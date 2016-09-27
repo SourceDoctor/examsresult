@@ -1,0 +1,47 @@
+[filetypes]
+filetype_exf=Examsresult Files
+filetype_all=All Files
+
+[main]
+title=Examsresult
+ok=ok
+add=Add
+edit=Edit
+remove=Remove
+close=Close
+
+[menu]
+mainmenufile=File
+newfile=new
+openfile=open
+quit=Exit
+
+mainmenuedit=Edit
+subject=Subject
+schoolclass=Schoolclass
+schoolyear=Schoolyear
+
+mainmenuhelp=Help
+about=about
+
+[window_newfile]
+title=New File
+
+[window_openfile]
+title=Open File
+msg_open_err=Failed to open File %s
+msg_db_updated=File to new Version updated
+msg_db_to_new=Cannot open File, because it's Version is to new. Please update your Application
+
+[window_subject]
+title = Subject
+
+[window_schoolclass]
+title = Schoolclass
+
+[window_schoolyear]
+title = Schoolyear
+
+[window_about]
+title = About
+infotext=the Teacher Exams Management Database
