@@ -1,4 +1,4 @@
-###Examsresult
+# Examsresult
 
 This Application is a tool for Teacher to handle Exams and Test results 
 of students and complete School Classes with several Subjects
