@@ -43,8 +43,9 @@ class ExamType(Base):
     weight = Column(Float(precision=2), default=1, nullable=False)
 
 
-class TimePhase(Base):
-    __tablename__ = 'time_phase'
+class TimePeriod(Base):
+    # weigth of first and second half of schoolyear, ...
+    __tablename__ = 'time_period'
     name = Column(Unicode(256), nullable=False)
     weight = Column(Float(precision=2), default=1, nullable=False)
 
@@ -55,7 +56,7 @@ class Exam(Base):
 
     subject = Column(Unicode(256), ForeignKey('subject.name'))
     exam_type = Column(Integer, ForeignKey('exam_type.id'))
-    time_phase = Column(Integer, ForeignKey('time_phase.id'))
+    time_period = Column(Integer, ForeignKey('time_period.id'))
     school_class_id = Column(Integer, ForeignKey('school_class.id'))
 
     single_test = Column(Boolean, default=False, nullable=False)
