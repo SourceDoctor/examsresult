@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 db_version = 1
 
+
 class Base(object):
     id = Column(Integer, primary_key=True)
 
@@ -39,7 +40,13 @@ class Subject(Base):
 class ExamType(Base):
     __tablename__ = 'exam_type'
     name = Column(Unicode(256), nullable=False)
-    weight = Column(Float(precision=2), nullable=False)
+    weight = Column(Float(precision=2), default=1, nullable=False)
+
+
+class TimePhase(Base):
+    __tablename__ = 'time_phase'
+    name = Column(Unicode(256), nullable=False)
+    weight = Column(Float(precision=2), default=1, nullable=False)
 
 
 class Exam(Base):
@@ -48,6 +55,7 @@ class Exam(Base):
 
     subject = Column(Unicode(256), ForeignKey('subject.name'))
     exam_type = Column(Integer, ForeignKey('exam_type.id'))
+    time_phase = Column(Integer, ForeignKey('time_phase.id'))
     school_class_id = Column(Integer, ForeignKey('school_class.id'))
 
     single_test = Column(Boolean, default=False, nullable=False)
@@ -56,7 +64,7 @@ class Exam(Base):
 
 class ExamResult(Base):
     __tablename__ = 'exam_result'
-    result = Column(Integer, default=0)
+    result = Column(Float(precision=1), default=0)
 
     exam_id = Column(Integer, ForeignKey('exam.id'))
     exam = relationship("Exam", backref="exam_results")
