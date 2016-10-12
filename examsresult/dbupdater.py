@@ -4,6 +4,8 @@ from examsresult.dbmodel import db_version as db_max_version
 
 class DBUpdater(object):
 
+    # Fixme: get DB Updater to run, so it can update DB Models
+
     def __init__(self, session):
         self.session = session
 
