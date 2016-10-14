@@ -1,5 +1,7 @@
 from configparser import RawConfigParser
 
+app_icon = './lng/1476313854_report_pencil.png'
+
 
 def lng_load(language='english', type='ini'):
     lng_cfg = {}

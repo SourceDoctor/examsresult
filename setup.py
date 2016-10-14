@@ -1,6 +1,6 @@
 # coding=utf-8
 from setuptools import setup, find_packages
-package_templates = {"examsresult.lng." + package: ["*.lng"] for package in find_packages('examsresult/lng')}
+package_templates = {"examsresult.lng." + package: ["*.lng", "1476313854_report_pencil.png"] for package in find_packages('examsresult/lng')}
 
 setup(
     name='examsresult',
@@ -14,6 +14,6 @@ setup(
             "examsresult = examsresult:run",
         ]
     },
-    install_requires=['sqlalchemy'],
+    install_requires=['sqlalchemy', 'PyQt5'],
     version='1.0',
 )
