@@ -49,7 +49,6 @@ class View(QMainWindow):
 
     def toggle_menu(self, db_state):
         # Enable/Disable Menu Entries
-        menutext = self.lng['menu']
         self.schoolyear_action.setEnabled(db_state)
         self.schoolclass_action.setEnabled(db_state)
         self.subject_action.setEnabled(db_state)
@@ -112,65 +111,59 @@ class View(QMainWindow):
             self.database_file = database_file
             self.connect_db()
 
-    def window_schoolyear(self):
-        lng = self.lng['window_schoolyear']
+    def window_schoolyear(self, lng):
         mytab = QWidget()
-#        self.tab_window.addTab(mytab, lng['title'])
-        self.add_tab_event(mytab, lng['title'])
+        self.tab_window.addTab(mytab, lng['title'])
 
-        button_add = QPushButton(self.lng['main']['add'], mytab)
+        button_add = QPushButton(lng['add'], mytab)
         button_add.move(50, 70)
-        button_edit = QPushButton(self.lng['main']['edit'], mytab)
+        button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(50, 90)
-        button_remove = QPushButton(self.lng['main']['remove'], mytab)
+        button_remove = QPushButton(lng['remove'], mytab)
         button_remove.move(50, 110)
 
-    def window_schoolclass(self):
-        lng = self.lng['window_schoolclass']
+    def window_schoolclass(self, lng):
         mytab = QWidget()
-        self.add_tab_event(mytab, lng['title'])
+        self.tab_window.addTab(mytab, lng['title'])
 
-        button_add = QPushButton(self.lng['main']['add'], mytab)
+        button_add = QPushButton(lng['add'], mytab)
         button_add.move(40, 70)
-        button_edit = QPushButton(self.lng['main']['edit'], mytab)
+        button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(40, 90)
-        button_remove = QPushButton(self.lng['main']['remove'], mytab)
+        button_remove = QPushButton(lng['remove'], mytab)
         button_remove.move(40, 110)
 
-    def window_subject(self):
-        lng = self.lng['window_subject']
+    def window_subject(self, lng):
         mytab = QWidget()
-        self.add_tab_event(mytab, lng['title'])
+        self.tab_window.addTab(mytab, lng['title'])
 
-        button_add = QPushButton(self.lng['main']['add'], mytab)
+        button_add = QPushButton(lng['add'], mytab)
         button_add.move(30, 70)
-        button_edit = QPushButton(self.lng['main']['edit'], mytab)
+        button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(30, 90)
-        button_remove = QPushButton(self.lng['main']['remove'], mytab)
+        button_remove = QPushButton(lng['remove'], mytab)
         button_remove.move(30, 110)
 
-    def window_examstype(self):
-        lng = self.lng['window_examstype']
+    def window_examstype(self, lng):
         mytab = QWidget()
-        self.add_tab_event(mytab, lng['title'])
+        self.tab_window.addTab(mytab, lng['title'])
 
-        button_add = QPushButton(self.lng['main']['add'], mytab)
+        button_add = QPushButton(lng['add'], mytab)
         button_add.move(20, 70)
-        button_edit = QPushButton(self.lng['main']['edit'], mytab)
+        button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(20, 90)
-        button_remove = QPushButton(self.lng['main']['remove'], mytab)
+        button_remove = QPushButton(lng['remove'], mytab)
         button_remove.move(20, 110)
 
-    def window_timeperiod(self):
-        lng = self.lng['window_timeperiod']
+    def window_timeperiod(self, lng):
         mytab = QWidget()
-        self.add_tab_event(mytab, lng['title'])
+        self.tab_window.addTab(mytab, lng['title'])
 
-        button_add = QPushButton(self.lng['main']['add'], mytab)
+        button_add = QPushButton(lng['add'], mytab)
         button_add.move(10, 70)
-        button_edit = QPushButton(self.lng['main']['edit'], mytab)
+        button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(10, 90)
-        button_remove = QPushButton(self.lng['main']['remove'], mytab)
+        button_remove = QPushButton(lng['remove'], mytab)
         button_remove.move(10, 110)
 
     def window_about(self, parent, width=400, height=100):
@@ -202,11 +195,21 @@ class View(QMainWindow):
     def closeEvent(self, event):
         self.action_app_close()
 
-    def add_tab_event(self, parent, title):
+    def add_tab_event(self, tab_to_open, lng):
         # Fixme: if tab added, and before Tabview was empty, first one has no content
-        # Todo: Focus on last opened Tab
-        self.tab_window.addTab(parent, title)
-        self.open_tabs.append(title)
+        # add Tab only if not still open
+        if lng['title'] not in self.open_tabs:
+            tab_to_open(lng)
+            self.open_tabs.append(lng['title'])
+
+        # set focus to requested Tab
+        index = 0
+        while index <= len(self.open_tabs) - 1:
+            title = self.tab_window.tabText(index)
+            if title == lng['title']:
+                break
+            index += 1
+        self.tab_window.setCurrentIndex(index)
 
     def main_menu(self):
         mainMenu = self.menuBar()
@@ -221,15 +224,15 @@ class View(QMainWindow):
         self.exit_action.triggered.connect(self.action_app_close)
         # Edit menu actions
         self.schoolyear_action = QAction(menutext['schoolyear'], self)
-        self.schoolyear_action.triggered.connect(self.window_schoolyear)
+        self.schoolyear_action.triggered.connect(lambda: self.add_tab_event(self.window_schoolyear, self.lng['window_schoolyear']))
         self.schoolclass_action = QAction(menutext['schoolclass'], self)
-        self.schoolclass_action.triggered.connect(self.window_schoolclass)
+        self.schoolclass_action.triggered.connect(lambda: self.add_tab_event(self.window_schoolclass, self.lng['window_schoolclass']))
         self.subject_action = QAction(menutext['subject'], self)
-        self.subject_action.triggered.connect(self.window_subject)
+        self.subject_action.triggered.connect(lambda: self.add_tab_event(self.window_subject, self.lng['window_subject']))
         self.examstype_action = QAction(menutext['examstype'], self)
-        self.examstype_action.triggered.connect(self.window_examstype)
+        self.examstype_action.triggered.connect(lambda: self.add_tab_event(self.window_examstype, self.lng['window_examstype']))
         self.timeperiod_action = QAction(menutext['timeperiod'], self)
-        self.timeperiod_action.triggered.connect(self.window_timeperiod)
+        self.timeperiod_action.triggered.connect(lambda: self.add_tab_event(self.window_timeperiod, self.lng['window_timeperiod']))
         # Help menu actions
         self.about_action = QAction(menutext['about'], self)
         self.about_action.triggered.connect(lambda: self.window_about(self))
