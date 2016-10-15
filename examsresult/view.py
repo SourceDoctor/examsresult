@@ -274,10 +274,6 @@ class View(QMainWindow):
 
         self.toggle_menu(self.db_loaded)
 
-        # no File to open found, ask for ...
-        # if not self.database_file:
-        #     self.window_openfile()
-
         tab_top = 25
 
         self.tab_window = QTabWidget(parent=self)
@@ -287,5 +283,9 @@ class View(QMainWindow):
         self.tab_window.setMovable(True)
         self.tab_window.setTabsClosable(True)
         self.tab_window.tabCloseRequested.connect(tab_close_handler)
+
+        # no File to open found, ask for ...
+        # if not self.database_file:
+        #     self.window_openfile()
 
         self.show()
