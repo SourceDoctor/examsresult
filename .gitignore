@@ -7,4 +7,4 @@ build/*
 .tox
 .coverage
 .*.swp
-
+*.exf
