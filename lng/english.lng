@@ -8,7 +8,6 @@ ok=ok
 add=Add
 edit=Edit
 remove=Remove
-close=Close
 
 [menu]
 mainmenufile=File

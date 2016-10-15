@@ -10,6 +10,7 @@ class View(QMainWindow):
     database_file = None
     db_loaded = False
     dbc = None
+    open_tabs = []
 
     def __init__(self, qapp, language='english'):
         super().__init__()
@@ -111,111 +112,71 @@ class View(QMainWindow):
             self.database_file = database_file
             self.connect_db()
 
-    def window_schoolyear(self, root_window, width=400, height=150):
+    def window_schoolyear(self):
         lng = self.lng['window_schoolyear']
-        tk_window = Toplevel(root_window)
-        tk_window.transient(root_window)
-        tk_window.title(string=lng['title'])
-        tk_window.minsize(width=width, height=height)
-        tk_window.maxsize(width=width, height=height)
-        center_pos(window_object=tk_window, width=width, height=height)
+        mytab = QWidget()
+#        self.tab_window.addTab(mytab, lng['title'])
+        self.add_tab_event(mytab, lng['title'])
 
-        btn_add = Button(tk_window, text=self.lng['main']['add'], command=lambda: self.action_schoolyear_add(tk_window), width=10)
-        btn_edit = Button(tk_window, text=self.lng['main']['edit'], command=lambda: self.action_schoolyear_edit(tk_window), width=10)
-        btn_remove = Button(tk_window, text=self.lng['main']['remove'], command=lambda: self.action_schoolyear_remove(tk_window), width=10)
-        btn_close = Button(tk_window, text=self.lng['main']['close'], command=tk_window.destroy, width=10)
-        btn_add.focus()
-        btn_add.pack()
-        btn_edit.pack()
-        btn_remove.pack()
-        btn_close.pack()
+        button_add = QPushButton(self.lng['main']['add'], mytab)
+        button_add.move(50, 70)
+        button_edit = QPushButton(self.lng['main']['edit'], mytab)
+        button_edit.move(50, 90)
+        button_remove = QPushButton(self.lng['main']['remove'], mytab)
+        button_remove.move(50, 110)
 
-    def window_schoolclass(self, root_window, width=400, height=150):
+    def window_schoolclass(self):
         lng = self.lng['window_schoolclass']
-        tk_window = Toplevel(root_window)
-        tk_window.transient(root_window)
-        tk_window.title(string=lng['title'])
-        tk_window.minsize(width=width, height=height)
-        tk_window.maxsize(width=width, height=height)
-        center_pos(window_object=tk_window, width=width, height=height)
+        mytab = QWidget()
+        self.add_tab_event(mytab, lng['title'])
 
-        btn_add = Button(tk_window, text=self.lng['main']['add'], command=lambda: self.action_schoolclass_add(tk_window), width=10)
-        btn_edit = Button(tk_window, text=self.lng['main']['edit'], command=lambda: self.action_schoolclass_edit(tk_window), width=10)
-        btn_remove = Button(tk_window, text=self.lng['main']['remove'], command=lambda: self.action_schoolclass_remove(tk_window), width=10)
-        btn_close = Button(tk_window, text=self.lng['main']['close'], command=tk_window.destroy, width=10)
-        btn_add.focus()
-        btn_add.pack()
-        btn_edit.pack()
-        btn_remove.pack()
-        btn_close.pack()
+        button_add = QPushButton(self.lng['main']['add'], mytab)
+        button_add.move(40, 70)
+        button_edit = QPushButton(self.lng['main']['edit'], mytab)
+        button_edit.move(40, 90)
+        button_remove = QPushButton(self.lng['main']['remove'], mytab)
+        button_remove.move(40, 110)
 
-    def window_subject(self, root_window, width=400, height=150):
+    def window_subject(self):
         lng = self.lng['window_subject']
-        tk_window = Toplevel(root_window)
-        tk_window.transient(root_window)
-        tk_window.title(string=lng['title'])
-        tk_window.minsize(width=width, height=height)
-        tk_window.maxsize(width=width, height=height)
-        center_pos(window_object=tk_window, width=width, height=height)
+        mytab = QWidget()
+        self.add_tab_event(mytab, lng['title'])
 
-        btn_add = Button(tk_window, text=self.lng['main']['add'], command=lambda: self.action_subject_add(tk_window), width=10)
-        btn_edit = Button(tk_window, text=self.lng['main']['edit'], command=lambda: self.action_subject_edit(tk_window), width=10)
-        btn_remove = Button(tk_window, text=self.lng['main']['remove'], command=lambda: self.action_subject_remove(tk_window), width=10)
-        btn_close = Button(tk_window, text=self.lng['main']['close'], command=tk_window.destroy, width=10)
-        btn_add.focus()
-        btn_add.pack()
-        btn_edit.pack()
-        btn_remove.pack()
-        btn_close.pack()
+        button_add = QPushButton(self.lng['main']['add'], mytab)
+        button_add.move(30, 70)
+        button_edit = QPushButton(self.lng['main']['edit'], mytab)
+        button_edit.move(30, 90)
+        button_remove = QPushButton(self.lng['main']['remove'], mytab)
+        button_remove.move(30, 110)
 
-    def window_examstype(self, root_window, width=400, height=150):
-        lng = self.lng['window_subject']
-        tk_window = Toplevel(root_window)
-        tk_window.transient(root_window)
-        tk_window.title(string=lng['title'])
-        tk_window.minsize(width=width, height=height)
-        tk_window.maxsize(width=width, height=height)
-        center_pos(window_object=tk_window, width=width, height=height)
+    def window_examstype(self):
+        lng = self.lng['window_examstype']
+        mytab = QWidget()
+        self.add_tab_event(mytab, lng['title'])
 
-        btn_add = Button(tk_window, text=self.lng['main']['add'], command=lambda: self.action_subject_add(tk_window),
-                         width=10)
-        btn_edit = Button(tk_window, text=self.lng['main']['edit'], command=lambda: self.action_subject_edit(tk_window),
-                          width=10)
-        btn_remove = Button(tk_window, text=self.lng['main']['remove'],
-                            command=lambda: self.action_subject_remove(tk_window), width=10)
-        btn_close = Button(tk_window, text=self.lng['main']['close'], command=tk_window.destroy, width=10)
-        btn_add.focus()
-        btn_add.pack()
-        btn_edit.pack()
-        btn_remove.pack()
-        btn_close.pack()
+        button_add = QPushButton(self.lng['main']['add'], mytab)
+        button_add.move(20, 70)
+        button_edit = QPushButton(self.lng['main']['edit'], mytab)
+        button_edit.move(20, 90)
+        button_remove = QPushButton(self.lng['main']['remove'], mytab)
+        button_remove.move(20, 110)
 
-    def window_timeperiod(self, root_window, width=400, height=150):
-        lng = self.lng['window_subject']
-        tk_window = Toplevel(root_window)
-        tk_window.transient(root_window)
-        tk_window.title(string=lng['title'])
-        tk_window.minsize(width=width, height=height)
-        tk_window.maxsize(width=width, height=height)
-        center_pos(window_object=tk_window, width=width, height=height)
+    def window_timeperiod(self):
+        lng = self.lng['window_timeperiod']
+        mytab = QWidget()
+        self.add_tab_event(mytab, lng['title'])
 
-        btn_add = Button(tk_window, text=self.lng['main']['add'], command=lambda: self.action_subject_add(tk_window),
-                         width=10)
-        btn_edit = Button(tk_window, text=self.lng['main']['edit'], command=lambda: self.action_subject_edit(tk_window),
-                          width=10)
-        btn_remove = Button(tk_window, text=self.lng['main']['remove'],
-                            command=lambda: self.action_subject_remove(tk_window), width=10)
-        btn_close = Button(tk_window, text=self.lng['main']['close'], command=tk_window.destroy, width=10)
-        btn_add.focus()
-        btn_add.pack()
-        btn_edit.pack()
-        btn_remove.pack()
-        btn_close.pack()
+        button_add = QPushButton(self.lng['main']['add'], mytab)
+        button_add.move(10, 70)
+        button_edit = QPushButton(self.lng['main']['edit'], mytab)
+        button_edit.move(10, 90)
+        button_remove = QPushButton(self.lng['main']['remove'], mytab)
+        button_remove.move(10, 110)
 
-    def window_about(self, parent_window, width=400, height=100):
+    def window_about(self, parent, width=400, height=100):
         lng = self.lng['window_about']
 
-        window = QDialog(parent=parent_window)
+        window = QDialog(parent=parent)
         window.setFixedHeight(height)
         window.setFixedWidth(width)
         window.setWindowTitle(lng['title'])
@@ -240,6 +201,12 @@ class View(QMainWindow):
 
     def closeEvent(self, event):
         self.action_app_close()
+
+    def add_tab_event(self, parent, title):
+        # Fixme: if tab added, and before Tabview was empty, first one has no content
+        # Todo: Focus on last opened Tab
+        self.tab_window.addTab(parent, title)
+        self.open_tabs.append(title)
 
     def main_menu(self):
         mainMenu = self.menuBar()
@@ -287,6 +254,8 @@ class View(QMainWindow):
     def main_window(self, width=800, height=600):
 
         def tab_close_handler(index):
+            title = self.tab_window.tabText(index)
+            self.open_tabs.remove(title)
             self.tab_window.removeTab(index)
 
         self.setWindowTitle(self.lng['main']['title'])
@@ -315,14 +284,5 @@ class View(QMainWindow):
         self.tab_window.setMovable(True)
         self.tab_window.setTabsClosable(True)
         self.tab_window.tabCloseRequested.connect(tab_close_handler)
-
-        # Todo: Focus on last opened Tab
-        self.tab1 = QWidget()
-        self.tab2 = QWidget()
-        self.tab3 = QWidget()
-        self.tab_window.addTab(self.tab1, "Tab 1")
-        self.tab_window.addTab(self.tab2, "Tab 2")
-        self.tab_window.addTab(self.tab3, "Tab 3")
-        self.tab_window.addTab(self.tab1, "Tab 1")
 
         self.show()
