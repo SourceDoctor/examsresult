@@ -52,6 +52,8 @@ class View(QMainWindow):
         self.schoolyear_action.setEnabled(db_state)
         self.schoolclass_action.setEnabled(db_state)
         self.subject_action.setEnabled(db_state)
+        self.examstype_action.setEnabled(db_state)
+        self.timeperiod_action.setEnabled(db_state)
 
     def action_app_close(self):
         self.close()
@@ -166,6 +168,50 @@ class View(QMainWindow):
         btn_remove.pack()
         btn_close.pack()
 
+    def window_examstype(self, root_window, width=400, height=150):
+        lng = self.lng['window_subject']
+        tk_window = Toplevel(root_window)
+        tk_window.transient(root_window)
+        tk_window.title(string=lng['title'])
+        tk_window.minsize(width=width, height=height)
+        tk_window.maxsize(width=width, height=height)
+        center_pos(window_object=tk_window, width=width, height=height)
+
+        btn_add = Button(tk_window, text=self.lng['main']['add'], command=lambda: self.action_subject_add(tk_window),
+                         width=10)
+        btn_edit = Button(tk_window, text=self.lng['main']['edit'], command=lambda: self.action_subject_edit(tk_window),
+                          width=10)
+        btn_remove = Button(tk_window, text=self.lng['main']['remove'],
+                            command=lambda: self.action_subject_remove(tk_window), width=10)
+        btn_close = Button(tk_window, text=self.lng['main']['close'], command=tk_window.destroy, width=10)
+        btn_add.focus()
+        btn_add.pack()
+        btn_edit.pack()
+        btn_remove.pack()
+        btn_close.pack()
+
+    def window_timeperiod(self, root_window, width=400, height=150):
+        lng = self.lng['window_subject']
+        tk_window = Toplevel(root_window)
+        tk_window.transient(root_window)
+        tk_window.title(string=lng['title'])
+        tk_window.minsize(width=width, height=height)
+        tk_window.maxsize(width=width, height=height)
+        center_pos(window_object=tk_window, width=width, height=height)
+
+        btn_add = Button(tk_window, text=self.lng['main']['add'], command=lambda: self.action_subject_add(tk_window),
+                         width=10)
+        btn_edit = Button(tk_window, text=self.lng['main']['edit'], command=lambda: self.action_subject_edit(tk_window),
+                          width=10)
+        btn_remove = Button(tk_window, text=self.lng['main']['remove'],
+                            command=lambda: self.action_subject_remove(tk_window), width=10)
+        btn_close = Button(tk_window, text=self.lng['main']['close'], command=tk_window.destroy, width=10)
+        btn_add.focus()
+        btn_add.pack()
+        btn_edit.pack()
+        btn_remove.pack()
+        btn_close.pack()
+
     def window_about(self, parent_window, width=400, height=100):
         lng = self.lng['window_about']
 
@@ -199,36 +245,41 @@ class View(QMainWindow):
         mainMenu = self.menuBar()
         menutext = self.lng['menu']
 
-        # File menu
+        # File menu actions
         self.new_action = QAction(menutext['newfile'], self)
         self.new_action.triggered.connect(self.window_newfile)
         self.open_action = QAction(menutext['openfile'], self)
         self.open_action.triggered.connect(self.window_openfile)
         self.exit_action = QAction(menutext['quit'], self)
         self.exit_action.triggered.connect(self.action_app_close)
-
-        filemenu = mainMenu.addMenu(menutext['mainmenufile'])
-        filemenu.addAction(self.new_action)
-        filemenu.addAction(self.open_action)
-        filemenu.addSeparator()
-        filemenu.addAction(self.exit_action)
-
-        # Edit menu
+        # Edit menu actions
         self.schoolyear_action = QAction(menutext['schoolyear'], self)
         self.schoolyear_action.triggered.connect(self.window_schoolyear)
         self.schoolclass_action = QAction(menutext['schoolclass'], self)
         self.schoolclass_action.triggered.connect(self.window_schoolclass)
         self.subject_action = QAction(menutext['subject'], self)
         self.subject_action.triggered.connect(self.window_subject)
+        self.examstype_action = QAction(menutext['examstype'], self)
+        self.examstype_action.triggered.connect(self.window_examstype)
+        self.timeperiod_action = QAction(menutext['timeperiod'], self)
+        self.timeperiod_action.triggered.connect(self.window_timeperiod)
+        # Help menu actions
+        self.about_action = QAction(menutext['about'], self)
+        self.about_action.triggered.connect(lambda: self.window_about(self))
+
+        # construct menu
+        filemenu = mainMenu.addMenu(menutext['mainmenufile'])
+        filemenu.addAction(self.new_action)
+        filemenu.addAction(self.open_action)
+        filemenu.addSeparator()
+        filemenu.addAction(self.exit_action)
 
         editmenu = mainMenu.addMenu(menutext['mainmenuedit'])
         editmenu.addAction(self.schoolyear_action)
         editmenu.addAction(self.schoolclass_action)
         editmenu.addAction(self.subject_action)
-
-        # Help menu
-        self.about_action = QAction(menutext['about'], self)
-        self.about_action.triggered.connect(lambda: self.window_about(self))
+        editmenu.addAction(self.examstype_action)
+        editmenu.addAction(self.timeperiod_action)
 
         helpmenu = mainMenu.addMenu(menutext['mainmenuhelp'])
         helpmenu.addAction(self.about_action)
@@ -251,10 +302,10 @@ class View(QMainWindow):
 
         self.toggle_menu(self.db_loaded)
 
-        #         # # no File to open found, ask for ...
-        #         # if not self.database_file:
-        #         #     self.window_openfile()
-        #
+        # no File to open found, ask for ...
+        # if not self.database_file:
+        #     self.window_openfile()
+
         tab_top = 25
 
         self.tab_window = QTabWidget(parent=self)

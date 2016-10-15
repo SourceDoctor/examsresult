@@ -20,6 +20,8 @@ mainmenuedit=Edit
 subject=Subject
 schoolclass=Schoolclass
 schoolyear=Schoolyear
+examstype=Examstype
+timeperiod=Timeperiod
 
 mainmenuhelp=Help
 about=about
@@ -32,6 +34,12 @@ title=Open File
 msg_open_err=Failed to open File %s
 msg_db_updated=File to new Version updated
 msg_db_to_new=Cannot open File, because it's Version is to new. Please update your Application
+
+[window_timeperiod]
+title = Timeperiod
+
+[window_examstype]
+title = Examstype
 
 [window_subject]
 title = Subject
