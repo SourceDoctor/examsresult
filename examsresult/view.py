@@ -222,7 +222,7 @@ class View(QMainWindow):
         self.open_action.triggered.connect(self.window_openfile)
         self.exit_action = QAction(menutext['quit'], self)
         self.exit_action.triggered.connect(self.action_app_close)
-        # Edit menu actions
+        # configure menu actions
         self.schoolyear_action = QAction(menutext['schoolyear'], self)
         self.schoolyear_action.triggered.connect(lambda: self.add_tab_event(self.window_schoolyear, self.lng['window_schoolyear']))
         self.schoolclass_action = QAction(menutext['schoolclass'], self)
@@ -244,12 +244,12 @@ class View(QMainWindow):
         filemenu.addSeparator()
         filemenu.addAction(self.exit_action)
 
-        editmenu = mainMenu.addMenu(menutext['mainmenuedit'])
-        editmenu.addAction(self.schoolyear_action)
-        editmenu.addAction(self.schoolclass_action)
-        editmenu.addAction(self.subject_action)
-        editmenu.addAction(self.examstype_action)
-        editmenu.addAction(self.timeperiod_action)
+        configuremenu = mainMenu.addMenu(menutext['mainmenuconfigure'])
+        configuremenu.addAction(self.schoolyear_action)
+        configuremenu.addAction(self.schoolclass_action)
+        configuremenu.addAction(self.subject_action)
+        configuremenu.addAction(self.examstype_action)
+        configuremenu.addAction(self.timeperiod_action)
 
         helpmenu = mainMenu.addMenu(menutext['mainmenuhelp'])
         helpmenu.addAction(self.about_action)

@@ -12,7 +12,7 @@ newfile=new
 openfile=open
 quit=Exit
 
-mainmenuedit=Edit
+mainmenuconfigure=Configure
 subject=Subject
 schoolclass=Schoolclass
 schoolyear=Schoolyear
