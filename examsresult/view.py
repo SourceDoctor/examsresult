@@ -66,19 +66,11 @@ class View(QMainWindow):
         # TODO: Give me something to do
         QMessageBox.information(root_window, "", "Give me something to do!")
 
-    def action_schoolyear_remove(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
     def action_schoolclass_add(self, root_window):
         # TODO: Give me something to do
         QMessageBox.information(root_window, "", "Give me something to do!")
 
     def action_schoolclass_edit(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_schoolclass_remove(self, root_window):
         # TODO: Give me something to do
         QMessageBox.information(root_window, "", "Give me something to do!")
 
@@ -90,19 +82,11 @@ class View(QMainWindow):
         # TODO: Give me something to do
         QMessageBox.information(root_window, "", "Give me something to do!")
 
-    def action_subject_remove(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-    
     def action_examstype_add(self, root_window):
         # TODO: Give me something to do
         QMessageBox.information(root_window, "", "Give me something to do!")
 
     def action_examstype_edit(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-        
-    def action_examstype_remove(self, root_window):
         # TODO: Give me something to do
         QMessageBox.information(root_window, "", "Give me something to do!")
 
@@ -111,10 +95,6 @@ class View(QMainWindow):
         QMessageBox.information(root_window, "", "Give me something to do!")
 
     def action_timeperiod_edit(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-    
-    def action_timeperiod_remove(self, root_window):
         # TODO: Give me something to do
         QMessageBox.information(root_window, "", "Give me something to do!")
 
@@ -141,13 +121,10 @@ class View(QMainWindow):
 
         button_add = QPushButton(lng['add'], mytab)
         button_add.move(50, 70)
+        button_add.clicked.connect(lambda: self.action_schoolyear_add(self))
         button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(50, 90)
-        button_remove = QPushButton(lng['remove'], mytab)
-        button_remove.move(50, 110)
-        button_add.clicked.connect(lambda: self.action_schoolyear_add(self))
         button_edit.clicked.connect(lambda: self.action_schoolyear_edit(self))
-        button_remove.clicked.connect(lambda: self.action_schoolyear_remove(self))
 
     def window_schoolclass(self, lng):
         mytab = QWidget()
@@ -159,9 +136,6 @@ class View(QMainWindow):
         button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(40, 90)
         button_edit.clicked.connect(lambda: self.action_schoolclass_edit(self))
-        button_remove = QPushButton(lng['remove'], mytab)
-        button_remove.move(40, 110)
-        button_remove.clicked.connect(lambda: self.action_schoolclass_remove(self))
 
     def window_subject(self, lng):
         mytab = QWidget()
@@ -173,9 +147,6 @@ class View(QMainWindow):
         button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(30, 90)
         button_edit.clicked.connect(lambda: self.action_subject_edit(self))
-        button_remove = QPushButton(lng['remove'], mytab)
-        button_remove.move(30, 110)
-        button_remove.clicked.connect(lambda: self.action_subject_remove(self))
 
     def window_examstype(self, lng):
         mytab = QWidget()
@@ -187,9 +158,6 @@ class View(QMainWindow):
         button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(20, 90)
         button_edit.clicked.connect(lambda: self.action_examstype_edit(self))
-        button_remove = QPushButton(lng['remove'], mytab)
-        button_remove.move(20, 110)
-        button_remove.clicked.connect(lambda: self.action_examstype_remove(self))
 
     def window_timeperiod(self, lng):
         mytab = QWidget()
@@ -201,9 +169,6 @@ class View(QMainWindow):
         button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(10, 90)
         button_edit.clicked.connect(lambda: self.action_timeperiod_edit(self))
-        button_remove = QPushButton(lng['remove'], mytab)
-        button_remove.move(10, 110)
-        button_remove.clicked.connect(lambda: self.action_timeperiod_remove(self))
 
     def window_about(self, parent, width=400, height=100):
         lng = self.lng['window_about']
@@ -323,8 +288,8 @@ class View(QMainWindow):
         self.tab_window.setTabsClosable(True)
         self.tab_window.tabCloseRequested.connect(tab_close_handler)
 
-        # no File to open found, ask for ...
-        # if not self.database_file:
-        #     self.window_openfile()
-
         self.show()
+
+        # no File to open found, ask for ...
+        if not self.database_file:
+            self.window_openfile()
