@@ -58,18 +58,6 @@ class View(QMainWindow):
     def action_app_close(self):
         self.close()
 
-    def action_subject_add(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_subject_edit(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_subject_remove(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
     def action_schoolyear_add(self, root_window):
         # TODO: Give me something to do
         QMessageBox.information(root_window, "", "Give me something to do!")
@@ -91,6 +79,42 @@ class View(QMainWindow):
         QMessageBox.information(root_window, "", "Give me something to do!")
 
     def action_schoolclass_remove(self, root_window):
+        # TODO: Give me something to do
+        QMessageBox.information(root_window, "", "Give me something to do!")
+
+    def action_subject_add(self, root_window):
+        # TODO: Give me something to do
+        QMessageBox.information(root_window, "", "Give me something to do!")
+
+    def action_subject_edit(self, root_window):
+        # TODO: Give me something to do
+        QMessageBox.information(root_window, "", "Give me something to do!")
+
+    def action_subject_remove(self, root_window):
+        # TODO: Give me something to do
+        QMessageBox.information(root_window, "", "Give me something to do!")
+    
+    def action_examstype_add(self, root_window):
+        # TODO: Give me something to do
+        QMessageBox.information(root_window, "", "Give me something to do!")
+
+    def action_examstype_edit(self, root_window):
+        # TODO: Give me something to do
+        QMessageBox.information(root_window, "", "Give me something to do!")
+        
+    def action_examstype_remove(self, root_window):
+        # TODO: Give me something to do
+        QMessageBox.information(root_window, "", "Give me something to do!")
+
+    def action_timeperiod_add(self, root_window):
+        # TODO: Give me something to do
+        QMessageBox.information(root_window, "", "Give me something to do!")
+
+    def action_timeperiod_edit(self, root_window):
+        # TODO: Give me something to do
+        QMessageBox.information(root_window, "", "Give me something to do!")
+    
+    def action_timeperiod_remove(self, root_window):
         # TODO: Give me something to do
         QMessageBox.information(root_window, "", "Give me something to do!")
 
@@ -121,6 +145,9 @@ class View(QMainWindow):
         button_edit.move(50, 90)
         button_remove = QPushButton(lng['remove'], mytab)
         button_remove.move(50, 110)
+        button_add.clicked.connect(lambda: self.action_schoolyear_add(self))
+        button_edit.clicked.connect(lambda: self.action_schoolyear_edit(self))
+        button_remove.clicked.connect(lambda: self.action_schoolyear_remove(self))
 
     def window_schoolclass(self, lng):
         mytab = QWidget()
@@ -128,10 +155,13 @@ class View(QMainWindow):
 
         button_add = QPushButton(lng['add'], mytab)
         button_add.move(40, 70)
+        button_add.clicked.connect(lambda: self.action_schoolclass_add(self))
         button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(40, 90)
+        button_edit.clicked.connect(lambda: self.action_schoolclass_edit(self))
         button_remove = QPushButton(lng['remove'], mytab)
         button_remove.move(40, 110)
+        button_remove.clicked.connect(lambda: self.action_schoolclass_remove(self))
 
     def window_subject(self, lng):
         mytab = QWidget()
@@ -139,10 +169,13 @@ class View(QMainWindow):
 
         button_add = QPushButton(lng['add'], mytab)
         button_add.move(30, 70)
+        button_add.clicked.connect(lambda: self.action_subject_add(self))
         button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(30, 90)
+        button_edit.clicked.connect(lambda: self.action_subject_edit(self))
         button_remove = QPushButton(lng['remove'], mytab)
         button_remove.move(30, 110)
+        button_remove.clicked.connect(lambda: self.action_subject_remove(self))
 
     def window_examstype(self, lng):
         mytab = QWidget()
@@ -150,10 +183,13 @@ class View(QMainWindow):
 
         button_add = QPushButton(lng['add'], mytab)
         button_add.move(20, 70)
+        button_add.clicked.connect(lambda: self.action_examstype_add(self))
         button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(20, 90)
+        button_edit.clicked.connect(lambda: self.action_examstype_edit(self))
         button_remove = QPushButton(lng['remove'], mytab)
         button_remove.move(20, 110)
+        button_remove.clicked.connect(lambda: self.action_examstype_remove(self))
 
     def window_timeperiod(self, lng):
         mytab = QWidget()
@@ -161,10 +197,13 @@ class View(QMainWindow):
 
         button_add = QPushButton(lng['add'], mytab)
         button_add.move(10, 70)
+        button_add.clicked.connect(lambda: self.action_timeperiod_add(self))
         button_edit = QPushButton(lng['edit'], mytab)
         button_edit.move(10, 90)
+        button_edit.clicked.connect(lambda: self.action_timeperiod_edit(self))
         button_remove = QPushButton(lng['remove'], mytab)
         button_remove.move(10, 110)
+        button_remove.clicked.connect(lambda: self.action_timeperiod_remove(self))
 
     def window_about(self, parent, width=400, height=100):
         lng = self.lng['window_about']
@@ -195,11 +234,11 @@ class View(QMainWindow):
     def closeEvent(self, event):
         self.action_app_close()
 
-    def add_tab_event(self, tab_to_open, lng):
+    def add_tab_event(self, tab_window_to_open, lng):
         # Fixme: if tab added, and before Tabview was empty, first one has no content
         # add Tab only if not still open
         if lng['title'] not in self.open_tabs:
-            tab_to_open(lng)
+            tab_window_to_open(lng)
             self.open_tabs.append(lng['title'])
 
         # set focus to requested Tab
