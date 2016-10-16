@@ -63,14 +63,15 @@ class BaseView(QMainWindow):
     def action_app_close(self):
         self.close()
 
-    def _filedialog_handler(self, type):
-        if type == 'new':
+    def _filedialog_handler(self, dialog_type):
+        file_handler = QFileDialog()
+        if dialog_type == 'new':
             lng = self.lng['window_newfile']
             # TODO: add per default File Extension
-            file_tuple = QFileDialog.getSaveFileName(parent=self, caption=lng['title'], filter=self.filetypes)
-        elif type == 'open':
+            file_tuple = file_handler.getSaveFileName(parent=self, caption=lng['title'], filter=self.filetypes)
+        elif dialog_type == 'open':
             lng = self.lng['window_openfile']
-            file_tuple = QFileDialog.getOpenFileName(parent=self, caption=lng['title'], filter=self.filetypes)
+            file_tuple = file_handler.getOpenFileName(parent=self, caption=lng['title'], filter=self.filetypes)
         else:
             print("CRITICAL, unknown filedialog type to handle")
             return
