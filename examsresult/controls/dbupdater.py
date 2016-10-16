@@ -1,5 +1,5 @@
-from examsresult.dbmodel import Parameter
-from examsresult.dbmodel import db_version as db_max_version
+from examsresult.models import Version
+from examsresult.models import db_version as db_max_version
 
 
 class DBUpdater(object):
@@ -22,7 +22,7 @@ class DBUpdater(object):
         pass
 
     def dbupdater(self):
-        _version = self.session.query(Parameter).filter(Parameter.key == 'db_version').first()
+        _version = self.session.query(Version).filter(Version.key == 'db_version').first()
         try:
             db_version = int(_version.value)
         except AttributeError:
@@ -45,9 +45,9 @@ class DBUpdater(object):
             getattr(self, "update_v%d_to_v%d" % (handle_db_version - 1, handle_db_version))()
 
             # update DB Model Version
-            p = self.session.query(Parameter).filter(Parameter.key == 'db_version').first()
+            p = self.session.query(Version).filter(Version.key == 'db_version').first()
             if not p:
-                p = Parameter(key='db_version', value=handle_db_version)
+                p = Version(key='db_version', value=handle_db_version)
             else:
                 p.value = handle_db_version
             self.session.add(p)

@@ -13,6 +13,12 @@ class Base(object):
 Base = declarative_base(cls=Base)
 
 
+class Version(Base):
+    __tablename__ = 'version'
+    key = Column(Unicode(256), unique=True, nullable=False)
+    value = Column(Unicode(256), nullable=True)
+
+
 class Parameter(Base):
     __tablename__ = 'parameter'
     key = Column(Unicode(256), unique=True, nullable=False)
