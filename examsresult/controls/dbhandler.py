@@ -1,10 +1,11 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from os.path import isfile
 
-from .dbmodel import Exam, ExamResult, SchoolClass, Student, Schoolyear, \
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from examsresult.controls.dbupdater import DBUpdater
+from examsresult.models import Exam, ExamResult, SchoolClass, Student, Schoolyear, \
     ExamType, Subject, Parameter, Base
-from .dbupdater import DBUpdater
 
 
 class DatabaseConnector(object):

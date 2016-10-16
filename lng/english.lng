@@ -34,7 +34,9 @@ msg_db_to_new=Cannot open File, because it's Version is to new. Please update yo
 [window_timeperiod]
 title = Timeperiod
 add=Add
-edit=Edit
+save=Save Changes
+description=Description
+weight=Weight
 
 [window_examstype]
 title = Examstype

@@ -1,12 +1,12 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 
-from examsresult.view import View
+from examsresult.views import BaseView
 
 
 def run():
     qapp = QApplication(sys.argv)
-    gui = View(qapp=qapp)
+    gui = BaseView(qapp=qapp)
     gui.main_window()
     sys.exit(qapp.exec_())
 

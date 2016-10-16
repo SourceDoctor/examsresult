@@ -4,7 +4,7 @@ package_templates = {"examsresult.lng." + package: ["*.lng", "1476313854_report_
 
 setup(
     name='examsresult',
-    packages=['examsresult'],
+    packages=['examsresult', 'examsresult.models', 'examsresult.controls', 'examsresult.views'],
     package_data=package_templates,
     author='Thomas Berberich',
     author_email='thomasberb@googlemail.com',

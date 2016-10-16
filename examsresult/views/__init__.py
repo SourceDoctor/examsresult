@@ -1,11 +1,17 @@
-from examsresult.tools import lng_load, center_pos, app_icon
-from examsresult.dbhandler import DatabaseConnector
-from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, \
-    QDialog, QPushButton, QLabel, QTabWidget, QWidget
 from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, \
+    QDialog, QPushButton, QLabel, QTabWidget
+
+from examsresult.controls.dbhandler import DatabaseConnector
+from examsresult.tools import lng_load, center_pos, app_icon
+from .examstype import ViewExamsType
+from .schoolclass import ViewSchoolClass
+from .schoolyear import ViewSchoolYear
+from .subject import ViewSubject
+from .timeperiod import ViewTimeperiod
 
 
-class View(QMainWindow):
+class BaseView(QMainWindow):
 
     database_file = None
     db_loaded = False
@@ -58,46 +64,6 @@ class View(QMainWindow):
     def action_app_close(self):
         self.close()
 
-    def action_schoolyear_add(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_schoolyear_edit(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_schoolclass_add(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_schoolclass_edit(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_subject_add(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_subject_edit(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_examstype_add(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_examstype_edit(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_timeperiod_add(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
-    def action_timeperiod_edit(self, root_window):
-        # TODO: Give me something to do
-        QMessageBox.information(root_window, "", "Give me something to do!")
-
     def window_newfile(self):
         lng = self.lng['window_newfile']
         # TODO: add per default File Extension
@@ -116,59 +82,19 @@ class View(QMainWindow):
             self.connect_db()
 
     def window_schoolyear(self, lng):
-        mytab = QWidget()
-        self.tab_window.addTab(mytab, lng['title'])
-
-        button_add = QPushButton(lng['add'], mytab)
-        button_add.move(50, 70)
-        button_add.clicked.connect(lambda: self.action_schoolyear_add(self))
-        button_edit = QPushButton(lng['edit'], mytab)
-        button_edit.move(50, 90)
-        button_edit.clicked.connect(lambda: self.action_schoolyear_edit(self))
+        ViewSchoolYear(self.tab_window, lng)
 
     def window_schoolclass(self, lng):
-        mytab = QWidget()
-        self.tab_window.addTab(mytab, lng['title'])
-
-        button_add = QPushButton(lng['add'], mytab)
-        button_add.move(40, 70)
-        button_add.clicked.connect(lambda: self.action_schoolclass_add(self))
-        button_edit = QPushButton(lng['edit'], mytab)
-        button_edit.move(40, 90)
-        button_edit.clicked.connect(lambda: self.action_schoolclass_edit(self))
+        ViewSchoolClass(self.tab_window, lng)
 
     def window_subject(self, lng):
-        mytab = QWidget()
-        self.tab_window.addTab(mytab, lng['title'])
-
-        button_add = QPushButton(lng['add'], mytab)
-        button_add.move(30, 70)
-        button_add.clicked.connect(lambda: self.action_subject_add(self))
-        button_edit = QPushButton(lng['edit'], mytab)
-        button_edit.move(30, 90)
-        button_edit.clicked.connect(lambda: self.action_subject_edit(self))
+        ViewSubject(self.tab_window, lng)
 
     def window_examstype(self, lng):
-        mytab = QWidget()
-        self.tab_window.addTab(mytab, lng['title'])
-
-        button_add = QPushButton(lng['add'], mytab)
-        button_add.move(20, 70)
-        button_add.clicked.connect(lambda: self.action_examstype_add(self))
-        button_edit = QPushButton(lng['edit'], mytab)
-        button_edit.move(20, 90)
-        button_edit.clicked.connect(lambda: self.action_examstype_edit(self))
+        ViewExamsType(self.tab_window, lng)
 
     def window_timeperiod(self, lng):
-        mytab = QWidget()
-        self.tab_window.addTab(mytab, lng['title'])
-
-        button_add = QPushButton(lng['add'], mytab)
-        button_add.move(10, 70)
-        button_add.clicked.connect(lambda: self.action_timeperiod_add(self))
-        button_edit = QPushButton(lng['edit'], mytab)
-        button_edit.move(10, 90)
-        button_edit.clicked.connect(lambda: self.action_timeperiod_edit(self))
+        ViewTimeperiod(self.tab_window, lng)
 
     def window_about(self, parent, width=400, height=100):
         lng = self.lng['window_about']
