@@ -1,7 +1,6 @@
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, \
     QDialog, QPushButton, QLabel, QTabWidget
-
 from examsresult.controls.dbhandler import DatabaseConnector
 from examsresult.tools import lng_load, center_pos, app_icon
 from .examstype import ViewExamsType
@@ -64,22 +63,37 @@ class BaseView(QMainWindow):
     def action_app_close(self):
         self.close()
 
-    def window_newfile(self):
-        lng = self.lng['window_newfile']
-        # TODO: add per default File Extension
-        file_tuple = QFileDialog.getSaveFileName(parent=self, caption=lng['title'], filter=self.filetypes)
+    def _filedialog_handler(self, type):
+        if type == 'new':
+            lng = self.lng['window_newfile']
+            # TODO: add per default File Extension
+            file_tuple = QFileDialog.getSaveFileName(parent=self, caption=lng['title'], filter=self.filetypes)
+        elif type == 'open':
+            lng = self.lng['window_openfile']
+            file_tuple = QFileDialog.getOpenFileName(parent=self, caption=lng['title'], filter=self.filetypes)
+        else:
+            print("CRITICAL, unknown filedialog type to handle")
+            return
+
         database_file = file_tuple[0]
-        if database_file:
-            self.database_file = database_file
-            self.connect_db()
+
+        if not database_file:
+            return
+        if database_file == self.database_file:
+            return
+
+        # close all opened tabs
+        while self.open_tabs:
+            self.close_tab_handler(0)
+
+        self.database_file = database_file
+        self.connect_db()
+
+    def window_newfile(self):
+        self._filedialog_handler('new')
 
     def window_openfile(self):
-        lng = self.lng['window_openfile']
-        file_tuple = QFileDialog.getOpenFileName(parent=self, caption=lng['title'], filter=self.filetypes)
-        database_file = file_tuple[0]
-        if database_file:
-            self.database_file = database_file
-            self.connect_db()
+        self._filedialog_handler('open')
 
     def window_schoolyear(self, lng):
         ViewSchoolYear(self.tab_window, lng)
@@ -124,6 +138,11 @@ class BaseView(QMainWindow):
 
     def closeEvent(self, event):
         self.action_app_close()
+
+    def close_tab_handler(self, index):
+        title = self.tab_window.tabText(index)
+        self.open_tabs.remove(title)
+        self.tab_window.removeTab(index)
 
     def add_tab_event(self, tab_window_to_open, lng):
         # Fixme: if tab added, and before Tabview was empty, first one has no content
@@ -186,11 +205,6 @@ class BaseView(QMainWindow):
 
     def main_window(self, width=800, height=600):
 
-        def tab_close_handler(index):
-            title = self.tab_window.tabText(index)
-            self.open_tabs.remove(title)
-            self.tab_window.removeTab(index)
-
         self.setWindowTitle(self.lng['main']['title'])
         self.setWindowIcon(QIcon(app_icon))
         left, top = center_pos(window_object=self.qapp, width=width, height=height)
@@ -212,7 +226,7 @@ class BaseView(QMainWindow):
         self.tab_window.setFixedWidth(width)
         self.tab_window.setMovable(True)
         self.tab_window.setTabsClosable(True)
-        self.tab_window.tabCloseRequested.connect(tab_close_handler)
+        self.tab_window.tabCloseRequested.connect(self.close_tab_handler)
 
         self.show()
 
