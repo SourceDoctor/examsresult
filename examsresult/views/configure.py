@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QTableWidget, QWidget, QTableWidgetItem, QMessageBox, QPushButton
+from PyQt5.QtWidgets import QTableWidget, QWidget, QTableWidgetItem, QMessageBox, QPushButton, QInputDialog
 
 
 class ViewConfigure(object):
@@ -54,16 +54,32 @@ class ViewConfigure(object):
     def _define_column_title(self):
         return ()
 
+    def _action_add_content(self, table):
+        # set Dummy Content
+        data = ()
+        column = 1
+        while column <= len(self.column_title) - 1:
+            cell_dummy_content = "%s_%s" % (self.column_title[column], str(table.rowCount()))
+            data += (cell_dummy_content,)
+            column += 1
+        return data
+
     def action_add(self, root_window, table):
-        # TODO: Give me something to do
+
+        data = self._action_add_content(table)
+        if not data:
+            return
+
         table.insertRow(table.rowCount())
         # add id Column also to have a reference to database id
         table.setItem(table.rowCount() - 1, 0, QTableWidgetItem(str(table.rowCount())))
-        table.setItem(table.rowCount() - 1, 1, QTableWidgetItem("blubber" + str(table.rowCount())))
-        table.setItem(table.rowCount() - 1, 2, QTableWidgetItem("bla" + str(table.rowCount())))
+
+        column = 1
+        while column <= len(self.column_title) - 1:
+            table.setItem(table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
+            column += 1
 
     def action_save(self, root_window):
-        # TODO: Give me something to do
         QMessageBox.information(root_window, "", "Give me something to do!")
 
 
@@ -77,6 +93,19 @@ class ViewSchoolYear(ViewConfigure):
     def _define_column_title(self):
         return (self.lng['name'],)
 
+    def _action_add_content(self, table):
+        data = ()
+
+        add_dialog = QInputDialog(parent=self.tab_window)
+
+        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
+        if not ok:
+            return data
+
+        data += (name,)
+
+        return data
+
 
 class ViewSchoolClass(ViewConfigure):
 
@@ -87,6 +116,19 @@ class ViewSchoolClass(ViewConfigure):
 
     def _define_column_title(self):
         return (self.lng['name'],)
+
+    def _action_add_content(self, table):
+        data = ()
+
+        add_dialog = QInputDialog(parent=self.tab_window)
+
+        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
+        if not ok:
+            return data
+
+        data += (name,)
+
+        return data
 
 
 class ViewSubject(ViewConfigure):
@@ -99,6 +141,19 @@ class ViewSubject(ViewConfigure):
     def _define_column_title(self):
         return (self.lng['name'],)
 
+    def _action_add_content(self, table):
+        data = ()
+
+        add_dialog = QInputDialog(parent=self.tab_window)
+
+        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
+        if not ok:
+            return data
+
+        data += (name,)
+
+        return data
+
 
 class ViewExamsType(ViewConfigure):
 
@@ -110,6 +165,21 @@ class ViewExamsType(ViewConfigure):
     def _define_column_title(self):
         return (self.lng['name'], self.lng['weight'])
 
+    def _action_add_content(self, table):
+        data = ()
+
+        add_dialog = QInputDialog(parent=self.tab_window)
+
+        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
+        if ok:
+            weight, ok = add_dialog.getDouble(self.tab_window, self.lng['title'], self.lng['weight'], decimals=2)
+        if not ok:
+            return data
+
+        data += (name, weight)
+
+        return data
+
 
 class ViewTimeperiod(ViewConfigure):
 
@@ -120,3 +190,18 @@ class ViewTimeperiod(ViewConfigure):
 
     def _define_column_title(self):
         return (self.lng['name'], self.lng['weight'])
+
+    def _action_add_content(self, table):
+        data = ()
+
+        add_dialog = QInputDialog(parent=self.tab_window)
+
+        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
+        if ok:
+            weight, ok = add_dialog.getDouble(self.tab_window, self.lng['title'], self.lng['weight'], decimals=2)
+        if not ok:
+            return data
+
+        data += (name, weight)
+
+        return data
