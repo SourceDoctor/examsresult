@@ -5,11 +5,16 @@ class ViewConfigure(object):
     # Fixme: if tab added, and before Tabview was empty, first one has no buttons
     lng = {}
     column_title = ()
+    row_title = ()
 
     table_left = 0
     table_top = 0
     table_height = 200
     table_width = 200
+
+    sorting = True
+    header_horizontal = True
+    header_vertical = False
 
     def __init__(self, root_tab, lng):
         self.tab_window = root_tab
@@ -25,11 +30,18 @@ class ViewConfigure(object):
 
         table.setColumnCount(len(self.column_title))
 
-        table.verticalHeader().setVisible(False)
+        table.verticalHeader().setVisible(self.header_vertical)
+        table.horizontalHeader().setVisible(self.header_horizontal)
         table.setHorizontalHeaderLabels(self.column_title)
 
+        # hide Column 'id'
+#        table.setColumnHidden(0, True)
+
+        if self.row_title:
+            table.setVerticalHeaderLabels(self.row_title)
+
         table.resizeColumnsToContents()
-        table.setSortingEnabled(True)
+        table.setSortingEnabled(self.sorting)
 
         button_add = QPushButton(lng['add'], mytab)
         button_add.move(self.table_left + self.table_width + 10, self.table_top)
