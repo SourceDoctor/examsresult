@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, \
     QDialog, QPushButton, QLabel, QTabWidget
 from examsresult.controls.dbhandler import DatabaseConnector
 from examsresult.tools import lng_load, center_pos, app_icon
-from .configure import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
+from .definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
 
 
 class BaseView(QMainWindow):
@@ -189,12 +189,12 @@ class BaseView(QMainWindow):
         filemenu.addSeparator()
         filemenu.addAction(self.exit_action)
 
-        configuremenu = mainMenu.addMenu(menutext['mainmenuconfigure'])
-        configuremenu.addAction(self.schoolyear_action)
-        configuremenu.addAction(self.schoolclass_action)
-        configuremenu.addAction(self.subject_action)
-        configuremenu.addAction(self.examstype_action)
-        configuremenu.addAction(self.timeperiod_action)
+        definitionmenu = mainMenu.addMenu(menutext['mainmenudefinition'])
+        definitionmenu.addAction(self.schoolyear_action)
+        definitionmenu.addAction(self.schoolclass_action)
+        definitionmenu.addAction(self.subject_action)
+        definitionmenu.addAction(self.examstype_action)
+        definitionmenu.addAction(self.timeperiod_action)
 
         helpmenu = mainMenu.addMenu(menutext['mainmenuhelp'])
         helpmenu.addAction(self.about_action)

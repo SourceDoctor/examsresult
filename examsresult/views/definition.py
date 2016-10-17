@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QTableWidget, QWidget, QTableWidgetItem, QMessageBox, QPushButton, QInputDialog
 
 
-class ViewConfigure(object):
+class ViewDefine(object):
     # Fixme: if tab added, and before Tabview was empty, first one has no buttons
     lng = {}
     column_title = ()
@@ -80,34 +80,10 @@ class ViewConfigure(object):
             column += 1
 
     def action_save(self, root_window):
-        QMessageBox.information(root_window, "", "Give me something to do!")
+        QMessageBox.information(root_window, self.lng['title'], "Give me something to do!")
 
 
-class ViewSchoolYear(ViewConfigure):
-
-    table_left = 100
-    table_top = 30
-    table_height = 350
-    table_width = 200
-
-    def _define_column_title(self):
-        return (self.lng['name'],)
-
-    def _action_add_content(self, table):
-        data = ()
-
-        add_dialog = QInputDialog(parent=self.tab_window)
-
-        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
-        if not ok:
-            return data
-
-        data += (name,)
-
-        return data
-
-
-class ViewSchoolClass(ViewConfigure):
+class ViewSchoolYear(ViewDefine):
 
     table_left = 100
     table_top = 30
@@ -131,7 +107,7 @@ class ViewSchoolClass(ViewConfigure):
         return data
 
 
-class ViewSubject(ViewConfigure):
+class ViewSchoolClass(ViewDefine):
 
     table_left = 100
     table_top = 30
@@ -155,7 +131,31 @@ class ViewSubject(ViewConfigure):
         return data
 
 
-class ViewExamsType(ViewConfigure):
+class ViewSubject(ViewDefine):
+
+    table_left = 100
+    table_top = 30
+    table_height = 350
+    table_width = 200
+
+    def _define_column_title(self):
+        return (self.lng['name'],)
+
+    def _action_add_content(self, table):
+        data = ()
+
+        add_dialog = QInputDialog(parent=self.tab_window)
+
+        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
+        if not ok:
+            return data
+
+        data += (name,)
+
+        return data
+
+
+class ViewExamsType(ViewDefine):
 
     table_left = 100
     table_top = 30
@@ -181,7 +181,7 @@ class ViewExamsType(ViewConfigure):
         return data
 
 
-class ViewTimeperiod(ViewConfigure):
+class ViewTimeperiod(ViewDefine):
 
     table_left = 100
     table_top = 30
