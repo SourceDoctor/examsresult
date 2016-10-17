@@ -3,11 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, \
     QDialog, QPushButton, QLabel, QTabWidget
 from examsresult.controls.dbhandler import DatabaseConnector
 from examsresult.tools import lng_load, center_pos, app_icon
-from .examstype import ViewExamsType
-from .schoolclass import ViewSchoolClass
-from .schoolyear import ViewSchoolYear
-from .subject import ViewSubject
-from .timeperiod import ViewTimeperiod
+from .configure import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
 
 
 class BaseView(QMainWindow):
@@ -146,7 +142,6 @@ class BaseView(QMainWindow):
         self.tab_window.removeTab(index)
 
     def add_tab_event(self, tab_window_to_open, lng):
-        # Fixme: if tab added, and before Tabview was empty, first one has no content
         # add Tab only if not still open
         if lng['title'] not in self.open_tabs:
             tab_window_to_open(lng)

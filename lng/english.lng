@@ -35,28 +35,33 @@ msg_db_to_new=Cannot open File, because it's Version is to new. Please update yo
 title = Timeperiod
 add=Add
 save=Save Changes
-description=Description
+name=Description
 weight=Weight
 
 [window_examstype]
 title = Examstype
 add=Add
-edit=Edit
+save=Save Changes
+name=Exams Type
+weight=Weight
 
 [window_subject]
 title = Subject
 add=Add
-edit=Edit
+save=Save Changes
+name=Subject Name
 
 [window_schoolclass]
 title = Schoolclass
 add=Add
-edit=Edit
+save=Save Changes
+name=Schoolclass Name
 
 [window_schoolyear]
 title = Schoolyear
 add=Add
-edit=Edit
+save=Save Changes
+name=Schoolyear Name
 
 [window_about]
 title = About
