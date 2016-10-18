@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QTableWidget, QWidget, QTableWidgetItem, QMessageBox, QPushButton, QInputDialog
+from PyQt5.QtWidgets import QTableWidget, QWidget, QTableWidgetItem, QMessageBox, \
+    QPushButton, QInputDialog, QAbstractItemView
 
 
 class ViewDefine(object):
@@ -11,6 +12,10 @@ class ViewDefine(object):
     table_top = 0
     table_height = 200
     table_width = 200
+
+    cell_editable = False
+    full_row_select = True
+    full_column_select = False
 
     sorting = True
     header_horizontal = True
@@ -40,8 +45,19 @@ class ViewDefine(object):
         if self.row_title:
             table.setVerticalHeaderLabels(self.row_title)
 
+        if self.full_row_select:
+            table.setSelectionBehavior(QAbstractItemView.SelectRows)
+
+        if self.full_column_select:
+            table.setSelectionBehavior(QAbstractItemView.SelectColumns)
+
+        if self.cell_editable:
+            table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
         table.resizeColumnsToContents()
         table.setSortingEnabled(self.sorting)
+
+        table.doubleClicked.connect(self.action_edit)
 
         button_add = QPushButton(lng['add'], mytab)
         button_add.move(self.table_left + self.table_width + 10, self.table_top)
@@ -63,6 +79,19 @@ class ViewDefine(object):
             data += (cell_dummy_content,)
             column += 1
         return data
+
+    def action_edit(self, cell):
+        row = cell.row()
+        column = cell.column()
+        QMessageBox.information(self.tab_window, "", str(row) + "," + str(column))
+        # # set Dummy Content
+        # data = ()
+        # column = 1
+        # while column <= len(self.column_title) - 1:
+        #     cell_dummy_content = "%s_%s" % (self.column_title[column], str(table.rowCount()))
+        #     data += (cell_dummy_content,)
+        #     column += 1
+        # return data
 
     def action_add(self, root_window, table):
 
