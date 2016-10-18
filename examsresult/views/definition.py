@@ -26,45 +26,46 @@ class ViewDefine(object):
         self.lng = lng
         self.column_title = ('id',) + self._define_column_title()
 
-        # Todo: check after Change if Cell is empty, then Error !
         mytab = QWidget()
-        table = QTableWidget(mytab)
+        self.my_table = QTableWidget(mytab)
         self.tab_window.addTab(mytab, self.lng['title'])
 
-        table.setGeometry(self.table_left, self.table_top, self.table_width, self.table_height)
+        self.my_table.setGeometry(self.table_left, self.table_top, self.table_width, self.table_height)
 
-        table.setColumnCount(len(self.column_title))
+        self.my_table.setColumnCount(len(self.column_title))
 
-        table.verticalHeader().setVisible(self.header_vertical)
-        table.horizontalHeader().setVisible(self.header_horizontal)
-        table.setHorizontalHeaderLabels(self.column_title)
+        self.my_table.verticalHeader().setVisible(self.header_vertical)
+        self.my_table.horizontalHeader().setVisible(self.header_horizontal)
+        self.my_table.setHorizontalHeaderLabels(self.column_title)
 
         # hide Column 'id'
 #        table.setColumnHidden(0, True)
 
         if self.row_title:
-            table.setVerticalHeaderLabels(self.row_title)
+            self.my_table.setVerticalHeaderLabels(self.row_title)
 
         if self.full_row_select:
-            table.setSelectionBehavior(QAbstractItemView.SelectRows)
+            self.my_table.setSelectionBehavior(QAbstractItemView.SelectRows)
 
         if self.full_column_select:
-            table.setSelectionBehavior(QAbstractItemView.SelectColumns)
+            self.my_table.setSelectionBehavior(QAbstractItemView.SelectColumns)
 
         if self.cell_editable:
-            table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            self.my_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-        table.resizeColumnsToContents()
-        table.setSortingEnabled(self.sorting)
+        # Fixme: on doubleclick-Edit Cell has blinking Cursor focus
 
-        table.doubleClicked.connect(self.action_edit)
+        self.my_table.resizeColumnsToContents()
+        self.my_table.setSortingEnabled(self.sorting)
+
+        self.my_table.doubleClicked.connect(self.action_edit)
 
         button_add = QPushButton(lng['add'], mytab)
         button_add.move(self.table_left + self.table_width + 10, self.table_top)
-        button_add.clicked.connect(lambda: self.action_add(self.tab_window, table))
+        button_add.clicked.connect(self.action_add)
 
         button_save = QPushButton(lng['save'], mytab)
-        button_save.move(self.table_left + self.table_width + 10, self.table_top + table.height())
+        button_save.move(self.table_left + self.table_width + 10, self.table_top + self.my_table.height())
         button_save.clicked.connect(lambda: self.action_save(self.tab_window))
 
     def _define_column_title(self):
@@ -75,38 +76,51 @@ class ViewDefine(object):
         data = ()
         column = 1
         while column <= len(self.column_title) - 1:
-            cell_dummy_content = "%s_%s" % (self.column_title[column], str(table.rowCount()))
+            cell_dummy_content = "%s_%s" % (self.column_title[column], str(self.my_table.rowCount()))
             data += (cell_dummy_content,)
             column += 1
         return data
 
-    def action_edit(self, cell):
-        row = cell.row()
-        column = cell.column()
-        QMessageBox.information(self.tab_window, "", str(row) + "," + str(column))
-        # # set Dummy Content
-        # data = ()
-        # column = 1
-        # while column <= len(self.column_title) - 1:
-        #     cell_dummy_content = "%s_%s" % (self.column_title[column], str(table.rowCount()))
-        #     data += (cell_dummy_content,)
-        #     column += 1
-        # return data
+    def _action_edit_content(self, table, content):
+        data = ()
+        return data
 
-    def action_add(self, root_window, table):
-
-        data = self._action_add_content(table)
+    def action_add(self):
+        # fill Data into Cells
+        data = self._action_add_content()
         if not data:
             return
 
-        table.insertRow(table.rowCount())
+        self.my_table.insertRow(self.my_table.rowCount())
         # add id Column also to have a reference to database id
-        table.setItem(table.rowCount() - 1, 0, QTableWidgetItem(str(table.rowCount())))
+        self.my_table.setItem(self.my_table.rowCount() - 1, 0, QTableWidgetItem(str(self.my_table.rowCount())))
 
         column = 1
         while column <= len(self.column_title) - 1:
-            table.setItem(table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
+            self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
             column += 1
+
+    def action_edit(self, cell):
+        row = cell.row()
+        content = ()
+
+        column = 1
+        while column <= len(self.column_title) - 1:
+            content += (self.my_table.item(row, column).text(),)
+            column += 1
+
+        new_content = self._action_edit_content(self.my_table, content)
+        if not new_content:
+            self.my_table.selectRow(row)
+            return
+
+        column = 1
+        while column <= len(self.column_title) - 1:
+            new_value = new_content[column - 1]
+            self.my_table.setItem(row, column, QTableWidgetItem(str(new_value)))
+            column += 1
+
+        self.my_table.selectRow(row)
 
     def action_save(self, root_window):
         QMessageBox.information(root_window, self.lng['title'], "Give me something to do!")
@@ -232,5 +246,18 @@ class ViewTimeperiod(ViewDefine):
             return data
 
         data += (name, weight)
+
+        return data
+
+    def _action_edit_content(self, table, content):
+        data = ()
+
+        edit_dialog = QInputDialog(parent=self.tab_window)
+
+        name, ok = edit_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'],text=content[0])
+        if ok:
+            weight, ok = edit_dialog.getDouble(self.tab_window, self.lng['title'], self.lng['weight'], decimals=2,value=float(content[1]))
+        if ok:
+            data += (name, weight)
 
         return data
