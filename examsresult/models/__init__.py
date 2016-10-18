@@ -30,17 +30,20 @@ class Schoolyear(Base):
     name = Column(Unicode(256), nullable=False)
 
 
-class SchoolClass(Base):
-    __tablename__ = 'school_class'
+class SchoolClassName(Base):
+    __tablename__ = 'school_class_name'
     name = Column(Unicode(256), nullable=False)
-    schoolyear = Column(Unicode(256), ForeignKey('school_year.name'))
-
-    exams = relationship("Exam")
 
 
 class Subject(Base):
     __tablename__ = 'subject'
     name = Column(Unicode(256), nullable=False)
+
+
+class SchoolClass(Base):
+    __tablename__ = 'school_class'
+    name = Column(Unicode(256), ForeignKey('school_class_name.name'))
+    comment = Column(Unicode(1024), nullable=True)
 
 
 class ExamType(Base):

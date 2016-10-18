@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from examsresult.controls.dbupdater import DBUpdater
-from examsresult.models import Exam, ExamResult, SchoolClass, Student, Schoolyear, \
+from examsresult.models import Exam, ExamResult, SchoolClassName, Student, Schoolyear, \
     ExamType, Subject, Parameter, Base
 
 
@@ -78,16 +78,14 @@ class DBHandler(object):
         return ret
 
     def _list(self, model, filter={}):
-        return self.session.query(model).filter_by(filter).all()
+        return self.session.query(model).filter_by(filter)
 
     def get_schoolyears(self):
-        return self._list(Schoolyear)
+        ret = self._list(Schoolyear)
+        return ret.all()
 
     def get_schoolclasses(self, filter={}):
-        ret = self._list(SchoolClass)
-
-        if 'schoolyear' in filter.keys():
-            ret = ret.filter(SchoolClass.schoolyear == filter['schoolyear'])
+        ret = self._list(SchoolClassName)
         return ret.all()
 
     def get_exams(self, filter={}):
@@ -116,10 +114,13 @@ class DBHandler(object):
         return ret.all()
 
     def get_exam_types(self):
-        return self._list(ExamType)
+        ret = self._list(ExamType)
+        return ret.all()
 
     def get_subject(self):
-        return self._list(Subject)
+        ret = self._list(Subject)
+        return ret.all()
 
     def get_parameter(self, filter_key):
-        return self._list(Parameter, {'key': filter_key})
+        ret = self._list(Parameter, {'key': filter_key})
+        return ret.all()
