@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QTableWidget, QWidget, QTableWidgetItem, QMessageBox
 
 class ViewDefine(object):
     # Fixme: if tab added, and before Tabview was empty, first one has no buttons
+
     lng = {}
     column_title = ()
     row_title = ()
@@ -87,7 +88,7 @@ class ViewDefine(object):
 
     def action_add(self):
         # fill Data into Cells
-        data = self._action_add_content()
+        data = self._action_add_content(self.my_table)
         if not data:
             return
 
@@ -234,7 +235,7 @@ class ViewTimeperiod(ViewDefine):
     def _define_column_title(self):
         return (self.lng['name'], self.lng['weight'])
 
-    def _action_add_content(self):
+    def _action_add_content(self, table):
         data = ()
 
         add_dialog = QInputDialog(parent=self.tab_window)
