@@ -234,7 +234,7 @@ class ViewTimeperiod(ViewDefine):
     def _define_column_title(self):
         return (self.lng['name'], self.lng['weight'])
 
-    def _action_add_content(self, table):
+    def _action_add_content(self):
         data = ()
 
         add_dialog = QInputDialog(parent=self.tab_window)
