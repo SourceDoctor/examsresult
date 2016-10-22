@@ -6,7 +6,8 @@ class ViewDefine(object):
     # Fixme: if tab added, and before Tabview was empty, first one has no buttons
 
     lng = {}
-    column_title = ()
+    # (column_name, column_type, column_default_value, column_editable)
+    column_title = []
     row_title = ()
 
     table_left = 0
@@ -21,11 +22,14 @@ class ViewDefine(object):
     sorting = True
     header_horizontal = True
     header_vertical = False
+    float_precision = 2
 
     def __init__(self, root_tab, lng):
         self.tab_window = root_tab
         self.lng = lng
-        self.column_title = ('id',) + self._define_column_title()
+        self.column_title = []
+        self.column_title.append(('id', 'int', '', False))
+        self.column_title.extend(self._define_column_title())
 
         mytab = QWidget()
         self.my_table = QTableWidget(mytab)
@@ -37,7 +41,11 @@ class ViewDefine(object):
 
         self.my_table.verticalHeader().setVisible(self.header_vertical)
         self.my_table.horizontalHeader().setVisible(self.header_horizontal)
-        self.my_table.setHorizontalHeaderLabels(self.column_title)
+
+        column_tuple = ()
+        for col in self.column_title:
+            column_tuple += (col[0],)
+        self.my_table.setHorizontalHeaderLabels(column_tuple)
 
         # hide Column 'id'
 #        table.setColumnHidden(0, True)
@@ -70,21 +78,58 @@ class ViewDefine(object):
         button_save.clicked.connect(lambda: self.action_save(self.tab_window))
 
     def _define_column_title(self):
-        return ()
+        return []
 
-    def _action_add_content(self, table):
-        # set Dummy Content
+    def _action_add_content(self, root_window, content=()):
         data = ()
-        column = 1
-        while column <= len(self.column_title) - 1:
-            cell_dummy_content = "%s_%s" % (self.column_title[column], str(self.my_table.rowCount()))
-            data += (cell_dummy_content,)
-            column += 1
+
+        add_dialog = QInputDialog(parent=root_window)
+        content_index = 0
+
+        for col in self.column_title:
+            try:
+                if col[3] == False:
+                    continue
+            except IndexError:
+                pass
+
+            try:
+                cell_content = content[content_index]
+            except IndexError:
+                if col[1] == 'int':
+                    cell_content = 0
+                elif col[1] == 'float':
+                    cell_content = 0
+                elif col[1] == 'string':
+                    cell_content = ""
+                elif col[1] == 'list':
+                    cell_content = []
+                else:
+                    cell_content = None
+
+            content_index += 1
+
+            if col[1] == 'int':
+                value, ok = add_dialog.getInt(root_window, self.lng['title'], col[0], value=int(cell_content))
+            elif col[1] == 'float':
+                value, ok = add_dialog.getDouble(root_window, self.lng['title'], col[0], decimals=self.float_precision, value=float(cell_content))
+            elif col[1] == 'string':
+                value, ok = add_dialog.getText(root_window, self.lng['title'], col[0], text=cell_content)
+            elif col[1] == 'list':
+                value, ok = add_dialog.getItem(root_window, self.lng['title'], col[0], Iterable=cell_content)
+            else:
+                print("unknown Type: %s" % col[1])
+                return ()
+
+            if not ok:
+                return ()
+
+            data += (value,)
+
         return data
 
-    def _action_edit_content(self, table, content):
-        data = ()
-        return data
+    def _action_edit_content(self, root_window, content):
+        return self._action_add_content(root_window, content)
 
     def action_add(self):
         # fill Data into Cells
@@ -105,6 +150,7 @@ class ViewDefine(object):
         row = cell.row()
         content = ()
 
+        # get Cell Content
         column = 1
         while column <= len(self.column_title) - 1:
             content += (self.my_table.item(row, column).text(),)
@@ -115,6 +161,7 @@ class ViewDefine(object):
             self.my_table.selectRow(row)
             return
 
+        # write new Cell Content
         column = 1
         while column <= len(self.column_title) - 1:
             new_value = new_content[column - 1]
@@ -135,20 +182,7 @@ class ViewSchoolYear(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return (self.lng['name'],)
-
-    def _action_add_content(self, table):
-        data = ()
-
-        add_dialog = QInputDialog(parent=self.tab_window)
-
-        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
-        if not ok:
-            return data
-
-        data += (name,)
-
-        return data
+        return [(self.lng['name'], 'string', '')]
 
 
 class ViewSchoolClass(ViewDefine):
@@ -159,20 +193,7 @@ class ViewSchoolClass(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return (self.lng['name'],)
-
-    def _action_add_content(self, table):
-        data = ()
-
-        add_dialog = QInputDialog(parent=self.tab_window)
-
-        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
-        if not ok:
-            return data
-
-        data += (name,)
-
-        return data
+        return [(self.lng['name'], 'string', '')]
 
 
 class ViewSubject(ViewDefine):
@@ -183,20 +204,7 @@ class ViewSubject(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return (self.lng['name'],)
-
-    def _action_add_content(self, table):
-        data = ()
-
-        add_dialog = QInputDialog(parent=self.tab_window)
-
-        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
-        if not ok:
-            return data
-
-        data += (name,)
-
-        return data
+        return [(self.lng['name'], 'string', '')]
 
 
 class ViewExamsType(ViewDefine):
@@ -207,22 +215,8 @@ class ViewExamsType(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return (self.lng['name'], self.lng['weight'])
-
-    def _action_add_content(self, table):
-        data = ()
-
-        add_dialog = QInputDialog(parent=self.tab_window)
-
-        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
-        if ok:
-            weight, ok = add_dialog.getDouble(self.tab_window, self.lng['title'], self.lng['weight'], decimals=2)
-        if not ok:
-            return data
-
-        data += (name, weight)
-
-        return data
+        return [(self.lng['name'], 'string', ''),
+                (self.lng['weight'], 'float', '')]
 
 
 class ViewTimeperiod(ViewDefine):
@@ -233,32 +227,5 @@ class ViewTimeperiod(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return (self.lng['name'], self.lng['weight'])
-
-    def _action_add_content(self, table):
-        data = ()
-
-        add_dialog = QInputDialog(parent=self.tab_window)
-
-        name, ok = add_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'])
-        if ok:
-            weight, ok = add_dialog.getDouble(self.tab_window, self.lng['title'], self.lng['weight'], decimals=2)
-        if not ok:
-            return data
-
-        data += (name, weight)
-
-        return data
-
-    def _action_edit_content(self, table, content):
-        data = ()
-
-        edit_dialog = QInputDialog(parent=self.tab_window)
-
-        name, ok = edit_dialog.getText(self.tab_window, self.lng['title'], self.lng['name'],text=content[0])
-        if ok:
-            weight, ok = edit_dialog.getDouble(self.tab_window, self.lng['title'], self.lng['weight'], decimals=2,value=float(content[1]))
-        if ok:
-            data += (name, weight)
-
-        return data
+        return [(self.lng['name'], 'string', ''),
+                (self.lng['weight'], 'float', '')]
