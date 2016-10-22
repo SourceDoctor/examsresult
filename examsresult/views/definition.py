@@ -73,9 +73,11 @@ class ViewDefine(object):
         button_add.move(self.table_left + self.table_width + 10, self.table_top)
         button_add.clicked.connect(self.action_add)
 
-        button_save = QPushButton(lng['save'], mytab)
-        button_save.move(self.table_left + self.table_width + 10, self.table_top + self.my_table.height())
-        button_save.clicked.connect(lambda: self.action_save(self.tab_window))
+        self.button_save = QPushButton(lng['save'], mytab)
+        self.button_save.move(self.table_left + self.table_width + 10, self.table_top + self.my_table.height())
+        self.button_save.clicked.connect(lambda: self.action_save(self.tab_window))
+
+        self.set_changed(False)
 
     def _define_column_title(self):
         return []
@@ -146,6 +148,8 @@ class ViewDefine(object):
             self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
             column += 1
 
+        self.set_changed(True)
+
     def action_edit(self, cell):
         row = cell.row()
         content = ()
@@ -169,9 +173,33 @@ class ViewDefine(object):
             column += 1
 
         self.my_table.selectRow(row)
+        self.set_changed(True)
 
     def action_save(self, root_window):
         QMessageBox.information(root_window, self.lng['title'], "Give me something to do!")
+        self.set_changed(False)
+
+    def set_changed(self, status):
+
+        self.button_save.setEnabled(status)
+
+        # (un)mark tab title
+        changed_mark = "! "
+        index = 0
+        while index <= self.tab_window.count():
+            title = self.tab_window.tabText(index)
+            if status:
+                search_title = "%s" % self.lng['title']
+                new_title = "%s%s" % (changed_mark, title)
+            else:
+                search_title = "%s%s" % (changed_mark, self.lng['title'])
+                new_title = title.replace(changed_mark, '')
+
+            if title == search_title:
+                break
+            index += 1
+
+        self.tab_window.setTabText(index, new_title)
 
 
 class ViewSchoolYear(ViewDefine):
