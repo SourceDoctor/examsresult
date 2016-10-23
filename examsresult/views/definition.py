@@ -70,15 +70,16 @@ class ViewDefine(object):
 
         self.my_table.doubleClicked.connect(self.action_edit)
 
-        button_add = QPushButton(lng['add'], mytab)
-        button_add.move(self.table_left + self.table_width + 10, self.table_top)
-        button_add.clicked.connect(self.action_add)
+        self.button_add = QPushButton(lng['add'], mytab)
+        self.button_add.move(self.table_left + self.table_width + 10, self.table_top)
+        self.button_add.clicked.connect(self.action_add)
 
         self.button_save = QPushButton(lng['save'], mytab)
         self.button_save.move(self.table_left + self.table_width + 10, self.table_top + self.my_table.height())
         self.button_save.clicked.connect(lambda: self.action_save(self.tab_window))
 
         self.set_changed(False)
+        self.button_add.setFocus()
 
     def _define_column_title(self):
         return []
@@ -141,19 +142,18 @@ class ViewDefine(object):
     def action_add(self):
         # fill Data into Cells
         data = self._action_add_content(self.my_table)
-        if not data:
-            return
+        if data:
+            self.my_table.insertRow(self.my_table.rowCount())
+            # add empty cell to id Column to have a reference to database
+            self.my_table.setItem(self.my_table.rowCount() - 1, 0, QTableWidgetItem(''))
 
-        self.my_table.insertRow(self.my_table.rowCount())
-        # add empty cell to id Column to have a reference to database
-        self.my_table.setItem(self.my_table.rowCount() - 1, 0, QTableWidgetItem(''))
+            column = 1
+            while column <= len(self.column_title) - 1:
+                self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
+                column += 1
+            self.set_changed(True)
 
-        column = 1
-        while column <= len(self.column_title) - 1:
-            self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
-            column += 1
-
-        self.set_changed(True)
+        self.button_add.setFocus()
 
     def action_edit(self, cell):
         row = cell.row()
