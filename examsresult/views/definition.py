@@ -160,7 +160,7 @@ class ViewDefine(CoreView):
                 self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column])))
                 column += 1
 
-    def unique_check(self, proof_data):
+    def unique_check(self, proof_data, edited_id=0):
         # search each Column which has to be unique if possible new_data is in it
         column = -1
         for col in self.column_title:
@@ -172,7 +172,10 @@ class ViewDefine(CoreView):
                 continue
             row = 0
             while row <= self.my_table.rowCount() - 1:
-                if proof_data[column - 1] == self.my_table.item(row, column).text():
+                if edited_id and (edited_id == int(self.my_table.item(row, 0).text())):
+                    # don't check against myself (happens on editing Content)
+                    pass
+                elif proof_data[column - 1] == self.my_table.item(row, column).text():
                     return False
                 row += 1
         return True
@@ -211,7 +214,7 @@ class ViewDefine(CoreView):
             self.my_table.selectRow(row)
             return
 
-        if not self.unique_check(new_content):
+        if not self.unique_check(new_content, edited_id=row+1):
             QMessageBox.warning(self.tab_window, self.lng['title'], self.lng['msg_double_error'])
             return
 
