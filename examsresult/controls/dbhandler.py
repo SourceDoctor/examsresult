@@ -118,17 +118,22 @@ class DBHandler(object):
             print(str(d))
             if d[0] != '':
                 id = int(d[0])
+                print("searching id %d" % id)
                 s = self.session.query(Subject).filter(id == id).first()
             else:
                 s = None
             if not s:
+                print("New Entry")
+                print("set name to %s" % d[1])
                 s = Subject(name=d[1])
-
+                self.session.add(s)
             else:
+                print("update")
+                print("update name to %s" % d[1])
                 s.name = d[1]
-            self.session.add(s)
 
-        self.session.commit()
+
+            self.session.commit()
         return 0
 
     def get_examtype(self):

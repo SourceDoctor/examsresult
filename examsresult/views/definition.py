@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import QTableWidget, QWidget, QTableWidgetItem, QMessageBox, \
     QPushButton, QInputDialog, QAbstractItemView
+from .core import CoreView
 
 
-class ViewDefine(object):
+class ViewDefine(CoreView):
     # Fixme: if tab added, and before Tabview was empty, first one has no buttons
 
     lng = {}
@@ -222,16 +223,15 @@ class ViewDefine(object):
         self.button_save.setEnabled(status)
 
         # (un)mark tab title
-        changed_mark = "! "
         index = 0
         while index <= self.tab_window.count():
             title = self.tab_window.tabText(index)
             if status:
                 search_title = "%s" % self.lng['title']
-                new_title = "%s%s" % (changed_mark, title)
+                new_title = "%s%s" % (self.changed_mark, title)
             else:
-                search_title = "%s%s" % (changed_mark, self.lng['title'])
-                new_title = title.replace(changed_mark, '')
+                search_title = "%s%s" % (self.changed_mark, self.lng['title'])
+                new_title = title.replace(self.changed_mark, '')
 
             if title == search_title:
                 break

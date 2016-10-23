@@ -4,9 +4,10 @@ from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, \
 from examsresult.controls.dbhandler import DatabaseConnector, DBHandler
 from examsresult.tools import lng_load, center_pos, app_icon
 from .definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
+from .core import CoreView
 
 
-class BaseView(QMainWindow):
+class BaseView(QMainWindow, CoreView):
 
     database_file = None
     db_loaded = False
@@ -138,6 +139,11 @@ class BaseView(QMainWindow):
 
     def close_tab_handler(self, index):
         title = self.tab_window.tabText(index)
+        if title.startswith(self.changed_mark):
+            answer = QMessageBox.question(self, self.lng['main']['title'], self.lng['main']['close_unsaved'])
+            if answer == QMessageBox.No:
+                return
+            title = title.replace(self.changed_mark, '')
         self.open_tabs.remove(title)
         self.tab_window.removeTab(index)
 
