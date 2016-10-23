@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, \
     QDialog, QPushButton, QLabel, QTabWidget
-from examsresult.controls.dbhandler import DatabaseConnector
+from examsresult.controls.dbhandler import DatabaseConnector, DBHandler
 from examsresult.tools import lng_load, center_pos, app_icon
 from .definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
 
@@ -10,7 +10,7 @@ class BaseView(QMainWindow):
 
     database_file = None
     db_loaded = False
-    dbc = None
+    dbh = None
     open_tabs = []
 
     def __init__(self, qapp, language='english'):
@@ -26,14 +26,14 @@ class BaseView(QMainWindow):
 
     def connect_db(self):
         if self.database_file:
-            self.dbc = DatabaseConnector(self.database_file)
+            self.dbh = DBHandler(self.database_file)
 
-        if not self.dbc:
+        if not self.dbh:
             self.db_loaded = False
             QMessageBox.warning(self, "", self.lng['window_openfile']['msg_open_err'] % self.database_file)
         else:
             self.db_loaded = True
-            old_db_version, db_version = self.dbc.db_updater()
+            old_db_version, db_version = self.dbh.dbc.db_updater()
             if old_db_version and old_db_version < db_version:
                 QMessageBox.information(self, "", self.lng['window_openfile']['msg_db_updated'])
             elif old_db_version > db_version:
@@ -93,19 +93,19 @@ class BaseView(QMainWindow):
         self._filedialog_handler('open')
 
     def window_schoolyear(self, lng):
-        ViewSchoolYear(self.tab_window, lng)
+        ViewSchoolYear(self.dbh, self.tab_window, lng)
 
     def window_schoolclass(self, lng):
-        ViewSchoolClass(self.tab_window, lng)
+        ViewSchoolClass(self.dbh, self.tab_window, lng)
 
     def window_subject(self, lng):
-        ViewSubject(self.tab_window, lng)
+        ViewSubject(self.dbh, self.tab_window, lng)
 
     def window_examstype(self, lng):
-        ViewExamsType(self.tab_window, lng)
+        ViewExamsType(self.dbh, self.tab_window, lng)
 
     def window_timeperiod(self, lng):
-        ViewTimeperiod(self.tab_window, lng)
+        ViewTimeperiod(self.dbh, self.tab_window, lng)
 
     def window_about(self, parent, width=400, height=100):
         lng = self.lng['window_about']

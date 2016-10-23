@@ -50,8 +50,8 @@ class DatabaseConnector(object):
 class DBHandler(object):
 
     def __init__(self, database_filename):
-        dbc = DatabaseConnector(database_filename)
-        self.session = dbc.session
+        self.dbc = DatabaseConnector(database_filename)
+        self.session = self.dbc.session
 
     def _delete(self, model, id):
         db_data = self.session.query(model).filter(model.id==id)

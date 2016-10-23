@@ -24,7 +24,8 @@ class ViewDefine(object):
     header_vertical = False
     float_precision = 2
 
-    def __init__(self, root_tab, lng):
+    def __init__(self, dbhandler, root_tab, lng):
+        self.dbh = dbhandler
         self.tab_window = root_tab
         self.lng = lng
         self.column_title = []
