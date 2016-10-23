@@ -7,7 +7,7 @@ class ViewDefine(CoreView):
     # Fixme: if tab added, and before Tabview was empty, first one has no buttons
 
     lng = {}
-    # (column_name, column_type, column_default_value, column_editable)
+    # (column_name, column_type, column_unique, column_editable)
     column_title = []
     row_title = ()
 
@@ -30,7 +30,7 @@ class ViewDefine(CoreView):
         self.tab_window = root_tab
         self.lng = lng
         self.column_title = []
-        self.column_title.append(('id', 'int', '', False))
+        self.column_title.append(('id', 'int', True, False))
         self.column_title.extend(self._define_column_title())
 
         mytab = QWidget()
@@ -160,19 +160,39 @@ class ViewDefine(CoreView):
                 self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column])))
                 column += 1
 
+    def unique_check(self, proof_data):
+        # search each Column which has to be unique if possible new_data is in it
+        column = -1
+        for col in self.column_title:
+            column += 1
+            if column == 0:
+                # id Column will be ignored
+                continue
+            if not col[2]:
+                continue
+            row = 0
+            while row <= self.my_table.rowCount() - 1:
+                if proof_data[column - 1] == self.my_table.item(row, column).text():
+                    return False
+                row += 1
+        return True
+
     def action_add(self):
         # fill Data into Cells
         data = self._action_add_content(self.my_table)
         if data:
-            self.my_table.insertRow(self.my_table.rowCount())
-            # add empty cell to id Column to have a reference to database
-            self.my_table.setItem(self.my_table.rowCount() - 1, 0, QTableWidgetItem(''))
+            if not self.unique_check(data):
+                QMessageBox.warning(self.tab_window, self.lng['title'], self.lng['msg_double_error'])
+            else:
+                self.my_table.insertRow(self.my_table.rowCount())
+                # add empty cell to id Column to have a reference to database
+                self.my_table.setItem(self.my_table.rowCount() - 1, 0, QTableWidgetItem(''))
 
-            column = 1
-            while column <= len(self.column_title) - 1:
-                self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
-                column += 1
-            self.set_changed(True)
+                column = 1
+                while column <= len(self.column_title) - 1:
+                    self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
+                    column += 1
+                self.set_changed(True)
 
         self.button_add.setFocus()
 
@@ -189,6 +209,10 @@ class ViewDefine(CoreView):
         new_content = self._action_edit_content(self.my_table, content)
         if not new_content:
             self.my_table.selectRow(row)
+            return
+
+        if not self.unique_check(new_content):
+            QMessageBox.warning(self.tab_window, self.lng['title'], self.lng['msg_double_error'])
             return
 
         # write new Cell Content
@@ -248,7 +272,7 @@ class ViewSchoolYear(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return [(self.lng['name'], 'string', '')]
+        return [(self.lng['name'], 'string', True)]
 
     def _action_save_content(self, data):
         ret = self.dbh.set_schoolyear(data=data)
@@ -266,7 +290,7 @@ class ViewSchoolClass(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return [(self.lng['name'], 'string', '')]
+        return [(self.lng['name'], 'string', True)]
 
     def _action_save_content(self, data):
         ret = self.dbh.set_schoolclassname(data=data)
@@ -284,7 +308,7 @@ class ViewSubject(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return [(self.lng['name'], 'string', '')]
+        return [(self.lng['name'], 'string', True)]
 
     def _action_save_content(self, data):
         ret = self.dbh.set_subject(data=data)
@@ -302,8 +326,8 @@ class ViewExamsType(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return [(self.lng['name'], 'string', ''),
-                (self.lng['weight'], 'float', '')]
+        return [(self.lng['name'], 'string', True),
+                (self.lng['weight'], 'float', False)]
 
     def _action_save_content(self, data):
         ret = self.dbh.set_examtype(data=data)
@@ -321,8 +345,8 @@ class ViewTimeperiod(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return [(self.lng['name'], 'string', ''),
-                (self.lng['weight'], 'float', '')]
+        return [(self.lng['name'], 'string', True),
+                (self.lng['weight'], 'float', False)]
 
     def _action_save_content(self, data):
         ret = self.dbh.set_timeperiod(data=data)

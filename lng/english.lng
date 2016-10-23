@@ -38,6 +38,7 @@ add=Add
 save=Save Changes
 name=Description
 weight=Weight
+msg_double_error=Timeperiod with this Name exists
 
 [window_examstype]
 title = Examstype
@@ -45,24 +46,28 @@ add=Add
 save=Save Changes
 name=Exams Type
 weight=Weight
+msg_double_error=Exam Type with this Name exists
 
 [window_subject]
 title = Subject
 add=Add
 save=Save Changes
 name=Subject Name
+msg_double_error=Subject with this Name exists
 
 [window_schoolclass]
 title = Schoolclass
 add=Add
 save=Save Changes
 name=Schoolclass Name
+msg_double_error=Schoolclass with this Name exists
 
 [window_schoolyear]
 title = Schoolyear
 add=Add
 save=Save Changes
 name=Schoolyear Name
+msg_double_error=Schoolyear with this Name exists
 
 [window_about]
 title = About
