@@ -5,6 +5,7 @@ from examsresult.controls.dbhandler import DBHandler
 from examsresult.tools import lng_load, center_pos, app_icon
 from .definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
 from .core import CoreView
+from os.path import isfile
 
 
 class BaseView(QMainWindow, CoreView):
@@ -14,10 +15,12 @@ class BaseView(QMainWindow, CoreView):
     dbh = None
     open_tabs = []
 
-    def __init__(self, qapp, language='english'):
+    def __init__(self, qapp, config):
         super().__init__()
+        self.config = config
+        print(str(config))
         self.qapp = qapp
-        self.lng = lng_load(language=language)
+        self.lng = lng_load(language=config['language'])
         lng = self.lng['filetypes']
 
         filetype = []
@@ -60,20 +63,26 @@ class BaseView(QMainWindow, CoreView):
     def action_app_close(self):
         self.close()
 
-    def _filedialog_handler(self, dialog_type):
-        file_handler = QFileDialog()
-        if dialog_type == 'new':
-            lng = self.lng['window_newfile']
-            # TODO: add per default File Extension
-            file_tuple = file_handler.getSaveFileName(parent=self, caption=lng['title'], filter=self.filetypes)
-        elif dialog_type == 'open':
-            lng = self.lng['window_openfile']
-            file_tuple = file_handler.getOpenFileName(parent=self, caption=lng['title'], filter=self.filetypes)
-        else:
-            print("CRITICAL, unknown filedialog type to handle")
-            return
+    def filedialog_handler(self, dialog_type, database_file=None):
+        if database_file and not isfile(database_file):
+            message = "%s\n%s" % (self.lng['main']['msg_file_not_found'], database_file)
+            QMessageBox.warning(self, self.lng['main']['title'], message)
+            database_file = None
 
-        database_file = file_tuple[0]
+        if not database_file:
+            file_handler = QFileDialog()
+            if dialog_type == 'new':
+                lng = self.lng['window_newfile']
+                # TODO: add per default File Extension
+                file_tuple = file_handler.getSaveFileName(parent=self, caption=lng['title'], filter=self.filetypes)
+            elif dialog_type == 'open':
+                lng = self.lng['window_openfile']
+                file_tuple = file_handler.getOpenFileName(parent=self, caption=lng['title'], filter=self.filetypes)
+            else:
+                print("CRITICAL, unknown filedialog type to handle")
+                return
+
+            database_file = file_tuple[0]
 
         if not database_file:
             return
@@ -88,10 +97,10 @@ class BaseView(QMainWindow, CoreView):
         self.connect_db()
 
     def window_newfile(self):
-        self._filedialog_handler('new')
+        self.filedialog_handler('new')
 
     def window_openfile(self):
-        self._filedialog_handler('open')
+        self.filedialog_handler('open')
 
     def window_schoolyear(self, lng):
         ViewSchoolYear(self.dbh, self.tab_window, lng)
@@ -232,6 +241,10 @@ class BaseView(QMainWindow, CoreView):
 
         self.show()
 
+        # open File on startup
+        if self.config['open_file_on_startup']:
+            self.filedialog_handler('open', database_file=self.config['open_file_on_startup'])
+
         # no File to open found, ask for ...
-        if not self.database_file:
+        if self.config['openbox_on_startup'] and not self.database_file:
             self.window_openfile()

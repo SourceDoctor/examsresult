@@ -6,6 +6,7 @@ filetype_all=All Files
 title=Examsresult
 ok=ok
 msg_close_unsaved=Really close unsaved?
+msg_file_not_found=File to open not found
 
 [menu]
 mainmenufile=File
