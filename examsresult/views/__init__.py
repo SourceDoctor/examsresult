@@ -140,7 +140,7 @@ class BaseView(QMainWindow, CoreView):
     def close_tab_handler(self, index):
         title = self.tab_window.tabText(index)
         if title.startswith(self.changed_mark):
-            answer = QMessageBox.question(self, self.lng['main']['title'], self.lng['main']['close_unsaved'])
+            answer = QMessageBox.question(self, self.lng['main']['title'], self.lng['main']['msg_close_unsaved'])
             if answer == QMessageBox.No:
                 return
             title = title.replace(self.changed_mark, '')

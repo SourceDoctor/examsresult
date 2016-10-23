@@ -5,7 +5,7 @@ filetype_all=All Files
 [main]
 title=Examsresult
 ok=ok
-close_unsaved=Really close unsaved?
+msg_close_unsaved=Really close unsaved?
 
 [menu]
 mainmenufile=File
