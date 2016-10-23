@@ -147,6 +147,10 @@ class ViewDefine(object):
         return 0
 
     def load_data(self):
+        # clear table
+        while self.my_table.rowCount():
+            self.my_table.removeRow(0)
+        # load data from Database
         data_list = self._action_load_content()
         for data in data_list:
             self.my_table.insertRow(self.my_table.rowCount())
@@ -210,6 +214,7 @@ class ViewDefine(object):
             row += 1
 
         self._action_save_content(data=data)
+        self.load_data()
         self.set_changed(False)
 
     def set_changed(self, status):
