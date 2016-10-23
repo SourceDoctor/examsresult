@@ -23,7 +23,7 @@ examstype=Examstype
 timeperiod=Timeperiod
 
 mainmenuhelp=Help
-about=about
+about=About
 
 [window_newfile]
 title=New File
@@ -74,3 +74,6 @@ msg_double_error=Schoolyear with this Name exists
 [window_about]
 title = About
 infotext=the Teacher Exams Management Database
+
+[window_settings]
+title = Settings

@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTab
 from examsresult.controls.dbhandler import DBHandler
 from examsresult.tools import lng_load, center_pos, app_icon
 from examsresult.views.about import ViewAbout
+from examsresult.views.settings import ViewSettings
 from .definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
 from .core import CoreView
 from os.path import isfile
@@ -101,8 +102,8 @@ class BaseView(QMainWindow, CoreView):
     def window_openfile(self):
         self.filedialog_handler('open')
 
-    def window_settings(self, lng):
-        QMessageBox.information(self.tab_window, '', "Give me something to do")
+    def window_settings(self, parent):
+        ViewSettings(parent=parent, lng=self.lng)
 
     def window_schoolyear(self, lng):
         ViewSchoolYear(self.dbh, self.tab_window, lng)
@@ -119,8 +120,8 @@ class BaseView(QMainWindow, CoreView):
     def window_timeperiod(self, lng):
         ViewTimeperiod(self.dbh, self.tab_window, lng)
 
-    def window_about(self, parent, width=400, height=100):
-        ViewAbout(parent=parent, lng=self.lng, width=width, height=height)
+    def window_about(self, parent):
+        ViewAbout(parent=parent, lng=self.lng)
 
     def closeEvent(self, event):
         self.action_app_close()
@@ -160,7 +161,7 @@ class BaseView(QMainWindow, CoreView):
         self.open_action = QAction(menutext['openfile'], self)
         self.open_action.triggered.connect(self.window_openfile)
         self.settings_action = QAction(menutext['settings'], self)
-        self.settings_action.triggered.connect(self.window_settings)
+        self.settings_action.triggered.connect(lambda: self.window_settings(self))
         self.exit_action = QAction(menutext['quit'], self)
         self.exit_action.triggered.connect(self.action_app_close)
         # configure menu actions
