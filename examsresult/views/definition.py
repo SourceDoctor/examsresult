@@ -133,6 +133,10 @@ class ViewDefine(object):
     def _action_edit_content(self, root_window, content):
         return self._action_add_content(root_window, content)
 
+    def _action_save_content(self, data):
+        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to save!")
+        return 0
+
     def action_add(self):
         # fill Data into Cells
         data = self._action_add_content(self.my_table)
@@ -140,8 +144,8 @@ class ViewDefine(object):
             return
 
         self.my_table.insertRow(self.my_table.rowCount())
-        # add id Column also to have a reference to database id
-        self.my_table.setItem(self.my_table.rowCount() - 1, 0, QTableWidgetItem(str(self.my_table.rowCount())))
+        # add empty cell to id Column to have a reference to database
+        self.my_table.setItem(self.my_table.rowCount() - 1, 0, QTableWidgetItem(''))
 
         column = 1
         while column <= len(self.column_title) - 1:
@@ -176,7 +180,19 @@ class ViewDefine(object):
         self.set_changed(True)
 
     def action_save(self, root_window):
-        QMessageBox.information(root_window, self.lng['title'], "Give me something to do!")
+        data = []
+        row = 0
+        while row <= self.my_table.rowCount() - 1:
+            row_content = ()
+            column = 0
+            while column <= self.my_table.columnCount() - 1:
+                cell = self.my_table.item(row, column).text()
+                row_content += (cell,)
+                column += 1
+            data.append(row_content)
+            row += 1
+
+        self._action_save_content(data=data)
         self.set_changed(False)
 
     def set_changed(self, status):

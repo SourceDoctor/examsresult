@@ -84,9 +84,22 @@ class DBHandler(object):
         ret = self._list(Schoolyear)
         return ret.all()
 
-    def get_schoolclasses(self, filter={}):
+    def get_schoolclassname(self, filter={}):
         ret = self._list(SchoolClassName)
         return ret.all()
+
+    def set_schoolclassname(self, data):
+        for d in data:
+            s = self.session.query(SchoolClassName).filter(id==d[0]).first()
+            if not s:
+                s = SchoolClassName(name=d[1])
+            else:
+                s.name = d[1]
+            self.session.add(s)
+
+        self.session.commit()
+
+        return 0
 
     def get_exams(self, filter={}):
         ret = self._list(Exam)
