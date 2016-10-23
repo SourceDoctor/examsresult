@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, \
     QDialog, QPushButton, QLabel, QTabWidget
-from examsresult.controls.dbhandler import DatabaseConnector, DBHandler
+from examsresult.controls.dbhandler import DBHandler
 from examsresult.tools import lng_load, center_pos, app_icon
 from .definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
 from .core import CoreView
