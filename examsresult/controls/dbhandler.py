@@ -54,15 +54,25 @@ class DBHandler(object):
         self.session = self.dbc.session
 
     def _list(self, model, filter={}):
-        return self.session.query(model).filter_by(filter)
+        if filter:
+            return self.session.query(model).filter_by(filter)
+        else:
+            return self.session.query(model)
 
     def get_schoolyear(self):
         ret = self._list(Schoolyear)
-        return ret.all()
+        data = []
+        for d in ret.all():
+            data.append((d.id, d.name))
+        return data
 
     def set_schoolyear(self, data):
         for d in data:
-            s = self.session.query(Schoolyear).filter(id == d[0]).first()
+            if d[0] != '':
+                id = int(d[0])
+                s = self.session.query(Schoolyear).filter(id == id).first()
+            else:
+                s = None
             if not s:
                 s = Schoolyear(name=d[1])
             else:
@@ -74,11 +84,18 @@ class DBHandler(object):
 
     def get_schoolclassname(self, filter={}):
         ret = self._list(SchoolClassName)
-        return ret.all()
+        data = []
+        for d in ret.all():
+            data.append((d.id, d.name))
+        return data
 
     def set_schoolclassname(self, data):
         for d in data:
-            s = self.session.query(SchoolClassName).filter(id==d[0]).first()
+            if d[0] != '':
+                id = int(d[0])
+                s = self.session.query(SchoolClassName).filter(id == id).first()
+            else:
+                s = None
             if not s:
                 s = SchoolClassName(name=d[1])
             else:
@@ -90,13 +107,23 @@ class DBHandler(object):
 
     def get_subject(self):
         ret = self._list(Subject)
-        return ret.all()
+        data = []
+        for d in ret.all():
+            data.append((d.id, d.name))
+        return data
+
 
     def set_subject(self, data):
         for d in data:
-            s = self.session.query(Subject).filter(id == d[0]).first()
+            print(str(d))
+            if d[0] != '':
+                id = int(d[0])
+                s = self.session.query(Subject).filter(id == id).first()
+            else:
+                s = None
             if not s:
                 s = Subject(name=d[1])
+
             else:
                 s.name = d[1]
             self.session.add(s)
@@ -106,11 +133,18 @@ class DBHandler(object):
 
     def get_examtype(self):
         ret = self._list(ExamType)
-        return ret.all()
+        data = []
+        for d in ret.all():
+            data.append((d.id, d.name, d.weight))
+        return data
 
     def set_examtype(self, data):
         for d in data:
-            s = self.session.query(ExamType).filter(id == d[0]).first()
+            if d[0] != '':
+                id = int(d[0])
+                s = self.session.query(ExamType).filter(id == id).first()
+            else:
+                s = None
             if not s:
                 s = ExamType(name=d[1], weight=d[2])
             else:
@@ -122,15 +156,24 @@ class DBHandler(object):
 
     def get_timeperiod(self):
         ret = self._list(TimePeriod)
-        return ret.all()
+        data = []
+        for d in ret.all():
+            data.append((d.id, d.name, d.weight))
+        return data
 
     def set_timeperiod(self, data):
         for d in data:
-            s = self.session.query(TimePeriod).filter(id == d[0]).first()
+            if d[0] != '':
+                id = int(d[0])
+                s = self.session.query(TimePeriod).filter(id == id).first()
+            else:
+                s = None
             if not s:
                 s = TimePeriod(name=d[1], weight=d[2])
             else:
                 s.name = d[1]
+                s.weight = d[2]
+
             self.session.add(s)
 
         self.session.commit()

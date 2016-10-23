@@ -78,6 +78,9 @@ class ViewDefine(object):
         self.button_save.move(self.table_left + self.table_width + 10, self.table_top + self.my_table.height())
         self.button_save.clicked.connect(lambda: self.action_save(self.tab_window))
 
+        # load Content from Database
+        self.load_data()
+
         self.set_changed(False)
         self.button_add.setFocus()
 
@@ -135,9 +138,22 @@ class ViewDefine(object):
     def _action_edit_content(self, root_window, content):
         return self._action_add_content(root_window, content)
 
+    def _action_load_content(self):
+        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to load!")
+        return []
+
     def _action_save_content(self, data):
         QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to save!")
         return 0
+
+    def load_data(self):
+        data_list = self._action_load_content()
+        for data in data_list:
+            self.my_table.insertRow(self.my_table.rowCount())
+            column = 0
+            while column <= len(self.column_title) - 1:
+                self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column])))
+                column += 1
 
     def action_add(self):
         # fill Data into Cells
@@ -233,6 +249,10 @@ class ViewSchoolYear(ViewDefine):
         ret = self.dbh.set_schoolyear(data=data)
         return ret
 
+    def _action_load_content(self):
+        return self.dbh.get_schoolyear()
+
+
 class ViewSchoolClass(ViewDefine):
 
     table_left = 100
@@ -247,6 +267,10 @@ class ViewSchoolClass(ViewDefine):
         ret = self.dbh.set_schoolclassname(data=data)
         return ret
 
+    def _action_load_content(self):
+        return self.dbh.get_schoolclassname()
+
+
 class ViewSubject(ViewDefine):
 
     table_left = 100
@@ -260,6 +284,10 @@ class ViewSubject(ViewDefine):
     def _action_save_content(self, data):
         ret = self.dbh.set_subject(data=data)
         return ret
+
+    def _action_load_content(self):
+        return self.dbh.get_subject()
+
 
 class ViewExamsType(ViewDefine):
 
@@ -276,6 +304,9 @@ class ViewExamsType(ViewDefine):
         ret = self.dbh.set_examtype(data=data)
         return ret
 
+    def _action_load_content(self):
+        return self.dbh.get_examtype()
+
 
 class ViewTimeperiod(ViewDefine):
 
@@ -291,3 +322,6 @@ class ViewTimeperiod(ViewDefine):
     def _action_save_content(self, data):
         ret = self.dbh.set_timeperiod(data=data)
         return ret
+
+    def _action_load_content(self):
+        return self.dbh.get_timeperiod()

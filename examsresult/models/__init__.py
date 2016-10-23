@@ -8,7 +8,7 @@ db_version = 1
 
 
 class Base(object):
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
 Base = declarative_base(cls=Base)
 
