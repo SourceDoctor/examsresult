@@ -7,7 +7,7 @@ class ViewDefine(CoreView):
     # Fixme: if tab added, and before Tabview was empty, first one has no buttons
 
     lng = {}
-    # (column_name, column_type, column_unique, column_editable)
+    # {name, type, unique, editable}
     column_title = []
     row_title = ()
 
@@ -30,7 +30,7 @@ class ViewDefine(CoreView):
         self.tab_window = root_tab
         self.lng = lng
         self.column_title = []
-        self.column_title.append(('id', 'int', True, False))
+        self.column_title.append({'name':'id', 'type':'int', 'unique':True, 'editable':False})
         self.column_title.extend(self._define_column_title())
 
         mytab = QWidget()
@@ -46,7 +46,7 @@ class ViewDefine(CoreView):
 
         column_tuple = ()
         for col in self.column_title:
-            column_tuple += (col[0],)
+            column_tuple += (col['name'],)
         self.my_table.setHorizontalHeaderLabels(column_tuple)
 
         # hide Column 'id'
@@ -96,35 +96,35 @@ class ViewDefine(CoreView):
 
         for col in self.column_title:
             try:
-                if col[3] == False:
+                if col['editable'] == False:
                     continue
-            except IndexError:
+            except KeyError:
                 pass
 
             try:
                 cell_content = content[content_index]
             except IndexError:
-                if col[1] == 'int':
+                if col['type'] == 'int':
                     cell_content = 0
-                elif col[1] == 'float':
+                elif col['type'] == 'float':
                     cell_content = 0
-                elif col[1] == 'string':
+                elif col['type'] == 'string':
                     cell_content = ""
-                elif col[1] == 'list':
+                elif col['type'] == 'list':
                     cell_content = []
                 else:
                     cell_content = None
 
             content_index += 1
 
-            if col[1] == 'int':
-                value, ok = add_dialog.getInt(root_window, self.lng['title'], col[0], value=int(cell_content))
-            elif col[1] == 'float':
-                value, ok = add_dialog.getDouble(root_window, self.lng['title'], col[0], decimals=self.float_precision, value=float(cell_content))
-            elif col[1] == 'string':
-                value, ok = add_dialog.getText(root_window, self.lng['title'], col[0], text=cell_content)
-            elif col[1] == 'list':
-                value, ok = add_dialog.getItem(root_window, self.lng['title'], col[0], Iterable=cell_content)
+            if col['type'] == 'int':
+                value, ok = add_dialog.getInt(root_window, self.lng['title'], col['name'], value=int(cell_content))
+            elif col['type'] == 'float':
+                value, ok = add_dialog.getDouble(root_window, self.lng['title'], col['name'], decimals=self.float_precision, value=float(cell_content))
+            elif col['type'] == 'string':
+                value, ok = add_dialog.getText(root_window, self.lng['title'], col['name'], text=cell_content)
+            elif col['type'] == 'list':
+                value, ok = add_dialog.getItem(root_window, self.lng['title'], col['name'], Iterable=cell_content)
             else:
                 print("unknown Type: %s" % col[1])
                 return ()
@@ -168,7 +168,7 @@ class ViewDefine(CoreView):
             if column == 0:
                 # id Column will be ignored
                 continue
-            if not col[2]:
+            if not col['unique']:
                 continue
             row = 0
             while row <= self.my_table.rowCount() - 1:
@@ -272,7 +272,7 @@ class ViewSchoolYear(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return [(self.lng['name'], 'string', True)]
+        return [{'name': self.lng['name'], 'type': 'string', 'unique': True}]
 
     def _action_save_content(self, data):
         ret = self.dbh.set_schoolyear(data=data)
@@ -290,7 +290,7 @@ class ViewSchoolClass(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return [(self.lng['name'], 'string', True)]
+        return [{'name': self.lng['name'], 'type': 'string', 'unique': True}]
 
     def _action_save_content(self, data):
         ret = self.dbh.set_schoolclassname(data=data)
@@ -308,7 +308,7 @@ class ViewSubject(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return [(self.lng['name'], 'string', True)]
+        return [{'name': self.lng['name'], 'type': 'string', 'unique': True}]
 
     def _action_save_content(self, data):
         ret = self.dbh.set_subject(data=data)
@@ -326,8 +326,9 @@ class ViewExamsType(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return [(self.lng['name'], 'string', True),
-                (self.lng['weight'], 'float', False)]
+        return [{'name': self.lng['name'], 'type': 'string', 'unique': True},
+                {'name': self.lng['weight'], 'type': 'float', 'unique': False}
+                ]
 
     def _action_save_content(self, data):
         ret = self.dbh.set_examtype(data=data)
@@ -345,8 +346,9 @@ class ViewTimeperiod(ViewDefine):
     table_width = 200
 
     def _define_column_title(self):
-        return [(self.lng['name'], 'string', True),
-                (self.lng['weight'], 'float', False)]
+        return [{'name': self.lng['name'], 'type': 'string', 'unique': True},
+                {'name': self.lng['weight'], 'type': 'float', 'unique': False}
+                ]
 
     def _action_save_content(self, data):
         ret = self.dbh.set_timeperiod(data=data)
