@@ -6,14 +6,16 @@ of students and complete School Classes with several Subjects
 Overview every time complete Result of Students or complete School Classes
 
 ## Features
-
-## Todos
 * set School Years
 * set School Class Names
+* define Subjects
 * define Exam Types and weight them
 * define Time Periods and weight them
-* handle several Subjects in every School Class
 
+## Todos
+* settings with open File on startup, default Language, File to open on startup
+
+* handle several Subjects in every School Class
 * define School Class for School Year and assign Students
 
 * calculate each Timeperiod seperate and show result, 
