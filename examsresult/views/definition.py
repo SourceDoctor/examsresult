@@ -229,6 +229,9 @@ class ViewSchoolYear(ViewDefine):
     def _define_column_title(self):
         return [(self.lng['name'], 'string', '')]
 
+    def _action_save_content(self, data):
+        ret = self.dbh.set_schoolyear(data=data)
+        return ret
 
 class ViewSchoolClass(ViewDefine):
 
@@ -240,6 +243,9 @@ class ViewSchoolClass(ViewDefine):
     def _define_column_title(self):
         return [(self.lng['name'], 'string', '')]
 
+    def _action_save_content(self, data):
+        ret = self.dbh.set_schoolclassname(data=data)
+        return ret
 
 class ViewSubject(ViewDefine):
 
@@ -251,6 +257,9 @@ class ViewSubject(ViewDefine):
     def _define_column_title(self):
         return [(self.lng['name'], 'string', '')]
 
+    def _action_save_content(self, data):
+        ret = self.dbh.set_subject(data=data)
+        return ret
 
 class ViewExamsType(ViewDefine):
 
@@ -263,6 +272,10 @@ class ViewExamsType(ViewDefine):
         return [(self.lng['name'], 'string', ''),
                 (self.lng['weight'], 'float', '')]
 
+    def _action_save_content(self, data):
+        ret = self.dbh.set_examtype(data=data)
+        return ret
+
 
 class ViewTimeperiod(ViewDefine):
 
@@ -274,3 +287,7 @@ class ViewTimeperiod(ViewDefine):
     def _define_column_title(self):
         return [(self.lng['name'], 'string', ''),
                 (self.lng['weight'], 'float', '')]
+
+    def _action_save_content(self, data):
+        ret = self.dbh.set_timeperiod(data=data)
+        return ret
