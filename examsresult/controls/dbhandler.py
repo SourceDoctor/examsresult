@@ -69,8 +69,7 @@ class DBHandler(object):
     def set_schoolyear(self, data):
         for d in data:
             if d[0] != '':
-                id = int(d[0])
-                s = self.session.query(Schoolyear).filter(id == id).first()
+                s = self.session.query(Schoolyear).filter(Schoolyear.id==int(d[0])).first()
             else:
                 s = None
             if not s:
@@ -92,8 +91,7 @@ class DBHandler(object):
     def set_schoolclassname(self, data):
         for d in data:
             if d[0] != '':
-                id = int(d[0])
-                s = self.session.query(SchoolClassName).filter(id == id).first()
+                s = self.session.query(SchoolClassName).filter(SchoolClassName.id==int(d[0])).first()
             else:
                 s = None
             if not s:
@@ -112,28 +110,19 @@ class DBHandler(object):
             data.append((d.id, d.name))
         return data
 
-
     def set_subject(self, data):
         for d in data:
-            print(str(d))
             if d[0] != '':
-                id = int(d[0])
-                print("searching id %d" % id)
-                s = self.session.query(Subject).filter(id == id).first()
+                s = self.session.query(Subject).filter(Subject.id==int(d[0])).first()
             else:
                 s = None
             if not s:
-                print("New Entry")
-                print("set name to %s" % d[1])
                 s = Subject(name=d[1])
-                self.session.add(s)
             else:
-                print("update")
-                print("update name to %s" % d[1])
                 s.name = d[1]
+            self.session.add(s)
 
-
-            self.session.commit()
+        self.session.commit()
         return 0
 
     def get_examtype(self):
@@ -146,8 +135,7 @@ class DBHandler(object):
     def set_examtype(self, data):
         for d in data:
             if d[0] != '':
-                id = int(d[0])
-                s = self.session.query(ExamType).filter(id == id).first()
+                s = self.session.query(ExamType).filter(ExamType.id==int(d[0])).first()
             else:
                 s = None
             if not s:
@@ -169,8 +157,7 @@ class DBHandler(object):
     def set_timeperiod(self, data):
         for d in data:
             if d[0] != '':
-                id = int(d[0])
-                s = self.session.query(TimePeriod).filter(id == id).first()
+                s = self.session.query(TimePeriod).filter(TimePeriod.id==int(d[0])).first()
             else:
                 s = None
             if not s:
