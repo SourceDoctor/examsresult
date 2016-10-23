@@ -10,8 +10,9 @@ msg_file_not_found=File to open not found
 
 [menu]
 mainmenufile=File
-newfile=new
-openfile=open
+newfile=New
+openfile=Open
+settings=Settings
 quit=Exit
 
 mainmenudefinition=Definition

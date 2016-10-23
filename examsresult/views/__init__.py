@@ -1,8 +1,8 @@
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, \
-    QDialog, QPushButton, QLabel, QTabWidget
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTabWidget
 from examsresult.controls.dbhandler import DBHandler
 from examsresult.tools import lng_load, center_pos, app_icon
+from examsresult.views.about import ViewAbout
 from .definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
 from .core import CoreView
 from os.path import isfile
@@ -18,7 +18,6 @@ class BaseView(QMainWindow, CoreView):
     def __init__(self, qapp, config):
         super().__init__()
         self.config = config
-        print(str(config))
         self.qapp = qapp
         self.lng = lng_load(language=config['language'])
         lng = self.lng['filetypes']
@@ -102,6 +101,9 @@ class BaseView(QMainWindow, CoreView):
     def window_openfile(self):
         self.filedialog_handler('open')
 
+    def window_settings(self, lng):
+        QMessageBox.information(self.tab_window, '', "Give me something to do")
+
     def window_schoolyear(self, lng):
         ViewSchoolYear(self.dbh, self.tab_window, lng)
 
@@ -118,30 +120,7 @@ class BaseView(QMainWindow, CoreView):
         ViewTimeperiod(self.dbh, self.tab_window, lng)
 
     def window_about(self, parent, width=400, height=100):
-        lng = self.lng['window_about']
-
-        window = QDialog(parent=parent)
-        window.setFixedHeight(height)
-        window.setFixedWidth(width)
-        window.setWindowTitle(lng['title'])
-
-        app_icon_label = QLabel(window)
-        pixmap = QPixmap(app_icon)
-        # Todo: Zoom Icon
-#         pixmap.scaledToWidth(30)
-#         pixmap.scaledToHeight(30)
-        app_icon_label.setPixmap(pixmap)
-        app_icon_label.move(10, 10)
-
-        title_label = QLabel(self.lng['main']['title'], window)
-        title_label.move(50, 10)
-        info_label = QLabel(lng['infotext'], window)
-        info_label.move(50, 30)
-        button = QPushButton(self.lng['main']['ok'], window)
-        button.move(300, 70)
-        button.clicked.connect(window.close)
-
-        window.exec_()
+        ViewAbout(parent=parent, lng=self.lng, width=width, height=height)
 
     def closeEvent(self, event):
         self.action_app_close()
@@ -180,6 +159,8 @@ class BaseView(QMainWindow, CoreView):
         self.new_action.triggered.connect(self.window_newfile)
         self.open_action = QAction(menutext['openfile'], self)
         self.open_action.triggered.connect(self.window_openfile)
+        self.settings_action = QAction(menutext['settings'], self)
+        self.settings_action.triggered.connect(self.window_settings)
         self.exit_action = QAction(menutext['quit'], self)
         self.exit_action.triggered.connect(self.action_app_close)
         # configure menu actions
@@ -201,6 +182,7 @@ class BaseView(QMainWindow, CoreView):
         filemenu = mainMenu.addMenu(menutext['mainmenufile'])
         filemenu.addAction(self.new_action)
         filemenu.addAction(self.open_action)
+        filemenu.addAction(self.settings_action)
         filemenu.addSeparator()
         filemenu.addAction(self.exit_action)
 
