@@ -1,10 +1,11 @@
 *.pyc
 env/*
-dist/*
-build/*
+build/
+dist/
 .idea/
 *.egg-info/
 .tox
 .coverage
 .*.swp
 *.exf
+examsresult.conf
