@@ -1,0 +1,87 @@
+[filetypes]
+filetype_exf=Examsresult Dateien
+filetype_all=Allee Dateien
+
+[main]
+language=deutsch
+title=Examsresult
+ok=ok
+msg_close_unsaved=Wirklich schließen ohne zu speichern?
+msg_file_not_found=Datei nicht gefunden
+
+[menu]
+mainmenufile=Datei
+newfile=Neu
+openfile=Öffnen
+settings=Einstellungen
+quit=Beenden
+
+mainmenudefinition=Definition
+subject=Schulfach
+schoolclass=Schulklasse
+schoolyear=Schuljahr
+examstype=Prüfungsart
+timeperiod=Zeitperiode
+
+mainmenuhelp=Hilfe
+about=Über
+
+[window_newfile]
+title=Neue Datei
+
+[window_openfile]
+title=Datei öffnen
+msg_open_err=Konnte diese Datei nicht öffnen %s
+msg_db_updated=Datei wurde auf neue Version aktualisiert
+msg_db_to_new=Konnte Datei nicht öffnen, da ihre Version zu neu ist. Bitte updaten Sie das Programm
+
+[window_timeperiod]
+title = Zeitperiode
+add=Hinzufügen
+save=speichern
+name=Beschreibung
+weight=Gewichtung
+msg_double_error=Zeitperiode mit dieser Beschreibung existiert schon
+
+[window_examstype]
+title = Prüfungsart
+add=Hinzufügen
+save=speichern
+name=Prfungsart
+weight=Gewichtung
+msg_double_error=Prüfungsart mit dieser Beschreibung existiert schon
+
+[window_subject]
+title = Schulfach
+add=Hinzufügen
+save=speichern
+name=Beschreibung
+msg_double_error=Schulfach mit dieser Beschreibung existiert schon
+
+[window_schoolclass]
+title = Schulklasse
+add=Hinzufügen
+save=speichern
+name=Beschreibung
+msg_double_error=Schulklasse mit dieser Beschreibung existiert schon
+
+[window_schoolyear]
+title = Schuljahr
+add=Hinzufügen
+save=speichern
+name=Beschreibung
+msg_double_error=Schuljahr mit dieser Beschreibung existiert schon
+
+[window_about]
+title = Über
+infotext=Die Prüfungs und Schulnotenverwaltungsdatenbank für Lehrer
+
+[window_settings]
+title = Einstellungen
+save = Speichern
+close = Schließen
+openbox_on_startup = Datei öffnen beim Start anzeigen
+listbox_language = Sprache
+open_file_on_startup_label = Datei beim Start öffnen
+open_file_on_startup_clear = entfernen
+open_file_on_startup_select = auswählen
