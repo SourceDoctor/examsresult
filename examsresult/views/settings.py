@@ -37,16 +37,13 @@ class ViewSettings(CoreView):
 
         # language ------------------------------------------
         self.listbox_language = QComboBox(self.window)
-
+        self.listbox_language.move(40, 60)
         tmp_list = []
         for l in self.language_list:
             tmp_list.append(l[0])
         tmp_list.sort()
-
         for t in tmp_list:
             self.listbox_language.addItem(t)
-            self.listbox_language.move(40, 60)
-
         for l in self.language_list:
             if l[1] == config['language']:
                 self.listbox_language.setCurrentIndex(self.listbox_language.findText(l[0]))
