@@ -2,10 +2,11 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTabWidget
 from examsresult.controls.dbhandler import DBHandler
 from examsresult.tools import lng_load, center_pos, app_icon
-from examsresult.views.about import ViewAbout
+from examsresult.views.core import CoreView
 from examsresult.views.settings import ViewSettings
-from .definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
-from .core import CoreView
+from examsresult.views.configuration import ViewSchoolClassConfigure
+from examsresult.views.definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
+from examsresult.views.about import ViewAbout
 from os.path import isfile
 
 
@@ -49,6 +50,7 @@ class BaseView(QMainWindow, CoreView):
 
     def toggle_menu(self, db_state):
         # Enable/Disable Menu Entries
+        self.schoolclass_configure_action.setEnabled(db_state)
         self.schoolyear_action.setEnabled(db_state)
         self.schoolclass_action.setEnabled(db_state)
         self.subject_action.setEnabled(db_state)
@@ -99,6 +101,9 @@ class BaseView(QMainWindow, CoreView):
 
     def window_settings(self, parent):
         ViewSettings(parent=parent, lng=self.lng)
+
+    def window_schoolclass_configure(self, lng):
+        ViewSchoolClassConfigure(self.dbh, self.tab_window, lng)
 
     def window_schoolyear(self, lng):
         ViewSchoolYear(self.dbh, self.tab_window, lng)
@@ -160,6 +165,9 @@ class BaseView(QMainWindow, CoreView):
         self.exit_action = QAction(menutext['quit'], self)
         self.exit_action.triggered.connect(self.action_app_close)
         # configure menu actions
+        self.schoolclass_configure_action = QAction(menutext['schoolclass_configure'], self)
+        self.schoolclass_configure_action.triggered.connect(lambda: self.add_tab_event(self.window_schoolclass_configure, self.lng['window_schoolclass_configure']))
+        # Definition menu actions
         self.schoolyear_action = QAction(menutext['schoolyear'], self)
         self.schoolyear_action.triggered.connect(lambda: self.add_tab_event(self.window_schoolyear, self.lng['window_schoolyear']))
         self.schoolclass_action = QAction(menutext['schoolclass'], self)
@@ -181,6 +189,9 @@ class BaseView(QMainWindow, CoreView):
         filemenu.addAction(self.settings_action)
         filemenu.addSeparator()
         filemenu.addAction(self.exit_action)
+
+        configurationmenu = mainMenu.addMenu(menutext['mainmenuconfigure'])
+        configurationmenu.addAction(self.schoolclass_configure_action)
 
         definitionmenu = mainMenu.addMenu(menutext['mainmenudefinition'])
         definitionmenu.addAction(self.schoolyear_action)
@@ -207,10 +218,11 @@ class BaseView(QMainWindow, CoreView):
 
         self.toggle_menu(self.db_loaded)
 
+        tab_left = 0
         tab_top = 25
 
         self.tab_window = QTabWidget(parent=self)
-        self.tab_window.move(0, tab_top)
+        self.tab_window.move(tab_left, tab_top)
         self.tab_window.setFixedHeight(height - tab_top)
         self.tab_window.setFixedWidth(width)
         self.tab_window.setMovable(True)

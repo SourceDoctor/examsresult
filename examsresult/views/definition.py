@@ -6,25 +6,6 @@ from .core import CoreView
 class ViewDefine(CoreView):
     # Fixme: if tab added, and before Tabview was empty, first one has no buttons
 
-    lng = {}
-    # {name, type, unique, editable}
-    column_title = []
-    row_title = ()
-
-    table_left = 0
-    table_top = 0
-    table_height = 200
-    table_width = 200
-
-    cell_editable = False
-    full_row_select = True
-    full_column_select = False
-
-    sorting = True
-    header_horizontal = True
-    header_vertical = False
-    float_precision = 2
-
     def __init__(self, dbhandler, root_tab, lng):
         self.dbh = dbhandler
         self.tab_window = root_tab

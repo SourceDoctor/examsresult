@@ -16,6 +16,9 @@ openfile=Öffnen
 settings=Einstellungen
 quit=Beenden
 
+mainmenuconfigure=Konfiguration
+schoolclass_configure=Schulklasse
+
 mainmenudefinition=Definition
 subject=Schulfach
 schoolclass=Schulklasse
@@ -85,3 +88,9 @@ listbox_language = Sprache
 open_file_on_startup_label = Datei beim Start öffnen
 open_file_on_startup_clear = entfernen
 open_file_on_startup_select = auswählen
+
+[window_schoolclass_configure]
+title = Schulklassen Konfiguration
+add=Hinzufügen
+save=Speichern
+name=Schulklasse Name
