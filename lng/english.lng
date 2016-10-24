@@ -81,7 +81,7 @@ infotext=the Teacher Exams Management Database
 
 [window_settings]
 title = Settings
-save = Save
+save = Save Changes
 close = Close
 openbox_on_startup = File Open Window on Startup
 listbox_language = Language
@@ -91,6 +91,11 @@ open_file_on_startup_select = Select
 
 [window_schoolclass_configure]
 title = Schoolclass Configuration
+schoolyear=Schoolyear
+schoolclass=Schoolclass
+students=Students
+save = Save Changes
 add=Add
-save=Save Changes
-name=Schoolclass Name
+remove=Remove
+firstname=First Name
+lastname=Last Name

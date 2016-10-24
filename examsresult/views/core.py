@@ -26,3 +26,6 @@ class CoreView(object):
         for desc in [(lng['filetype_exf'], '*.exf'), (lng['filetype_all'], '*')]:
             filetype.append("%s (%s)" % (desc[0], desc[1]))
         self.filetypes = ";;".join(filetype)
+
+    def _define_column_title(self):
+        return []

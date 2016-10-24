@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, ForeignKey, Unicode, Boolean
+from sqlalchemy import Column, Integer, Float, ForeignKey, Unicode, Boolean, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -55,8 +55,13 @@ class TimePeriod(Base):
 
 class SchoolClass(Base):
     __tablename__ = 'school_class'
+    year = Column(Unicode(256), ForeignKey('school_year.name'))
     name = Column(Unicode(256), ForeignKey('school_class_name.name'))
     comment = Column(Unicode(1024), nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint('year', 'name', name='school_class-unique-constraint'),
+    )
 
 
 class Exam(Base):
@@ -85,7 +90,12 @@ class ExamResult(Base):
 
 class Student(Base):
     __tablename__ = 'student'
-    name = Column(Unicode(256))
+    firstname = Column(Unicode(256))
+    lastname = Column(Unicode(256))
 
     school_class_id = Column(Integer, ForeignKey('school_class.id'))
     school_class = relationship("SchoolClass", backref="students")
+
+    __table_args__ = (
+        UniqueConstraint('firstname', 'lastname', 'school_class', name='student-unique-constraint'),
+    )

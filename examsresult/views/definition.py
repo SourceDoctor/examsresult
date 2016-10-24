@@ -66,9 +66,6 @@ class ViewDefine(CoreView):
         self.set_changed(False)
         self.button_add.setFocus()
 
-    def _define_column_title(self):
-        return []
-
     def _action_add_content(self, root_window, content=()):
         data = ()
 

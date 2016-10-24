@@ -91,6 +91,11 @@ open_file_on_startup_select = auswählen
 
 [window_schoolclass_configure]
 title = Schulklassen Konfiguration
+schoolyear=Schuljahr
+schoolclass=Schulklasse
+students=Schüler
+save = Speichern
 add=Hinzufügen
-save=Speichern
-name=Schulklasse Name
+remove=entfernen
+firstname=Vorname
+lastname=Nachname
