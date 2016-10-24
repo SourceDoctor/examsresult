@@ -97,5 +97,5 @@ class Student(Base):
     school_class = relationship("SchoolClass", backref="students")
 
     __table_args__ = (
-        UniqueConstraint('firstname', 'lastname', 'school_class', name='student-unique-constraint'),
+        UniqueConstraint('firstname', 'lastname', 'school_class_id', name='student-unique-constraint'),
     )
