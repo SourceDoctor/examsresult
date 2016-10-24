@@ -21,12 +21,7 @@ class BaseView(QMainWindow, CoreView):
         self.config = config
         self.qapp = qapp
         self.lng = lng_load(language=config['language'])
-        lng = self.lng['filetypes']
-
-        filetype = []
-        for desc in [(lng['filetype_exf'], '*.exf'), (lng['filetype_all'], '*')]:
-            filetype.append("%s (%s)" % (desc[0], desc[1]))
-        self.filetypes = ";;".join(filetype)
+        self.set_filetypes(self.lng['filetypes'])
 
     def connect_db(self):
         if self.database_file:

@@ -1,13 +1,14 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 
-from examsresult.configuration import init_config
+from examsresult.configuration import init_config, current_config
 from examsresult.views import BaseView
 
 
 def run():
 
-    config = init_config()
+    init_config()
+    config = current_config
 
     qapp = QApplication(sys.argv)
     gui = BaseView(qapp=qapp, config=config)

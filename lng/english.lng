@@ -3,6 +3,7 @@ filetype_exf=Examsresult Files
 filetype_all=All Files
 
 [main]
+language=english
 title=Examsresult
 ok=ok
 msg_close_unsaved=Really close unsaved?
@@ -77,3 +78,10 @@ infotext=the Teacher Exams Management Database
 
 [window_settings]
 title = Settings
+save = Save
+close = Close
+openbox_on_startup = File Open Window on Startup
+listbox_language = Language
+open_file_on_startup_label = File to Open on Startup
+open_file_on_startup_clear = Clear
+open_file_on_startup_select = Select
