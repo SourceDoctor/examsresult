@@ -1,6 +1,10 @@
 import json
 from os.path import isfile
 
+configfile = "examsresult.conf"
+
+current_config = {}
+
 
 def default_config():
     default_dict = {
@@ -9,10 +13,6 @@ def default_config():
         'open_file_on_startup': '',
         }
     return default_dict
-
-current_config = {}
-
-configfile = "examsresult.conf"
 
 
 def init_config():
@@ -24,15 +24,17 @@ def init_config():
 
     return config
 
-def save_config(config, configfile=configfile):
-    with open(configfile, 'w') as f:
+
+def save_config(config, conffile=configfile):
+    with open(conffile, 'w') as f:
         f.write(json.dumps(config))
 
-def load_config(configfile=configfile):
-    if not isfile(configfile):
+
+def load_config(conffile=configfile):
+    if not isfile(conffile):
         return {}
 
-    with open(configfile, 'r') as f:
+    with open(conffile, 'r') as f:
         config = f.read()
 
     return json.loads(config)
