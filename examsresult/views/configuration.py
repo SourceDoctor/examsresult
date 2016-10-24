@@ -74,6 +74,8 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_save.clicked.connect(lambda: self.action_save(self.tab_window))
 
         self.listbox_schoolclass = QComboBox(mytab)
+        for i in self.get_schoolclassnames():
+            self.listbox_schoolclass.addItem(i)
         self.listbox_schoolclass.move(self.table_left + 100,
                                       self.table_top - label_students.height() - self.listbox_schoolclass.height())
 
@@ -81,6 +83,8 @@ class ViewSchoolClassConfigure(ViewConfigure):
         label_schoolclass.move(self.table_left, self.table_top - label_students.height() - self.listbox_schoolclass.height() + 5)
 
         self.listbox_schoolyear = QComboBox(mytab)
+        for i in self.get_schoolyears():
+            self.listbox_schoolyear.addItem(i)
         self.listbox_schoolyear.move(self.table_left + 100,
                              self.table_top - label_students.height() - self.listbox_schoolyear.height() - self.listbox_schoolclass.height())
 
@@ -100,10 +104,11 @@ class ViewSchoolClassConfigure(ViewConfigure):
     def set_changed(self, status):
         if status:
             if not self.listbox_schoolyear.currentText():
-                return
+                return False
             if not self.listbox_schoolclass.currentText():
-                return
+                return False
         self.button_save.setEnabled(status)
+        return True
 
     def student_add(self):
         self.set_changed(True)
@@ -113,3 +118,15 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
     def student_remove(self, index):
         self.set_changed(True)
+
+    def get_schoolclassnames(self):
+        ret = []
+        for i in self.dbh.get_schoolclassname():
+            ret.append(i[1])
+        return ret
+
+    def get_schoolyears(self):
+        ret = []
+        for i in self.dbh.get_schoolyear():
+            ret.append(i[1])
+        return ret
