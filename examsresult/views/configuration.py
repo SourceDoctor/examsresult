@@ -11,7 +11,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
     table_left = 100
     table_top = 120
     table_height = 350
-    table_width = 300
+    table_width = 500
 
     def __init__(self, dbhandler, root_tab, lng):
         self.dbh = dbhandler
@@ -95,7 +95,8 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
     def _define_column_title(self):
         return [{'name': self.lng['firstname'], 'type': 'string', 'unique': False},
-                {'name': self.lng['lastname'], 'type': 'string', 'unique': False}
+                {'name': self.lng['lastname'], 'type': 'string', 'unique': False},
+                {'name': self.lng['comment'], 'type': 'string', 'unique': False}
                 ]
 
     def action_save(self, root_window):

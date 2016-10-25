@@ -92,6 +92,7 @@ class Student(Base):
     __tablename__ = 'student'
     firstname = Column(Unicode(256))
     lastname = Column(Unicode(256))
+    comment = Column(Unicode(1024), nullable=True)
 
     school_class_id = Column(Integer, ForeignKey('school_class.id'))
     school_class = relationship("SchoolClass", backref="students")
