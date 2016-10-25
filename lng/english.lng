@@ -100,3 +100,4 @@ remove=Remove
 firstname=First Name
 lastname=Last Name
 comment=Comment
+msg_switch_unsaved=Really switch unsaved?

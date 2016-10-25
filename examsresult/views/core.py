@@ -1,8 +1,11 @@
+from PyQt5.QtWidgets import QMessageBox, QInputDialog, QTableWidgetItem
+
 
 class CoreView(object):
 
     changed_mark = "! "
     changed_mark_enabled = True
+    is_changed = False
 
     lng = {}
     # {name, type, unique, editable}
@@ -56,5 +59,128 @@ class CoreView(object):
                 index += 1
             self.tab_window.setTabText(index, new_title)
 
+        self.is_changed = status
         self.button_save.setEnabled(status)
         return True
+
+    def unique_check(self, proof_data, edited_id=0):
+        # search each Column which has to be unique if possible new_data is in it
+        column = -1
+        for col in self.column_title:
+            column += 1
+            if column == 0:
+                # id Column will be ignored
+                continue
+            if not col['unique']:
+                continue
+            row = 0
+            while row <= self.my_table.rowCount() - 1:
+                if edited_id and \
+                        self.my_table.item(row, 0).text() and \
+                        (edited_id == int(self.my_table.item(row, 0).text())):
+                    # don't check against myself (happens on editing Content)
+                    pass
+                elif proof_data[column - 1] == self.my_table.item(row, column).text():
+                    return False
+                row += 1
+        return True
+
+    def _action_add_content(self, root_window, content=()):
+        data = ()
+
+        add_dialog = QInputDialog(parent=root_window)
+        content_index = 0
+
+        for col in self.column_title:
+            try:
+                if col['editable'] == False:
+                    continue
+            except KeyError:
+                pass
+
+            try:
+                cell_content = content[content_index]
+            except IndexError:
+                if col['type'] == 'int':
+                    cell_content = 0
+                elif col['type'] == 'float':
+                    cell_content = 0
+                elif col['type'] == 'string':
+                    cell_content = ""
+                elif col['type'] == 'list':
+                    cell_content = []
+                else:
+                    cell_content = None
+
+            content_index += 1
+
+            if col['type'] == 'int':
+                value, ok = add_dialog.getInt(root_window, self.lng['title'], col['name'], value=int(cell_content))
+            elif col['type'] == 'float':
+                value, ok = add_dialog.getDouble(root_window, self.lng['title'], col['name'],
+                                                 decimals=self.float_precision, value=float(cell_content))
+            elif col['type'] == 'string':
+                value, ok = add_dialog.getText(root_window, self.lng['title'], col['name'], text=cell_content)
+            elif col['type'] == 'list':
+                value, ok = add_dialog.getItem(root_window, self.lng['title'], col['name'], Iterable=cell_content)
+            else:
+                print("unknown Type: %s" % col[1])
+                return ()
+
+            if not ok:
+                return ()
+
+            data += (value,)
+
+        return data
+
+    def _action_edit_content(self, root_window, content):
+        return self._action_add_content(root_window, content)
+
+    def action_add(self):
+        # fill Data into Cells
+        data = self._action_add_content(self.my_table)
+        if data:
+            if not self.unique_check(data):
+                QMessageBox.warning(self.tab_window, self.lng['title'], self.lng['msg_double_error'])
+            else:
+                self.my_table.insertRow(self.my_table.rowCount())
+                # add empty cell to id Column to have a reference to database
+                self.my_table.setItem(self.my_table.rowCount() - 1, 0, QTableWidgetItem(''))
+
+                column = 1
+                while column <= len(self.column_title) - 1:
+                    self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
+                    column += 1
+                self.set_changed(True)
+
+        self.button_add.setFocus()
+
+    def action_edit(self, cell):
+        row = cell.row()
+        content = ()
+
+        # get Cell Content
+        column = 1
+        while column <= len(self.column_title) - 1:
+            content += (self.my_table.item(row, column).text(),)
+            column += 1
+
+        new_content = self._action_edit_content(self.my_table, content)
+        if not new_content:
+            self.my_table.selectRow(row)
+            return
+
+        if not self.unique_check(new_content, edited_id=row+1):
+            QMessageBox.warning(self.tab_window, self.lng['title'], self.lng['msg_double_error'])
+            return
+
+        # write new Cell Content
+        column = 1
+        while column <= len(self.column_title) - 1:
+            new_value = new_content[column - 1]
+            self.my_table.setItem(row, column, QTableWidgetItem(str(new_value)))
+            column += 1
+
+        self.my_table.selectRow(row)
+        self.set_changed(True)

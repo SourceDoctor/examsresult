@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, QPushButton, QComboBox
+from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
+    QPushButton, QComboBox, QMessageBox
 from examsresult.views import CoreView
 
 
@@ -12,6 +13,11 @@ class ViewSchoolClassConfigure(ViewConfigure):
     table_top = 120
     table_height = 350
     table_width = 500
+
+    schoolyear_listindex = 0
+    schoolyear_change_enabled = True
+    schoolclass_listindex = 0
+    schoolclass_change_enabled = True
 
     def __init__(self, dbhandler, root_tab, lng):
         self.dbh = dbhandler
@@ -41,13 +47,13 @@ class ViewSchoolClassConfigure(ViewConfigure):
             column_tuple += (col['name'],)
         self.my_table.setHorizontalHeaderLabels(column_tuple)
 
-        self.button_student_add = QPushButton(self.lng['add'], mytab)
-        self.button_student_add.move(self.table_left + self.table_width + 10, self.table_top)
-        self.button_student_add.clicked.connect(self.student_add)
+        self.button_add = QPushButton(self.lng['add'], mytab)
+        self.button_add.move(self.table_left + self.table_width + 10, self.table_top)
+        self.button_add.clicked.connect(self.student_add)
         
-        self.button_student_remove = QPushButton(self.lng['remove'], mytab)
-        self.button_student_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_student_add.height())
-        self.button_student_remove.clicked.connect(self.student_remove)
+        self.button_remove = QPushButton(self.lng['remove'], mytab)
+        self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
+        self.button_remove.clicked.connect(self.student_remove)
 
         # hide Column 'id'
         #        table.setColumnHidden(0, True)
@@ -69,6 +75,8 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.my_table.resizeColumnsToContents()
         self.my_table.setSortingEnabled(self.sorting)
 
+        self.my_table.doubleClicked.connect(self.action_edit)
+
         self.button_save = QPushButton(lng['save'], mytab)
         self.button_save.move(self.table_left + self.table_width + 10, self.table_top + self.my_table.height())
         self.button_save.clicked.connect(lambda: self.action_save(self.tab_window))
@@ -78,6 +86,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
             self.listbox_schoolclass.addItem(i)
         self.listbox_schoolclass.move(self.table_left + 100,
                                       self.table_top - label_students.height() - self.listbox_schoolclass.height())
+        self.listbox_schoolclass.currentIndexChanged.connect(self.schoolclass_change)
 
         label_schoolclass = QLabel(self.lng['schoolclass'], mytab)
         label_schoolclass.move(self.table_left, self.table_top - label_students.height() - self.listbox_schoolclass.height() + 5)
@@ -87,17 +96,49 @@ class ViewSchoolClassConfigure(ViewConfigure):
             self.listbox_schoolyear.addItem(i)
         self.listbox_schoolyear.move(self.table_left + 100,
                              self.table_top - label_students.height() - self.listbox_schoolyear.height() - self.listbox_schoolclass.height())
+        self.listbox_schoolyear.currentIndexChanged.connect(self.schoolyear_change)
 
         label_schoolyear = QLabel(self.lng['schoolyear'], mytab)
         label_schoolyear.move(self.table_left, self.table_top - label_students.height() - self.listbox_schoolyear.height() - self.listbox_schoolclass.height() + 5)
 
         self.set_changed(False)
+        self.button_add.setFocus()
 
     def _define_column_title(self):
         return [{'name': self.lng['firstname'], 'type': 'string', 'unique': False},
                 {'name': self.lng['lastname'], 'type': 'string', 'unique': False},
                 {'name': self.lng['comment'], 'type': 'string', 'unique': False}
                 ]
+
+    def schoolclass_change(self, index):
+        if not self.schoolclass_change_enabled:
+            self.schoolclass_change_enabled = True
+            return
+        if self.is_changed:
+            answer = QMessageBox.question(self.tab_window, self.lng['title'], self.lng['msg_switch_unsaved'])
+            if answer == QMessageBox.No:
+                self.schoolclass_change_enabled = False
+                self.listbox_schoolclass.setCurrentIndex(self.schoolclass_listindex)
+                return
+            self.set_changed(False)
+        self.students_load(schoolyear=self.listbox_schoolyear.currentText(),
+                           schoolclass=self.listbox_schoolclass.currentText())
+        self.schoolclass_listindex = index
+
+    def schoolyear_change(self, index):
+        if not self.schoolyear_change_enabled:
+            self.schoolyear_change_enabled = True
+            return
+        if self.is_changed:
+            answer = QMessageBox.question(self.tab_window, self.lng['title'], self.lng['msg_switch_unsaved'])
+            if answer == QMessageBox.No:
+                self.schoolyear_change_enabled = False
+                self.listbox_schoolyear.setCurrentIndex(self.schoolyear_listindex)
+                return
+        self.set_changed(False)
+        self.students_load(schoolyear=self.listbox_schoolyear.currentText(),
+                           schoolclass=self.listbox_schoolclass.currentText())
+        self.listbox_schoolyear = index
 
     def action_save(self, root_window):
         self.set_changed(False)
@@ -111,13 +152,22 @@ class ViewSchoolClassConfigure(ViewConfigure):
         return True
 
     def student_add(self):
+        self.action_add()
         self.set_changed(True)
 
-    def student_edit(self, index):
+    def student_edit(self, cell):
+        self.action_edit(cell)
         self.set_changed(True)
 
-    def student_remove(self, index):
+    def student_remove(self):
+        selection = self.my_table.currentRow()
+        if not selection:
+            return
+        self.my_table.removeRow(selection)
         self.set_changed(True)
+
+    def students_load(self, schoolyear, schoolclass):
+        print("loading students for Year %s and Class %s" % (schoolyear, schoolclass))
 
     def get_schoolclassnames(self):
         ret = []

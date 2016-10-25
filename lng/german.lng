@@ -100,3 +100,4 @@ remove=entfernen
 firstname=Vorname
 lastname=Nachname
 comment=Kommentar
+msg_switch_unsaved=wirklich wechseln ohne zu speichern?
