@@ -138,7 +138,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.set_changed(False)
         self.students_load(schoolyear=self.listbox_schoolyear.currentText(),
                            schoolclass=self.listbox_schoolclass.currentText())
-        self.listbox_schoolyear = index
+        self.schoolyear_listindex = index
 
     def action_save(self, root_window):
         self.set_changed(False)
