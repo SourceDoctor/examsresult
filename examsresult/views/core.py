@@ -2,6 +2,8 @@
 class CoreView(object):
 
     changed_mark = "! "
+    changed_mark_enabled = True
+
     lng = {}
     # {name, type, unique, editable}
     column_title = []
@@ -29,3 +31,30 @@ class CoreView(object):
 
     def _define_column_title(self):
         return []
+
+    def _set_changed(self, status):
+        return True
+
+    def set_changed(self, status):
+        if not self._set_changed(status):
+            return False
+
+        # (un)mark tab title
+        if self.changed_mark_enabled:
+            index = 0
+            while index <= self.tab_window.count():
+                title = self.tab_window.tabText(index)
+                if status:
+                    search_title = "%s" % self.lng['title']
+                    new_title = "%s%s" % (self.changed_mark, title)
+                else:
+                    search_title = "%s%s" % (self.changed_mark, self.lng['title'])
+                    new_title = title.replace(self.changed_mark, '')
+
+                if title == search_title:
+                    break
+                index += 1
+            self.tab_window.setTabText(index, new_title)
+
+        self.button_save.setEnabled(status)
+        return True

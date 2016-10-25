@@ -101,13 +101,12 @@ class ViewSchoolClassConfigure(ViewConfigure):
     def action_save(self, root_window):
         self.set_changed(False)
 
-    def set_changed(self, status):
+    def _set_changed(self, status):
         if status:
             if not self.listbox_schoolyear.currentText():
                 return False
             if not self.listbox_schoolclass.currentText():
                 return False
-        self.button_save.setEnabled(status)
         return True
 
     def student_add(self):

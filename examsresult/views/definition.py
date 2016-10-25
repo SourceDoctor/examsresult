@@ -223,27 +223,6 @@ class ViewDefine(CoreView):
         self.load_data()
         self.set_changed(False)
 
-    def set_changed(self, status):
-
-        self.button_save.setEnabled(status)
-
-        # (un)mark tab title
-        index = 0
-        while index <= self.tab_window.count():
-            title = self.tab_window.tabText(index)
-            if status:
-                search_title = "%s" % self.lng['title']
-                new_title = "%s%s" % (self.changed_mark, title)
-            else:
-                search_title = "%s%s" % (self.changed_mark, self.lng['title'])
-                new_title = title.replace(self.changed_mark, '')
-
-            if title == search_title:
-                break
-            index += 1
-
-        self.tab_window.setTabText(index, new_title)
-
 
 class ViewSchoolYear(ViewDefine):
 

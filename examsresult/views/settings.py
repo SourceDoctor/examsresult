@@ -7,6 +7,8 @@ from examsresult.views.core import CoreView
 
 class ViewSettings(CoreView):
 
+    changed_mark_enabled = False
+
     def __init__(self, parent, lng, width=400, height=200):
         self.lng = lng
         local_lng = self.lng['window_settings']
@@ -70,9 +72,6 @@ class ViewSettings(CoreView):
 
         self.set_changed(False)
         self.window.exec_()
-
-    def set_changed(self, status):
-        self.button_save.setEnabled(status)
 
     def language_change(self, index):
         self.set_changed(True)
