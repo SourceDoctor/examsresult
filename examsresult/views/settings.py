@@ -68,17 +68,17 @@ class ViewSettings(CoreView):
         self.label_file_to_open = QLabel(config['open_file_on_startup'], self.window)
         self.label_file_to_open.setGeometry(40, 120, 300, self.label_file_to_open.height())
 
-        self.settings_changed(False)
+        self.set_changed(False)
         self.window.exec_()
 
-    def settings_changed(self, flag):
-        self.button_save.setEnabled(flag)
+    def set_changed(self, status):
+        self.button_save.setEnabled(status)
 
     def language_change(self, index):
-        self.settings_changed(True)
+        self.set_changed(True)
 
     def openbox_on_startup_change(self):
-        self.settings_changed(True)
+        self.set_changed(True)
 
     def openfile_on_startup_select(self):
         lng = self.lng['window_openfile']
@@ -89,11 +89,11 @@ class ViewSettings(CoreView):
         if not database_file:
             return
         self.label_file_to_open.setText(database_file)
-        self.settings_changed(True)
+        self.set_changed(True)
 
     def openfile_on_startup_clear(self):
         self.label_file_to_open.setText("")
-        self.settings_changed(True)
+        self.set_changed(True)
 
     def save_settings(self):
         config = current_config
@@ -109,4 +109,4 @@ class ViewSettings(CoreView):
 
         save_config(config)
 
-        self.settings_changed(False)
+        self.set_changed(False)
