@@ -124,6 +124,17 @@ class BaseView(QMainWindow, CoreView):
         ViewAbout(parent=parent, lng=self.lng)
 
     def closeEvent(self, event):
+        index = -1
+        while index <= self.tab_window.count() - 1:
+            index += 1
+            title = self.tab_window.tabText(index)
+            if not title.startswith(self.changed_mark):
+                continue
+            answer = QMessageBox.question(self, self.lng['main']['title'], self.lng['main']['msg_close_unsaved'])
+            if answer == QMessageBox.No:
+                event.ignore()
+                return
+            break
         self.action_app_close()
 
     def close_tab_handler(self, index):
