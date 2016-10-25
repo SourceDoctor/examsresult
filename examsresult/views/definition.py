@@ -150,7 +150,9 @@ class ViewDefine(CoreView):
                 continue
             row = 0
             while row <= self.my_table.rowCount() - 1:
-                if edited_id and (edited_id == int(self.my_table.item(row, 0).text())):
+                if edited_id and \
+                        self.my_table.item(row, 0).text() and \
+                        (edited_id == int(self.my_table.item(row, 0).text())):
                     # don't check against myself (happens on editing Content)
                     pass
                 elif proof_data[column - 1] == self.my_table.item(row, column).text():
