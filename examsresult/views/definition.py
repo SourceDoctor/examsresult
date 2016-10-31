@@ -1,5 +1,4 @@
-from PyQt5.QtWidgets import QTableWidget, QWidget, QTableWidgetItem, QMessageBox, \
-    QPushButton, QInputDialog, QAbstractItemView
+from PyQt5.QtWidgets import QTableWidget, QWidget, QPushButton, QAbstractItemView
 from .core import CoreView
 
 

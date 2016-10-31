@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
-    QPushButton, QComboBox, QMessageBox, QTableWidgetItem
+    QPushButton, QComboBox, QMessageBox
 from examsresult.views import CoreView
 
 
