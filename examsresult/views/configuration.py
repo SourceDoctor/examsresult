@@ -105,8 +105,8 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_add.setFocus()
 
     def _define_column_title(self):
-        return [{'name': self.lng['firstname'], 'type': 'string', 'unique': False},
-                {'name': self.lng['lastname'], 'type': 'string', 'unique': False},
+        return [{'name': self.lng['lastname'], 'type': 'string', 'unique': False},
+                {'name': self.lng['firstname'], 'type': 'string', 'unique': False},
                 {'name': self.lng['comment'], 'type': 'string', 'unique': False}
                 ]
 

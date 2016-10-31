@@ -180,7 +180,7 @@ class DBHandler(object):
         data = []
         if school_class:
             for d in school_class.students:
-                data.append((d.id, d.firstname, d.lastname, d.comment))
+                data.append((d.id, d.lastname, d.firstname, d.comment))
         return data
 
     def set_students(self, schoolyear, schoolclass, students=[]):
@@ -207,10 +207,10 @@ class DBHandler(object):
             else:
                 s = None
             if not s:
-                s = Student(firstname=d[1], lastname=d[2], comment=d[3])
+                s = Student(lastname=d[1], firstname=d[2], comment=d[3])
             else:
-                s.firstname = d[1]
-                s.lastname = d[2]
+                s.lastname = d[1]
+                s.firstname = d[2]
                 s.comment = d[3]
             s.school_class = school_class
             self.session.add(s)
