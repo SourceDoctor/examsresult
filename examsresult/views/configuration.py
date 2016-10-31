@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
-    QPushButton, QComboBox, QMessageBox
+    QPushButton, QComboBox, QMessageBox, QToolButton, QMenu
 from examsresult.views import CoreView
 
 
@@ -55,9 +55,14 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
         self.button_remove.clicked.connect(self.student_remove)
 
-        self.button_import = QPushButton(self.lng['import'], mytab)
+        self.button_import = QToolButton(mytab)
         self.button_import.move(self.table_left + self.table_width + self.button_add.width(), self.table_top)
-        self.button_import.clicked.connect(self.student_import)
+        self.button_import.setText(self.lng['import'])
+        self.button_import.setPopupMode(QToolButton.MenuButtonPopup)
+        menu = QMenu()
+        menu.addAction(self.lng['import_csv'], self.student_import_csv)
+        menu.addAction(self.lng['import_other_schoolclass'], self.student_import_other_class)
+        self.button_import.setMenu(menu)
 
         # hide Column 'id'
         #        table.setColumnHidden(0, True)
@@ -179,8 +184,11 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.my_table.removeRow(selection)
         self.set_changed(True)
 
-    def student_import(self):
-        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to import!")
+    def student_import_csv(self):
+        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to import from CSV!")
+
+    def student_import_other_class(self):
+        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to import from other class!")
 
     def get_schoolclassnames(self):
         ret = []
