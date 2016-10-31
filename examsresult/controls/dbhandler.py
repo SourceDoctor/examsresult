@@ -200,6 +200,11 @@ class DBHandler(object):
             s.filter(SchoolClass.schoolclass == schoolclass)
             school_class = s.first()
 
+        # collect all students found for class
+        id_list = []
+        for student in school_class.students:
+            id_list.append(str(student.id))
+
         # now refresh student assignment -------------------------
         for d in students:
             if d[0] != '':
@@ -209,11 +214,18 @@ class DBHandler(object):
             if not s:
                 s = Student(lastname=d[1], firstname=d[2], comment=d[3])
             else:
+                id_list.remove(str(d[0]))
                 s.lastname = d[1]
                 s.firstname = d[2]
                 s.comment = d[3]
             s.school_class = school_class
             self.session.add(s)
+
+        # remaining id's in id_list are no longer member of school_class, so delete them
+        for student_id in id_list:
+            s = self.session.query(Student).filter(Student.id == int(student_id)).first()
+            self.session.delete(s)
+
         self.session.commit()
         return 0
 
