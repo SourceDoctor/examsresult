@@ -108,6 +108,17 @@ comment=Kommentar
 msg_switch_unsaved=wirklich wechseln ohne zu speichern?
 msg_no_schoolclass=keine Schulklasse definiert
 msg_no_schoolyear=kein Schuljahr definiert
+msg_column_key_failure=Konnte Spalten Titel nicht finden
+msg_column_number_failure=Spalten Nummer nicht gefunden
+csv_import_title=CSV Import
+csv_file=CSV Datei
+csv_with_header=CSV mit Spaltentitel
+csv_simple=einfaches CSV
+delimiter=Delimiter
+column_lastname=Spaltennummer für Nachname
+column_firstname=Spaltennummer für Vorname
+column_comment=Spaltennummer für Kommentar
+cancel=Abbrechen
 
 [window_exam_schoolclass]
 title = Schulklasse Prüfung

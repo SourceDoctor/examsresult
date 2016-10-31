@@ -108,6 +108,17 @@ comment=Comment
 msg_switch_unsaved=Really switch unsaved?
 msg_no_schoolclass=No Schoolclass defined
 msg_no_schoolyear=No Schoolyear defined
+msg_column_key_failure=Column Key not found
+msg_column_number_failure=Column Number failure
+csv_import_title=CSV Import
+csv_file=CSV File
+csv_with_header=CSV with Column Title
+csv_simple=Simple CSV
+delimiter=Delimiter
+column_lastname=Column Number for Lastname
+column_firstname=Column Number for Firstname
+column_comment=Column Number for Comment
+cancel=Cancel
 
 [window_exam_schoolclass]
 title = Schoolclass Exam

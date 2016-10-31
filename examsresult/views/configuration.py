@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
     QPushButton, QComboBox, QMessageBox, QToolButton, QMenu, QInputDialog
 from examsresult.views import CoreView
+from examsresult.views.import_csv import CSVImport
 
 
 class ViewConfigure(CoreView):
@@ -49,7 +50,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
         self.button_add = QPushButton(self.lng['add'], mytab)
         self.button_add.move(self.table_left + self.table_width + 10, self.table_top)
-        self.button_add.clicked.connect(self.student_add)
+        self.button_add.clicked.connect(self.action_add)
         
         self.button_remove = QPushButton(self.lng['remove'], mytab)
         self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
@@ -169,10 +170,6 @@ class ViewSchoolClassConfigure(ViewConfigure):
                 return False
         return True
 
-    def student_add(self):
-        self.action_add()
-        self.set_changed(True)
-
     def student_edit(self, cell):
         self.action_edit(cell)
         self.set_changed(True)
@@ -185,7 +182,8 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.set_changed(True)
 
     def student_import_csv(self):
-        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to import from CSV!")
+        CSVImport(self.tab_window, lng=self.lng)
+
 
     def student_import_other_class(self):
         schoolyear_list = []
