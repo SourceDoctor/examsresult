@@ -122,7 +122,7 @@ class CoreView(object):
             elif col['type'] == 'string':
                 value, ok = add_dialog.getText(root_window, self.lng['title'], col['name'], text=cell_content)
             elif col['type'] == 'list':
-                value, ok = add_dialog.getItem(root_window, self.lng['title'], col['name'], Iterable=cell_content)
+                value, ok = add_dialog.getItem(root_window, self.lng['title'], col['name'], cell_content, 0, False)
             else:
                 print("unknown Type: %s" % col[1])
                 return ()
