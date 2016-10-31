@@ -55,6 +55,10 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
         self.button_remove.clicked.connect(self.student_remove)
 
+        self.button_import = QPushButton(self.lng['import'], mytab)
+        self.button_import.move(self.table_left + self.table_width + self.button_add.width(), self.table_top)
+        self.button_import.clicked.connect(self.student_import)
+
         # hide Column 'id'
         #        table.setColumnHidden(0, True)
 
@@ -101,6 +105,9 @@ class ViewSchoolClassConfigure(ViewConfigure):
         label_schoolyear = QLabel(self.lng['schoolyear'], mytab)
         label_schoolyear.move(self.table_left, self.table_top - label_students.height() - self.listbox_schoolyear.height() - self.listbox_schoolclass.height() + 5)
 
+        # load Content from Database
+        self.load_data()
+
         self.set_changed(False)
         self.button_add.setFocus()
 
@@ -121,8 +128,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
                 self.listbox_schoolclass.setCurrentIndex(self.schoolclass_listindex)
                 return
             self.set_changed(False)
-        self.students_load(schoolyear=self.listbox_schoolyear.currentText(),
-                           schoolclass=self.listbox_schoolclass.currentText())
+        self.load_data()
         self.schoolclass_listindex = index
 
     def schoolyear_change(self, index):
@@ -136,8 +142,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
                 self.listbox_schoolyear.setCurrentIndex(self.schoolyear_listindex)
                 return
         self.set_changed(False)
-        self.students_load(schoolyear=self.listbox_schoolyear.currentText(),
-                           schoolclass=self.listbox_schoolclass.currentText())
+        self.load_data()
         self.schoolyear_listindex = index
 
     def _action_load_content(self):
@@ -204,8 +209,8 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.my_table.removeRow(selection)
         self.set_changed(True)
 
-    def students_load(self, schoolyear, schoolclass):
-        self.load_data()
+    def student_import(self):
+        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to import!")
 
     def get_schoolclassnames(self):
         ret = []

@@ -96,6 +96,7 @@ schoolclass=Schoolclass
 students=Students
 save = Save Changes
 add=Add
+import=Import
 remove=Remove
 firstname=First Name
 lastname=Last Name
