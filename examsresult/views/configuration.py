@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
-    QPushButton, QComboBox, QMessageBox, QToolButton, QMenu
+    QPushButton, QComboBox, QMessageBox, QToolButton, QMenu, QInputDialog
 from examsresult.views import CoreView
 
 
@@ -188,7 +188,34 @@ class ViewSchoolClassConfigure(ViewConfigure):
         QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to import from CSV!")
 
     def student_import_other_class(self):
-        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to import from other class!")
+        schoolyear_list = []
+        schoolclass_list = []
+
+        for y in self.dbh.get_schoolyear():
+            schoolyear_list.append(y[1])
+        for c in self.dbh.get_schoolclassname():
+            schoolclass_list.append(c[1])
+
+        if not schoolyear_list:
+            QMessageBox.information(self.tab_window, self.lng['title'], self.lng['msg_no_schoolyear'])
+            return
+        if not schoolclass_list:
+            QMessageBox.information(self.tab_window, self.lng['title'], self.lng['msg_no_schoolclass'])
+            return
+
+        import_dialog = QInputDialog(parent=self.tab_window)
+        schoolyear, ok = import_dialog.getItem(self.tab_window, self.lng['title'], self.lng['schoolyear'], schoolyear_list, 0, False)
+        if not ok:
+            return
+        schoolclass, ok = import_dialog.getItem(self.tab_window, self.lng['title'], self.lng['schoolclass'], schoolclass_list, 0, False)
+        if not ok:
+            return
+
+        student_list= self.dbh.get_students(schoolyear=schoolyear, schoolclass=schoolclass)
+        for student in student_list:
+            # remove first element of tuple (id Field)
+            student = student[1:len(student)]
+            self.action_add(data_import=True, data=student)
 
     def get_schoolclassnames(self):
         ret = []

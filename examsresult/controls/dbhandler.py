@@ -81,7 +81,7 @@ class DBHandler(object):
         self.session.commit()
         return 0
 
-    def get_schoolclassname(self, filter={}):
+    def get_schoolclassname(self):
         ret = self._list(SchoolClassName)
         data = []
         for d in ret.all():

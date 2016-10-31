@@ -106,6 +106,8 @@ firstname=First Name
 lastname=Last Name
 comment=Comment
 msg_switch_unsaved=Really switch unsaved?
+msg_no_schoolclass=No Schoolclass defined
+msg_no_schoolyear=No Schoolyear defined
 
 [window_exam_schoolclass]
 title = Schoolclass Exam

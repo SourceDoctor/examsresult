@@ -145,9 +145,10 @@ class CoreView(object):
         QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to save!")
         return 0
 
-    def action_add(self):
+    def action_add(self, data_import=False, data=()):
         # fill Data into Cells
-        data = self._action_add_content(self.my_table)
+        if not data_import:
+            data = self._action_add_content(self.my_table)
         if data:
             if not self.unique_check(data):
                 QMessageBox.warning(self.tab_window, self.lng['title'], self.lng['msg_double_error'])

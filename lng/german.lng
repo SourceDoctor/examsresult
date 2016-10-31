@@ -106,6 +106,8 @@ firstname=Vorname
 lastname=Nachname
 comment=Kommentar
 msg_switch_unsaved=wirklich wechseln ohne zu speichern?
+msg_no_schoolclass=keine Schulklasse definiert
+msg_no_schoolyear=kein Schuljahr definiert
 
 [window_exam_schoolclass]
 title = Schulklasse Prüfung

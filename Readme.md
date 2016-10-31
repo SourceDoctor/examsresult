@@ -13,6 +13,8 @@ Overview every time complete Result of Students or complete School Classes
 * define Time Periods and weight them
 * define School Class for School Year and assign Students
 
+* import Students from a Class of a School Year before
+
 ## Todos
 * handle several Subjects in every School Class
 * handle an Exam for complete School Class or a single student
@@ -24,6 +26,6 @@ for each schoolyear final result calculate timeperiod results with their weights
 * CSV Export of Student Results
 * CSV Export of Class Results
 * CSV Export of Exams Results
-* import Students from Textfile, CSV or from a Class of a School Year before
+* import Students from CSV
 
 * "what if Simulation" (what happens if Student has in next Test(s) this result(s)?)
