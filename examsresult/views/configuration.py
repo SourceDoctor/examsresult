@@ -179,7 +179,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
     def student_remove(self):
         selection = self.my_table.currentRow()
-        if not selection:
+        if selection < 0:
             return
         self.my_table.removeRow(selection)
         self.set_changed(True)
