@@ -137,6 +137,14 @@ class CoreView(object):
     def _action_edit_content(self, root_window, content):
         return self._action_add_content(root_window, content)
 
+    def _action_load_content(self):
+        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to load!")
+        return []
+
+    def _action_save_content(self, data):
+        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to save!")
+        return 0
+
     def action_add(self):
         # fill Data into Cells
         data = self._action_add_content(self.my_table)
@@ -184,3 +192,33 @@ class CoreView(object):
 
         self.my_table.selectRow(row)
         self.set_changed(True)
+
+    def action_save(self, root_window):
+        data = []
+        row = 0
+        while row <= self.my_table.rowCount() - 1:
+            row_content = ()
+            column = 0
+            while column <= self.my_table.columnCount() - 1:
+                cell = self.my_table.item(row, column).text()
+                row_content += (cell,)
+                column += 1
+            data.append(row_content)
+            row += 1
+
+        self._action_save_content(data=data)
+        self.load_data()
+        self.set_changed(False)
+
+    def load_data(self):
+        # clear table
+        while self.my_table.rowCount():
+            self.my_table.removeRow(0)
+        # load data from Database
+        data_list = self._action_load_content()
+        for data in data_list:
+            self.my_table.insertRow(self.my_table.rowCount())
+            column = 0
+            while column <= len(self.column_title) - 1:
+                self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column])))
+                column += 1
