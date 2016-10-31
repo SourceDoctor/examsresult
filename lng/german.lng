@@ -10,24 +10,26 @@ msg_close_unsaved=Wirklich schließen ohne zu speichern?
 msg_file_not_found=Datei nicht gefunden
 
 [menu]
-mainmenufile=Datei
-newfile=Neu
-openfile=Öffnen
-settings=Einstellungen
-quit=Beenden
-
-mainmenuconfigure=Konfiguration
-schoolclass_configure=Schulklasse
-
+mainmenufile=File
+mainmenuexam=Exam
+mainmenureport=Report
+mainmenuconfigure=Configuration
 mainmenudefinition=Definition
-subject=Schulfach
-schoolclass=Schulklasse
-schoolyear=Schuljahr
-examstype=Prüfungsart
-timeperiod=Zeitperiode
+mainmenuhelp=Help
 
-mainmenuhelp=Hilfe
-about=Über
+newfile=New
+openfile=Open
+settings=Settings
+quit=Exit
+
+subject=Subject
+schoolclass=Schoolclass
+schoolyear=Schoolyear
+examstype=Examstype
+timeperiod=Timeperiod
+student=Student
+
+about=About
 
 [window_newfile]
 title=Neue Datei
@@ -38,7 +40,7 @@ msg_open_err=Konnte diese Datei nicht öffnen %s
 msg_db_updated=Datei wurde auf neue Version aktualisiert
 msg_db_to_new=Konnte Datei nicht öffnen, da ihre Version zu neu ist. Bitte updaten Sie das Programm
 
-[window_timeperiod]
+[window_define_timeperiod]
 title = Zeitperiode
 add=Hinzufügen
 save=speichern
@@ -46,7 +48,7 @@ name=Beschreibung
 weight=Gewichtung
 msg_double_error=Zeitperiode mit dieser Beschreibung existiert schon
 
-[window_examstype]
+[window_define_examstype]
 title = Prüfungsart
 add=Hinzufügen
 save=speichern
@@ -54,21 +56,21 @@ name=Prfungsart
 weight=Gewichtung
 msg_double_error=Prüfungsart mit dieser Beschreibung existiert schon
 
-[window_subject]
+[window_define_subject]
 title = Schulfach
 add=Hinzufügen
 save=speichern
 name=Beschreibung
 msg_double_error=Schulfach mit dieser Beschreibung existiert schon
 
-[window_schoolclass]
+[window_define_schoolclass]
 title = Schulklasse
 add=Hinzufügen
 save=speichern
 name=Beschreibung
 msg_double_error=Schulklasse mit dieser Beschreibung existiert schon
 
-[window_schoolyear]
+[window_define_schoolyear]
 title = Schuljahr
 add=Hinzufügen
 save=speichern
@@ -89,7 +91,7 @@ open_file_on_startup_label = Datei beim Start öffnen
 open_file_on_startup_clear = entfernen
 open_file_on_startup_select = auswählen
 
-[window_schoolclass_configure]
+[window_configure_schoolclass]
 title = Schulklassen Konfiguration
 schoolyear=Schuljahr
 schoolclass=Schulklasse
@@ -102,3 +104,15 @@ firstname=Vorname
 lastname=Nachname
 comment=Kommentar
 msg_switch_unsaved=wirklich wechseln ohne zu speichern?
+
+[window_exam_schoolclass]
+title = Schulklasse Prüfung
+
+[window_exam_student]
+title = Schüler Prüfung
+
+[window_report_schoolclass]
+title = Schulklasse Report
+
+[window_report_student]
+title = Schüler Report

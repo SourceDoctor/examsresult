@@ -102,22 +102,34 @@ class BaseView(QMainWindow, CoreView):
     def window_settings(self, parent):
         ViewSettings(parent=parent, lng=self.lng)
 
-    def window_schoolclass_configure(self, lng):
+    def window_exam_schoolclass(self, lng):
+        QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
+
+    def window_exam_student(self, lng):
+        QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
+
+    def window_report_schoolclass(self, lng):
+        QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
+
+    def window_report_student(self, lng):
+        QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
+
+    def window_configure_schoolclass(self, lng):
         ViewSchoolClassConfigure(self.dbh, self.tab_window, lng)
 
-    def window_schoolyear(self, lng):
+    def window_define_schoolyear(self, lng):
         ViewSchoolYear(self.dbh, self.tab_window, lng)
 
-    def window_schoolclass(self, lng):
+    def window_define_schoolclass(self, lng):
         ViewSchoolClass(self.dbh, self.tab_window, lng)
 
-    def window_subject(self, lng):
+    def window_define_subject(self, lng):
         ViewSubject(self.dbh, self.tab_window, lng)
 
-    def window_examstype(self, lng):
+    def window_define_examstype(self, lng):
         ViewExamsType(self.dbh, self.tab_window, lng)
 
-    def window_timeperiod(self, lng):
+    def window_define_timeperiod(self, lng):
         ViewTimeperiod(self.dbh, self.tab_window, lng)
 
     def window_about(self, parent):
@@ -175,20 +187,30 @@ class BaseView(QMainWindow, CoreView):
         self.settings_action.triggered.connect(lambda: self.window_settings(self))
         self.exit_action = QAction(menutext['quit'], self)
         self.exit_action.triggered.connect(self.action_app_close)
+        # Exam menu actions
+        self.exam_schoolclass_action = QAction(menutext['schoolclass'], self)
+        self.exam_schoolclass_action.triggered.connect(lambda: self.add_tab_event(self.window_exam_schoolclass, self.lng['window_exam_schoolclass']))
+        self.exam_student_action = QAction(menutext['student'], self)
+        self.exam_student_action.triggered.connect(lambda: self.add_tab_event(self.window_exam_student, self.lng['window_exam_student']))
+        # Report menu actions
+        self.report_schoolclass_action = QAction(menutext['schoolclass'], self)
+        self.report_schoolclass_action.triggered.connect(lambda: self.add_tab_event(self.window_report_schoolclass, self.lng['window_report_schoolclass']))
+        self.report_student_action = QAction(menutext['student'], self)
+        self.report_student_action.triggered.connect(lambda: self.add_tab_event(self.window_report_student, self.lng['window_report_student']))
         # configure menu actions
-        self.schoolclass_configure_action = QAction(menutext['schoolclass_configure'], self)
-        self.schoolclass_configure_action.triggered.connect(lambda: self.add_tab_event(self.window_schoolclass_configure, self.lng['window_schoolclass_configure']))
+        self.schoolclass_configure_action = QAction(menutext['schoolclass'], self)
+        self.schoolclass_configure_action.triggered.connect(lambda: self.add_tab_event(self.window_configure_schoolclass, self.lng['window_configure_schoolclass']))
         # Definition menu actions
         self.schoolyear_action = QAction(menutext['schoolyear'], self)
-        self.schoolyear_action.triggered.connect(lambda: self.add_tab_event(self.window_schoolyear, self.lng['window_schoolyear']))
+        self.schoolyear_action.triggered.connect(lambda: self.add_tab_event(self.window_define_schoolyear, self.lng['window_define_schoolyear']))
         self.schoolclass_action = QAction(menutext['schoolclass'], self)
-        self.schoolclass_action.triggered.connect(lambda: self.add_tab_event(self.window_schoolclass, self.lng['window_schoolclass']))
+        self.schoolclass_action.triggered.connect(lambda: self.add_tab_event(self.window_define_schoolclass, self.lng['window_define_schoolclass']))
         self.subject_action = QAction(menutext['subject'], self)
-        self.subject_action.triggered.connect(lambda: self.add_tab_event(self.window_subject, self.lng['window_subject']))
+        self.subject_action.triggered.connect(lambda: self.add_tab_event(self.window_define_subject, self.lng['window_define_subject']))
         self.examstype_action = QAction(menutext['examstype'], self)
-        self.examstype_action.triggered.connect(lambda: self.add_tab_event(self.window_examstype, self.lng['window_examstype']))
+        self.examstype_action.triggered.connect(lambda: self.add_tab_event(self.window_define_examstype, self.lng['window_define_examstype']))
         self.timeperiod_action = QAction(menutext['timeperiod'], self)
-        self.timeperiod_action.triggered.connect(lambda: self.add_tab_event(self.window_timeperiod, self.lng['window_timeperiod']))
+        self.timeperiod_action.triggered.connect(lambda: self.add_tab_event(self.window_define_timeperiod, self.lng['window_define_timeperiod']))
         # Help menu actions
         self.about_action = QAction(menutext['about'], self)
         self.about_action.triggered.connect(lambda: self.window_about(self))
@@ -200,6 +222,14 @@ class BaseView(QMainWindow, CoreView):
         filemenu.addAction(self.settings_action)
         filemenu.addSeparator()
         filemenu.addAction(self.exit_action)
+
+        exammenu = mainMenu.addMenu(menutext['mainmenuexam'])
+        exammenu.addAction(self.exam_schoolclass_action)
+        exammenu.addAction(self.exam_student_action)
+
+        reportmenu = mainMenu.addMenu(menutext['mainmenureport'])
+        reportmenu.addAction(self.report_schoolclass_action)
+        reportmenu.addAction(self.report_student_action)
 
         configurationmenu = mainMenu.addMenu(menutext['mainmenuconfigure'])
         configurationmenu.addAction(self.schoolclass_configure_action)

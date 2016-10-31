@@ -11,22 +11,24 @@ msg_file_not_found=File to open not found
 
 [menu]
 mainmenufile=File
+mainmenuexam=Exam
+mainmenureport=Report
+mainmenuconfigure=Configuration
+mainmenudefinition=Definition
+mainmenuhelp=Help
+
 newfile=New
 openfile=Open
 settings=Settings
 quit=Exit
 
-mainmenuconfigure=Configuration
-schoolclass_configure=Schoolclass
-
-mainmenudefinition=Definition
 subject=Subject
 schoolclass=Schoolclass
 schoolyear=Schoolyear
 examstype=Examstype
 timeperiod=Timeperiod
+student=Student
 
-mainmenuhelp=Help
 about=About
 
 [window_newfile]
@@ -38,7 +40,7 @@ msg_open_err=Failed to open File %s
 msg_db_updated=File to new Version updated
 msg_db_to_new=Cannot open File, because it's Version is to new. Please update your Application
 
-[window_timeperiod]
+[window_define_timeperiod]
 title = Timeperiod
 add=Add
 save=Save Changes
@@ -46,7 +48,7 @@ name=Description
 weight=Weight
 msg_double_error=Timeperiod with this Name exists
 
-[window_examstype]
+[window_define_examstype]
 title = Examstype
 add=Add
 save=Save Changes
@@ -54,21 +56,21 @@ name=Exams Type
 weight=Weight
 msg_double_error=Exam Type with this Name exists
 
-[window_subject]
+[window_define_subject]
 title = Subject
 add=Add
 save=Save Changes
 name=Subject Name
 msg_double_error=Subject with this Name exists
 
-[window_schoolclass]
+[window_define_schoolclass]
 title = Schoolclass
 add=Add
 save=Save Changes
 name=Schoolclass Name
 msg_double_error=Schoolclass with this Name exists
 
-[window_schoolyear]
+[window_define_schoolyear]
 title = Schoolyear
 add=Add
 save=Save Changes
@@ -89,7 +91,7 @@ open_file_on_startup_label = File to Open on Startup
 open_file_on_startup_clear = Clear
 open_file_on_startup_select = Select
 
-[window_schoolclass_configure]
+[window_configure_schoolclass]
 title = Schoolclass Configuration
 schoolyear=Schoolyear
 schoolclass=Schoolclass
@@ -102,3 +104,15 @@ firstname=First Name
 lastname=Last Name
 comment=Comment
 msg_switch_unsaved=Really switch unsaved?
+
+[window_exam_schoolclass]
+title = Schoolclass Exam
+
+[window_exam_student]
+title = Student Exam
+
+[window_report_schoolclass]
+title = Schoolclass Report
+
+[window_report_student]
+title = Student Report
