@@ -55,12 +55,12 @@ class TimePeriod(Base):
 
 class SchoolClass(Base):
     __tablename__ = 'school_class'
-    year = Column(Unicode(256), ForeignKey('school_year.name'))
-    name = Column(Unicode(256), ForeignKey('school_class_name.name'))
+    schoolyear = Column(Unicode(256), ForeignKey('school_year.name'))
+    schoolclass = Column(Unicode(256), ForeignKey('school_class_name.name'))
     comment = Column(Unicode(1024), nullable=True)
 
     __table_args__ = (
-        UniqueConstraint('year', 'name', name='school_class-unique-constraint'),
+        UniqueConstraint('schoolyear', 'schoolclass', name='school_class-unique-constraint'),
     )
 
 

@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 from examsresult.controls.dbupdater import DBUpdater
 from examsresult.models import Exam, ExamResult, SchoolClassName, Student, Schoolyear, \
-    ExamType, TimePeriod, Subject, Parameter, Base
+    SchoolClass, ExamType, TimePeriod, Subject, Parameter, Base
 
 
 class DatabaseConnector(object):
@@ -171,6 +171,52 @@ class DBHandler(object):
         self.session.commit()
         return 0
 
+    def get_students(self, schoolyear, schoolclass):
+        ret = self._list(SchoolClass)
+        ret = ret.filter(SchoolClass.schoolyear==schoolyear)
+        ret = ret.filter(SchoolClass.schoolclass==schoolclass)
+        school_class = ret.first()
+
+        data = []
+        if school_class:
+            for d in school_class.students:
+                data.append((d.id, d.firstname, d.lastname, d.comment))
+        return data
+
+    def set_students(self, schoolyear, schoolclass, students=[]):
+        s = self.session.query(SchoolClass).filter(SchoolClass.schoolyear==schoolyear)
+        s.filter(SchoolClass.schoolclass==schoolclass)
+        school_class = s.first()
+
+        if not school_class:
+            # create new school class
+            school_class = SchoolClass(schoolyear=schoolyear,
+                                schoolclass=schoolclass,
+                               )
+            self.session.add(school_class)
+            self.session.commit()
+            # get the row back in secure way:
+            s = self.session.query(SchoolClass).filter(SchoolClass.schoolyear == schoolyear)
+            s.filter(SchoolClass.schoolclass == schoolclass)
+            school_class = s.first()
+
+        # now refresh student assignment -------------------------
+        for d in students:
+            if d[0] != '':
+                s = self.session.query(Student).filter(Student.id == int(d[0])).first()
+            else:
+                s = None
+            if not s:
+                s = Student(firstname=d[1], lastname=d[2], comment=d[3])
+            else:
+                s.firstname = d[1]
+                s.lastname = d[2]
+                s.comment = d[3]
+            s.school_class = school_class
+            self.session.add(s)
+        self.session.commit()
+        return 0
+
     # ----------- still not used functions -----------------------------------------
 
     def get_exams(self, filter={}):
@@ -189,13 +235,6 @@ class DBHandler(object):
             ret = ret.filter(ExamResult.student.school_class.name == filter['schoolchlass'])
         if 'student' in filter.keys():
             ret = ret.filter(ExamResult.student.name == filter['student'])
-        return ret.all()
-
-    def get_students(self, filter={}):
-        ret = self._list(Student)
-
-        if 'schoolclass' in filter.keys():
-            ret = ret.filter(Student.school_class.name == filter['schoolclass'])
         return ret.all()
 
     def get_parameter(self, filter_key):

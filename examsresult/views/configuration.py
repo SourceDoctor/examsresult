@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
-    QPushButton, QComboBox, QMessageBox
+    QPushButton, QComboBox, QMessageBox, QTableWidgetItem
 from examsresult.views import CoreView
 
 
@@ -140,7 +140,45 @@ class ViewSchoolClassConfigure(ViewConfigure):
                            schoolclass=self.listbox_schoolclass.currentText())
         self.schoolyear_listindex = index
 
+    def _action_load_content(self):
+        return self.dbh.get_students(schoolyear=self.listbox_schoolyear.currentText(),
+                                     schoolclass=self.listbox_schoolclass.currentText()
+                                     )
+
+    def _action_save_content(self, data):
+        self.dbh.set_students(schoolyear=self.listbox_schoolyear.currentText(),
+                              schoolclass=self.listbox_schoolclass.currentText(),
+                              students=data)
+        self.set_changed(False)
+
+    def load_data(self):
+        # clear table
+        while self.my_table.rowCount():
+            self.my_table.removeRow(0)
+        # load data from Database
+        data_list = self._action_load_content()
+        for data in data_list:
+            self.my_table.insertRow(self.my_table.rowCount())
+            column = 0
+            while column <= len(self.column_title) - 1:
+                self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column])))
+                column += 1
+
     def action_save(self, root_window):
+        data = []
+        row = 0
+        while row <= self.my_table.rowCount() - 1:
+            row_content = ()
+            column = 0
+            while column <= self.my_table.columnCount() - 1:
+                cell = self.my_table.item(row, column).text()
+                row_content += (cell,)
+                column += 1
+            data.append(row_content)
+            row += 1
+
+        self._action_save_content(data=data)
+        self.load_data()
         self.set_changed(False)
 
     def _set_changed(self, status):
@@ -167,7 +205,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.set_changed(True)
 
     def students_load(self, schoolyear, schoolclass):
-        print("loading students for Year %s and Class %s" % (schoolyear, schoolclass))
+        self.load_data()
 
     def get_schoolclassnames(self):
         ret = []
