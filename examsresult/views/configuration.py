@@ -182,8 +182,9 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.set_changed(True)
 
     def student_import_csv(self):
-        CSVImport(self.tab_window, lng=self.lng)
-
+        data = CSVImport(self.tab_window, lng=self.lng)
+        for student in data.students:
+            self.action_add(data_import=True, data=student)
 
     def student_import_other_class(self):
         schoolyear_list = []

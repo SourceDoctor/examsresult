@@ -8,6 +8,7 @@ import csv
 class CSVImport(CoreView):
 
     changed_mark_enabled = False
+    students = []
 
     def __init__(self, parent, lng, width=400, height=420):
         self.lng = lng
@@ -129,12 +130,8 @@ class CSVImport(CoreView):
         else:
             print("unknown CSV Type to import")
 
-#        for student in students:
-#            self.action_add(data_import=True, data=student)
-
-        print (str(students))
-
-        return students
+        self.students = students
+        self.window.close()
 
     def csv_openfile(self):
         lng = self.lng
