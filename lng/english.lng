@@ -11,7 +11,6 @@ msg_file_not_found=File to open not found
 
 [menu]
 mainmenufile=File
-mainmenuexam=Exam
 mainmenureport=Report
 mainmenuconfigure=Configuration
 mainmenudefinition=Definition
@@ -28,6 +27,7 @@ schoolyear=Schoolyear
 examstype=Examstype
 timeperiod=Timeperiod
 student=Student
+exam=Exam
 
 about=About
 
@@ -120,11 +120,8 @@ column_firstname=Column Number for Firstname
 column_comment=Column Number for Comment
 cancel=Cancel
 
-[window_exam_schoolclass]
-title = Schoolclass Exam
-
-[window_exam_student]
-title = Student Exam
+[window_configure_exam]
+title = Exam Configuration
 
 [window_report_schoolclass]
 title = Schoolclass Report

@@ -102,12 +102,6 @@ class BaseView(QMainWindow, CoreView):
     def window_settings(self, parent):
         ViewSettings(parent=parent, lng=self.lng)
 
-    def window_exam_schoolclass(self, lng):
-        QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
-
-    def window_exam_student(self, lng):
-        QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
-
     def window_report_schoolclass(self, lng):
         QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
 
@@ -116,6 +110,9 @@ class BaseView(QMainWindow, CoreView):
 
     def window_configure_schoolclass(self, lng):
         ViewSchoolClassConfigure(self.dbh, self.tab_window, lng)
+
+    def window_configure_exam(self, lng):
+        QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
 
     def window_define_schoolyear(self, lng):
         ViewSchoolYear(self.dbh, self.tab_window, lng)
@@ -187,11 +184,6 @@ class BaseView(QMainWindow, CoreView):
         self.settings_action.triggered.connect(lambda: self.window_settings(self))
         self.exit_action = QAction(menutext['quit'], self)
         self.exit_action.triggered.connect(self.action_app_close)
-        # Exam menu actions
-        self.exam_schoolclass_action = QAction(menutext['schoolclass'], self)
-        self.exam_schoolclass_action.triggered.connect(lambda: self.add_tab_event(self.window_exam_schoolclass, self.lng['window_exam_schoolclass']))
-        self.exam_student_action = QAction(menutext['student'], self)
-        self.exam_student_action.triggered.connect(lambda: self.add_tab_event(self.window_exam_student, self.lng['window_exam_student']))
         # Report menu actions
         self.report_schoolclass_action = QAction(menutext['schoolclass'], self)
         self.report_schoolclass_action.triggered.connect(lambda: self.add_tab_event(self.window_report_schoolclass, self.lng['window_report_schoolclass']))
@@ -200,6 +192,8 @@ class BaseView(QMainWindow, CoreView):
         # configure menu actions
         self.schoolclass_configure_action = QAction(menutext['schoolclass'], self)
         self.schoolclass_configure_action.triggered.connect(lambda: self.add_tab_event(self.window_configure_schoolclass, self.lng['window_configure_schoolclass']))
+        self.exam_configure_action = QAction(menutext['exam'], self)
+        self.exam_configure_action.triggered.connect(lambda: self.add_tab_event(self.window_configure_exam, self.lng['window_configure_exam']))
         # Definition menu actions
         self.schoolyear_action = QAction(menutext['schoolyear'], self)
         self.schoolyear_action.triggered.connect(lambda: self.add_tab_event(self.window_define_schoolyear, self.lng['window_define_schoolyear']))
@@ -223,16 +217,13 @@ class BaseView(QMainWindow, CoreView):
         filemenu.addSeparator()
         filemenu.addAction(self.exit_action)
 
-        exammenu = mainMenu.addMenu(menutext['mainmenuexam'])
-        exammenu.addAction(self.exam_schoolclass_action)
-        exammenu.addAction(self.exam_student_action)
-
         reportmenu = mainMenu.addMenu(menutext['mainmenureport'])
         reportmenu.addAction(self.report_schoolclass_action)
         reportmenu.addAction(self.report_student_action)
 
         configurationmenu = mainMenu.addMenu(menutext['mainmenuconfigure'])
         configurationmenu.addAction(self.schoolclass_configure_action)
+        configurationmenu.addAction(self.exam_configure_action)
 
         definitionmenu = mainMenu.addMenu(menutext['mainmenudefinition'])
         definitionmenu.addAction(self.schoolyear_action)

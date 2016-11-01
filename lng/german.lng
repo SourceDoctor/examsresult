@@ -11,7 +11,6 @@ msg_file_not_found=Datei nicht gefunden
 
 [menu]
 mainmenufile=File
-mainmenuexam=Exam
 mainmenureport=Report
 mainmenuconfigure=Configuration
 mainmenudefinition=Definition
@@ -28,6 +27,7 @@ schoolyear=Schoolyear
 examstype=Examstype
 timeperiod=Timeperiod
 student=Student
+exam=Prüfung
 
 about=About
 
@@ -120,11 +120,8 @@ column_firstname=Spaltennummer für Vorname
 column_comment=Spaltennummer für Kommentar
 cancel=Abbrechen
 
-[window_exam_schoolclass]
-title = Schulklasse Prüfung
-
-[window_exam_student]
-title = Schüler Prüfung
+[window_configure_exam]
+title = Prüfung Konfiguration
 
 [window_report_schoolclass]
 title = Schulklasse Report
