@@ -4,7 +4,7 @@ from examsresult.controls.dbhandler import DBHandler
 from examsresult.tools import lng_load, center_pos, app_icon
 from examsresult.views.core import CoreView
 from examsresult.views.settings import ViewSettings
-from examsresult.views.configuration import ViewSchoolClassConfigure
+from examsresult.views.configuration import ViewSchoolClassConfigure, ViewExamConfigure
 from examsresult.views.definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
 from examsresult.views.about import ViewAbout
 from os.path import isfile
@@ -112,7 +112,7 @@ class BaseView(QMainWindow, CoreView):
         ViewSchoolClassConfigure(self.dbh, self.tab_window, lng)
 
     def window_configure_exam(self, lng):
-        QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
+        ViewExamConfigure(self.dbh, self.tab_window, lng)
 
     def window_define_schoolyear(self, lng):
         ViewSchoolYear(self.dbh, self.tab_window, lng)

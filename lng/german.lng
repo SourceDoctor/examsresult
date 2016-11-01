@@ -122,6 +122,16 @@ cancel=Abbrechen
 
 [window_configure_exam]
 title = Prüfung Konfiguration
+schoolyear=Schuljahr
+schoolclass=Schulklasse
+examtype = Prüfungsart
+date = Datum
+exams = Prüfungen
+subject = Schulfach
+count = Anzahl
+average = Durchschnitt
+add = Hinzufügen
+save = Speichern
 
 [window_report_schoolclass]
 title = Schulklasse Report

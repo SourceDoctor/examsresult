@@ -122,6 +122,16 @@ cancel=Cancel
 
 [window_configure_exam]
 title = Exam Configuration
+schoolyear=Schoolyear
+schoolclass=Schoolclass
+examtype = Exam Type
+date = Date
+exams = Exams
+subject = Subject
+count = Count
+average = Average
+add = Add
+save = Save Changes
 
 [window_report_schoolclass]
 title = Schoolclass Report
