@@ -158,12 +158,16 @@ class CoreView(object):
                 self.my_table.setItem(self.my_table.rowCount() - 1, 0, QTableWidgetItem(''))
 
                 column = 1
-                while column <= len(self.column_title) - 1:
+                data_row = 0
+                while column <= len(self.column_title) - 1 and data_row <= len(data) - 1:
                     self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
                     column += 1
+                    data_row += 1
                 self.set_changed(True)
-
-        self.button_add.setFocus()
+        try:
+            self.button_add.setFocus()
+        except AttributeError:
+            pass
 
     def action_edit(self, cell):
         row = cell.row()

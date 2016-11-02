@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QDialog, QPushButton, QLabel, QTableWidget, \
-    QAbstractItemView, QTextEdit, QCalendarWidget, QGroupBox
+    QAbstractItemView, QTextEdit, QCalendarWidget, QInputDialog, QTableWidgetItem
 
-from examsresult.configuration import current_config, save_config
+from examsresult.configuration import current_config
 from examsresult.tools import lng_list
 from examsresult.views.core import CoreView
 
@@ -19,7 +19,7 @@ class Exam(CoreView):
 
     examresult = []
 
-    def __init__(self, dbhandler, parent, lng):
+    def __init__(self, dbhandler, parent, lng, type='add', students=[]):
         self.dbhandler = dbhandler
         self.lng = lng
         self.column_title = []
@@ -80,11 +80,9 @@ class Exam(CoreView):
 
         self.my_table.doubleClicked.connect(self.action_edit)
 
-
-
+        # set button_save object, so set_change - Handler doesn't crash
         self.button_save = QPushButton(self.lng['save'], self.window)
-        self.button_save.move(self.table_left + self.table_width - self.button_save.width(), self.table_top + self.table_height)
-#        self.button_save.clicked.connect(self.save_settings)
+        self.button_save.setVisible(False)
 
         button_cancel = QPushButton(self.lng['close'], self.window)
         button_cancel.move(370, 470)
@@ -100,20 +98,27 @@ class Exam(CoreView):
         label_exam_date.setText(self.lng['exam_date'])
         label_exam_date.move(self.table_left, 30)
 
-#        cal.clicked[QDate].connect(cal.showDate)
-
         date = self.cal.selectedDate()
         self.exam_date = QLabel(self.window)
         self.exam_date.setText(date.toString())
-#        self.exam_date.move(self.table_left + 100, 30)
-        self.exam_date.setGeometry(self.table_left + 100, 22, 100, self.exam_date.height())
+        self.exam_date.setGeometry(self.table_left + 100, 22, 120, self.exam_date.height())
 
         self.button_set_date = QPushButton(self.lng['set_date'], self.window)
         self.button_set_date.move(self.table_left + 240, 25)
         self.button_set_date.clicked.connect(self.set_date)
 
+        for student in students:
+            self.action_add(data_import=True, data=student)
+
         self.set_changed(False)
-        self.window.exec_()
+
+        self.window.show()
+
+        if type == 'add':
+            # run over all students to fill in results
+            self.insert_result()
+
+        self.window.exec()
 
     def _define_column_title(self):
         return [{'name': self.lng['lastname'], 'type': 'string', 'unique': False},
@@ -128,3 +133,21 @@ class Exam(CoreView):
         self.exam_date.setVisible(not self.exam_date.isVisible())
         date = self.cal.selectedDate()
         self.exam_date.setText(date.toString())
+
+    def insert_result(self):
+        lastname_column = 1
+        firstname_column = 2
+        result_column = 3
+        dialog = QInputDialog(self.my_table)
+        row = 0
+        while row <= self.my_table.rowCount() - 1:
+            lastname = self.my_table.item(row, lastname_column).text()
+            firstname = self.my_table.item(row, firstname_column).text()
+            input_text = "%s, %s" % (lastname, firstname)
+
+            result, ok = dialog.getDouble(self.my_table, self.lng['result'], input_text, decimals=self.float_precision)
+            if not ok:
+                return
+            self.my_table.setItem(row, result_column, QTableWidgetItem(str(result)))
+
+            row += 1

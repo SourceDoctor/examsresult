@@ -352,8 +352,18 @@ class ViewExamConfigure(ViewConfigure):
         timeperiod, ok = dialog.getItem(self.tab_window, self.lng['title'], self.lng['timeperiod'], timeperiod_list, 0, False)
         if not ok:
             return
-        exam = Exam(self.dbh, self.tab_window, self.lng)
-        data = exam.examresult
+
+        students = self.dbh.get_students(schoolyear=self.listbox_schoolyear.currentText(),
+                                         schoolclass=self.listbox_schoolclass.currentText()
+                                         )
+        student_list = []
+        for s in students:
+            student_list.append((s[1], s[2]))
+
+        exam = Exam(self.dbh, self.tab_window, self.lng, type='add', students=student_list)
+        exam_data = exam.examresult
+        if exam_data:
+            self.set_changed(True)
 
     def _set_changed(self, status):
         if status:
