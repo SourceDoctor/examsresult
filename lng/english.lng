@@ -122,9 +122,15 @@ cancel=Cancel
 
 [window_configure_exam]
 title = Exam Configuration
+title_result = Exam Result
 schoolyear=Schoolyear
 schoolclass=Schoolclass
 examtype = Exam Type
+timeperiod = Timeperiod
+lastname= Lastname
+firstname = Firstname
+result = Result
+comment = Comment
 date = Date
 exams = Exams
 subject = Subject
@@ -132,6 +138,13 @@ count = Count
 average = Average
 add = Add
 save = Save Changes
+close = Close
+exam_date = Date of Exam
+exam_description = Description
+students = Students
+set_date = Date
+msg_no_examtype= No Examtype defined
+msg_no_timeperiod= No Timeperiod defined
 
 [window_report_schoolclass]
 title = Schoolclass Report

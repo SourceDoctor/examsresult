@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
     QPushButton, QComboBox, QMessageBox, QToolButton, QMenu, QInputDialog
 from examsresult.views import CoreView
+from examsresult.views.exam_handler import Exam
 from examsresult.views.import_csv import CSVImport
 
 
@@ -319,6 +320,7 @@ class ViewExamConfigure(ViewConfigure):
     def _define_column_title(self):
         return [{'name': self.lng['date'], 'type': 'string', 'unique': False},
                 {'name': self.lng['examtype'], 'type': 'string', 'unique': False},
+                {'name': self.lng['timeperiod'], 'type': 'string', 'unique': False},
                 {'name': self.lng['count'], 'type': 'float', 'unique': False},
                 {'name': self.lng['average'], 'type': 'float', 'unique': False},
                 ]
@@ -331,6 +333,27 @@ class ViewExamConfigure(ViewConfigure):
 
     def subject_change(self, index):
         self._change(self.subject_change_enabled, self.listbox_subject, self.subject_listindex, index)
+
+    def action_add(self, data_import=False, data=()):
+        examtype_list = self.get_examtypenames()
+        timeperiod_list = self.get_timeperiodnames()
+
+        if not examtype_list:
+            QMessageBox.critical(self.tab_window, self.lng['title'], self.lng['msg_no_examtype'])
+            return
+        if not timeperiod_list:
+            QMessageBox.critical(self.tab_window, self.lng['title'], self.lng['msg_no_timeperiod'])
+            return
+
+        dialog = QInputDialog()
+        examtype, ok = dialog.getItem(self.tab_window, self.lng['title'], self.lng['examtype'], examtype_list, 0, False)
+        if not ok:
+            return
+        timeperiod, ok = dialog.getItem(self.tab_window, self.lng['title'], self.lng['timeperiod'], timeperiod_list, 0, False)
+        if not ok:
+            return
+        exam = Exam(self.dbh, self.tab_window, self.lng)
+        data = exam.examresult
 
     def _set_changed(self, status):
         if status:
@@ -357,5 +380,17 @@ class ViewExamConfigure(ViewConfigure):
     def get_subjectnames(self):
         ret = []
         for i in self.dbh.get_subject():
+            ret.append(i[1])
+        return ret
+
+    def get_examtypenames(self):
+        ret = []
+        for i in self.dbh.get_examtype():
+            ret.append(i[1])
+        return ret
+
+    def get_timeperiodnames(self):
+        ret = []
+        for i in self.dbh.get_timeperiod():
             ret.append(i[1])
         return ret

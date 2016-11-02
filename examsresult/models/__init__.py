@@ -73,7 +73,6 @@ class Exam(Base):
     time_period = Column(Integer, ForeignKey('time_period.id'))
     school_class_id = Column(Integer, ForeignKey('school_class.id'))
 
-    single_test = Column(Boolean, default=False, nullable=False)
     comment = Column(Unicode(1024), nullable=True)
 
 
