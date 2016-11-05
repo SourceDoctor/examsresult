@@ -31,6 +31,36 @@ class ViewConfigure(CoreView):
         self.load_data()
         change_index = index
 
+    def get_schoolclassnames(self):
+        ret = []
+        for i in self.dbh.get_schoolclassname():
+            ret.append(i[1])
+        return ret
+
+    def get_schoolyears(self):
+        ret = []
+        for i in self.dbh.get_schoolyear():
+            ret.append(i[1])
+        return ret
+
+    def get_subjectnames(self):
+        ret = []
+        for i in self.dbh.get_subject():
+            ret.append(i[1])
+        return ret
+
+    def get_examtypenames(self):
+        ret = []
+        for i in self.dbh.get_examtype():
+            ret.append(i[1])
+        return ret
+
+    def get_timeperiodnames(self):
+        ret = []
+        for i in self.dbh.get_timeperiod():
+            ret.append(i[1])
+        return ret
+
 
 class ViewSchoolClassConfigure(ViewConfigure):
 
@@ -208,18 +238,6 @@ class ViewSchoolClassConfigure(ViewConfigure):
             student = student[1:len(student)]
             self.action_add(data_import=True, data=student)
 
-    def get_schoolclassnames(self):
-        ret = []
-        for i in self.dbh.get_schoolclassname():
-            ret.append(i[1])
-        return ret
-
-    def get_schoolyears(self):
-        ret = []
-        for i in self.dbh.get_schoolyear():
-            ret.append(i[1])
-        return ret
-
 
 class ViewExamConfigure(ViewConfigure):
 
@@ -323,6 +341,7 @@ class ViewExamConfigure(ViewConfigure):
                 {'name': self.lng['timeperiod'], 'type': 'string', 'unique': False},
                 {'name': self.lng['count'], 'type': 'float', 'unique': False},
                 {'name': self.lng['average'], 'type': 'float', 'unique': False},
+                {'name': self.lng['exam_description'], 'type': 'string', 'unique': False},
                 ]
 
     def schoolclass_change(self, index):
@@ -358,7 +377,7 @@ class ViewExamConfigure(ViewConfigure):
                                          )
         student_list = []
         for s in students:
-            student_list.append((s[1], s[2]))
+            student_list.append((s[1], s[2], "", ""))
 
         exam = Exam(self.dbh, self.tab_window, self.lng, type='add', students=student_list)
         exam_data = exam.examresult
@@ -374,33 +393,3 @@ class ViewExamConfigure(ViewConfigure):
             if not self.listbox_subject.currentText():
                 return False
         return True
-
-    def get_schoolclassnames(self):
-        ret = []
-        for i in self.dbh.get_schoolclassname():
-            ret.append(i[1])
-        return ret
-
-    def get_schoolyears(self):
-        ret = []
-        for i in self.dbh.get_schoolyear():
-            ret.append(i[1])
-        return ret
-
-    def get_subjectnames(self):
-        ret = []
-        for i in self.dbh.get_subject():
-            ret.append(i[1])
-        return ret
-
-    def get_examtypenames(self):
-        ret = []
-        for i in self.dbh.get_examtype():
-            ret.append(i[1])
-        return ret
-
-    def get_timeperiodnames(self):
-        ret = []
-        for i in self.dbh.get_timeperiod():
-            ret.append(i[1])
-        return ret

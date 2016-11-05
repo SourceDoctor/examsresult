@@ -85,7 +85,7 @@ class CoreView(object):
                 row += 1
         return True
 
-    def _action_add_content(self, root_window, content=()):
+    def _action_add_content(self, root_window, content=(), limit_column=[]):
         data = ()
 
         add_dialog = QInputDialog(parent=root_window)
@@ -113,29 +113,31 @@ class CoreView(object):
                     cell_content = None
 
             content_index += 1
-
-            if col['type'] == 'int':
-                value, ok = add_dialog.getInt(root_window, self.lng['title'], col['name'], value=int(cell_content))
-            elif col['type'] == 'float':
-                value, ok = add_dialog.getDouble(root_window, self.lng['title'], col['name'],
-                                                 decimals=self.float_precision, value=float(cell_content))
-            elif col['type'] == 'string':
-                value, ok = add_dialog.getText(root_window, self.lng['title'], col['name'], text=cell_content)
-            elif col['type'] == 'list':
-                value, ok = add_dialog.getItem(root_window, self.lng['title'], col['name'], cell_content, 0, False)
+            if len(limit_column) and content_index not in limit_column:
+                value = cell_content
             else:
-                print("unknown Type: %s" % col[1])
-                return ()
+                if col['type'] == 'int':
+                    value, ok = add_dialog.getInt(root_window, self.lng['title'], col['name'], value=int(cell_content))
+                elif col['type'] == 'float':
+                    value, ok = add_dialog.getDouble(root_window, self.lng['title'], col['name'],
+                                                     decimals=self.float_precision, value=float(cell_content))
+                elif col['type'] == 'string':
+                    value, ok = add_dialog.getText(root_window, self.lng['title'], col['name'], text=cell_content)
+                elif col['type'] == 'list':
+                    value, ok = add_dialog.getItem(root_window, self.lng['title'], col['name'], cell_content, 0, False)
+                else:
+                    print("unknown Type: %s" % col[1])
+                    return ()
 
-            if not ok:
-                return ()
+                if not ok:
+                    return ()
 
             data += (value,)
 
         return data
 
-    def _action_edit_content(self, root_window, content):
-        return self._action_add_content(root_window, content)
+    def _action_edit_content(self, root_window, content, limit_column=[]):
+        return self._action_add_content(root_window, content, limit_column)
 
     def _action_load_content(self):
         QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to load!")
@@ -169,7 +171,7 @@ class CoreView(object):
         except AttributeError:
             pass
 
-    def action_edit(self, cell):
+    def action_edit(self, cell, limit_column=[]):
         row = cell.row()
         content = ()
 
@@ -179,7 +181,7 @@ class CoreView(object):
             content += (self.my_table.item(row, column).text(),)
             column += 1
 
-        new_content = self._action_edit_content(self.my_table, content)
+        new_content = self._action_edit_content(self.my_table, content, limit_column)
         if not new_content:
             self.my_table.selectRow(row)
             return
@@ -191,8 +193,9 @@ class CoreView(object):
         # write new Cell Content
         column = 1
         while column <= len(self.column_title) - 1:
-            new_value = new_content[column - 1]
-            self.my_table.setItem(row, column, QTableWidgetItem(str(new_value)))
+            if not len(limit_column) or column in limit_column:
+                new_value = new_content[column - 1]
+                self.my_table.setItem(row, column, QTableWidgetItem(str(new_value)))
             column += 1
 
         self.my_table.selectRow(row)

@@ -12,12 +12,12 @@ Overview every time complete Result of Students or complete School Classes
 * define Exam Types and weight them
 * define Time Periods and weight them
 * define School Class for School Year and assign Students
+* handle several Subjects in every School Class
 
 * import Students from CSV
 * import Students from a Class of a School Year before
 
 ## Todos
-* handle several Subjects in every School Class
 * handle an Exam for complete School Class or a single student
 
 * calculate each Timeperiod seperate and show result, 

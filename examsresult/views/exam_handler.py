@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QDialog, QPushButton, QLabel, QTableWidget, \
-    QAbstractItemView, QTextEdit, QCalendarWidget, QInputDialog, QTableWidgetItem
+    QAbstractItemView, QTextEdit, QCalendarWidget, QInputDialog, QTableWidgetItem, \
+    QMessageBox
 
 from examsresult.configuration import current_config
 from examsresult.tools import lng_list
@@ -33,12 +34,14 @@ class Exam(CoreView):
         self.window.setFixedHeight(self.height)
         self.window.setFixedWidth(self.width)
         self.window.setWindowTitle(self.lng['title_result'])
+        self.window.closeEvent = self.closeEvent
 
         label_exam_description = QLabel(self.window)
         label_exam_description.setText(self.lng['exam_description'])
         label_exam_description.move(self.table_left, 50)
         self.text_exam_description = QTextEdit(self.window)
         self.text_exam_description.setGeometry(self.table_left + 100, 52, 300, 40)
+        self.text_exam_description.textChanged.connect(self.description_changed)
 
         label_students = QLabel(self.window)
         label_students.setText(self.lng['students'])
@@ -78,11 +81,12 @@ class Exam(CoreView):
         self.my_table.resizeColumnsToContents()
         self.my_table.setSortingEnabled(self.sorting)
 
-        self.my_table.doubleClicked.connect(self.action_edit)
+        self.my_table.doubleClicked.connect(self.result_edit)
 
         # set button_save object, so set_change - Handler doesn't crash
         self.button_save = QPushButton(self.lng['save'], self.window)
-        self.button_save.setVisible(False)
+        self.button_save.move(self.table_left + self.table_width - self.button_save.width(), self.table_top + self.table_height)
+        self.button_save.clicked.connect(self.save_exam)
 
         button_cancel = QPushButton(self.lng['close'], self.window)
         button_cancel.move(370, 470)
@@ -118,7 +122,7 @@ class Exam(CoreView):
             # run over all students to fill in results
             self.insert_result()
 
-        self.window.exec()
+        self.window.exec_()
 
     def _define_column_title(self):
         return [{'name': self.lng['lastname'], 'type': 'string', 'unique': False},
@@ -127,12 +131,19 @@ class Exam(CoreView):
                 {'name': self.lng['comment'], 'type': 'string', 'unique': False}
                 ]
 
+    def result_edit(self, cell):
+        self.action_edit(cell, limit_column=[3, 4])
+
     def set_date(self):
         self.cal.setVisible(not self.cal.isVisible())
         self.button_set_date.setVisible(not self.button_set_date.isVisible())
         self.exam_date.setVisible(not self.exam_date.isVisible())
         date = self.cal.selectedDate()
         self.exam_date.setText(date.toString())
+        self.set_changed(True)
+
+    def description_changed(self):
+        self.set_changed(True)
 
     def insert_result(self):
         lastname_column = 1
@@ -149,5 +160,31 @@ class Exam(CoreView):
             if not ok:
                 return
             self.my_table.setItem(row, result_column, QTableWidgetItem(str(result)))
+            self.set_changed(True)
 
             row += 1
+
+    def save_exam(self):
+        self.set_changed(False)
+
+    # def closeEvent(self, event):
+    #     index = -1
+    #     while index <= self.tab_window.count() - 1:
+    #         index += 1
+    #         title = self.tab_window.tabText(index)
+    #         if not title.startswith(self.changed_mark):
+    #             continue
+    #         answer = QMessageBox.question(self, self.lng['main']['title'], self.lng['main']['msg_close_unsaved'])
+    #         if answer == QMessageBox.No:
+    #             event.ignore()
+    #             return
+    #         break
+    #     self.action_app_close()
+
+    def closeEvent(self, event):
+        if self.button_save.isEnabled():
+            answer = QMessageBox.question(self.window, self.lng['title'], self.lng['msg_close_unsaved'])
+            if answer == QMessageBox.No:
+                event.ignore()
+                return
+        self.window.close()

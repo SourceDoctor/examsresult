@@ -145,6 +145,7 @@ students = Students
 set_date = Date
 msg_no_examtype= No Examtype defined
 msg_no_timeperiod= No Timeperiod defined
+msg_close_unsaved=Really close unsaved?
 
 [window_report_schoolclass]
 title = Schoolclass Report
