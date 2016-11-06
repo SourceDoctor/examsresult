@@ -256,13 +256,19 @@ class DBHandler(object):
         else:
             x_list = []
 
-        count = 1
-        average = 2
-
         for x in x_list:
+            count = 0
+            sum = 0
+            for r in x.exam_results:
+                if r.result:
+                    count += 1
+                    sum += r.result
+            if count:
+                average = round(sum/count, 2)
+            written_count = "%d/%d" % (count, len(x.exam_results))
             x_type = self.session.query(ExamType).filter(ExamType.id == x.exam_type).first()
             x_timeperiod = self.session.query(TimePeriod).filter(TimePeriod.id == x.time_period).first()
-            exam_list.append((x.id, x.date, x_type.name, x_timeperiod.name, count, average, x.comment))
+            exam_list.append((x.id, x.date, x_type.name, x_timeperiod.name, written_count, average, x.comment))
 
         return exam_list
 
