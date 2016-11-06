@@ -298,7 +298,9 @@ class ViewExamConfigure(ViewConfigure):
 
         self.my_table.doubleClicked.connect(self.action_edit)
 
+        # dummy Button
         self.button_save = QPushButton(lng['save'], mytab)
+        self.button_save.setVisible(False)
         self.button_save.move(self.table_left + self.table_width + 10, self.table_top + self.my_table.height())
         self.button_save.clicked.connect(lambda: self.action_save(self.tab_window))
 
@@ -377,12 +379,19 @@ class ViewExamConfigure(ViewConfigure):
                                          )
         student_list = []
         for s in students:
-            student_list.append((s[1], s[2], "", ""))
+            student_list.append((s[0], s[1], s[2], "", ""))
 
-        exam = Exam(self.dbh, self.tab_window, self.lng, type='add', students=student_list)
-        exam_data = exam.examresult
-        if exam_data:
-            self.set_changed(True)
+        exam_data = {
+            'schoolyear': self.listbox_schoolyear.currentText(),
+            'schoolclass': self.listbox_schoolclass.currentText(),
+            'subject': self.listbox_subject.currentText(),
+            'examtype': examtype,
+            'timeperiod': timeperiod,
+            'students': student_list
+        }
+
+        Exam(self.dbh, self.tab_window, self.lng, type='add', exam_data=exam_data)
+        self.load_data()
 
     def _set_changed(self, status):
         if status:
@@ -393,3 +402,9 @@ class ViewExamConfigure(ViewConfigure):
             if not self.listbox_subject.currentText():
                 return False
         return True
+
+    def _action_load_content(self):
+        schoolyear = self.listbox_schoolyear.currentText()
+        schoolclassname = self.listbox_schoolclass.currentText()
+        subject = self.listbox_subject.currentText()
+        return self.dbh.get_exams(schoolyear, schoolclassname, subject)

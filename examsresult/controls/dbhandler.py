@@ -103,6 +103,25 @@ class DBHandler(object):
         self.session.commit()
         return 0
 
+    def get_schoolclass_id(self, schoolyear, schoolclassname):
+        school_class_row = self.session.query(SchoolClass).filter(SchoolClass.schoolyear==schoolyear). \
+            filter(SchoolClass.schoolclass==schoolclassname).first()
+        if school_class_row:
+            return school_class_row.id
+        return None
+
+    def get_examtype_id(self, examtype):
+        ret = self.session.query(ExamType).filter(ExamType.name == examtype).first()
+        if ret:
+            return ret.id
+        return None
+
+    def get_timeperiod_id(self, timeperiod):
+        ret = self.session.query(TimePeriod).filter(TimePeriod.name == timeperiod).first()
+        if ret:
+            return ret.id
+        return None
+
     def get_subject(self):
         ret = self._list(Subject)
         data = []
@@ -171,6 +190,9 @@ class DBHandler(object):
         self.session.commit()
         return 0
 
+    def get_student_data(self, id):
+        return self.session.query(Student).filter(Student.id==id).first()
+
     def get_students(self, schoolyear, schoolclass):
         ret = self._list(SchoolClass)
         ret = ret.filter(SchoolClass.schoolyear==schoolyear)
@@ -219,36 +241,116 @@ class DBHandler(object):
                 s.firstname = d[2]
                 s.comment = d[3]
             s.school_class = school_class
-            self.session.add(s)
-
-        # remaining id's in id_list are no longer member of school_class, so delete them
-        for student_id in id_list:
-            s = self.session.query(Student).filter(Student.id == int(student_id)).first()
-            self.session.delete(s)
+            self.session.add(s),
 
         self.session.commit()
         return 0
 
-    # ----------- still not used functions -----------------------------------------
+    def get_exams(self, schoolyear, schoolclassname, subject):
+        exam_list = []
 
-    def get_exams(self, filter={}):
-        ret = self._list(Exam)
+        school_class_id = self.get_schoolclass_id(schoolyear, schoolclassname)
+        if school_class_id:
+            x_list = self.session.query(Exam).filter(Exam.school_class_id == school_class_id).filter(
+                Exam.subject == subject).all()
+        else:
+            x_list = []
 
-        if 'schoolclass' in filter.keys():
-            ret = ret.filter(Exam.school_class_id.name == filter['schoolclass'])
-        if 'student' in filter.keys():
-            ret = ret.filter(Exam.student.name == filter['student'])
-        return ret.all()
+        count = 1
+        average = 2
 
-    def get_exam_result(self, filter={}):
-        ret = self._list(ExamResult)
+        for x in x_list:
+            x_type = self.session.query(ExamType).filter(ExamType.id == x.exam_type).first()
+            x_timeperiod = self.session.query(TimePeriod).filter(TimePeriod.id == x.time_period).first()
+            exam_list.append((x.id, x.date, x_type.name, x_timeperiod.name, count, average, x.comment))
 
-        if 'schoolclass' in filter.keys():
-            ret = ret.filter(ExamResult.student.school_class.name == filter['schoolchlass'])
-        if 'student' in filter.keys():
-            ret = ret.filter(ExamResult.student.name == filter['student'])
-        return ret.all()
+        return exam_list
 
-    def get_parameter(self, filter_key):
-        ret = self._list(Parameter, {'key': filter_key})
-        return ret.all()
+    def get_exam(self, exam_date, school_class_id, subject, examtype, timeperiod):
+        examtype_id = self.get_examtype_id(examtype)
+        timeperiod_id = self.get_timeperiod_id(timeperiod)
+
+        ret = self.session.query(Exam). \
+            filter(Exam.date==exam_date). \
+            filter(Exam.school_class_id==school_class_id). \
+            filter(Exam.subject==subject). \
+            filter(Exam.exam_type==examtype_id). \
+            filter(Exam.time_period==timeperiod_id).first()
+        return ret
+
+    def set_exam(self, exam_date, schoolyear, schoolclassname, subject, examtype, timeperiod, results, comment):
+
+        school_class_id = self.get_schoolclass_id(schoolyear, schoolclassname)
+        examtype_id = self.get_examtype_id(examtype)
+        timeperiod_id = self.get_timeperiod_id(timeperiod)
+        subject_row = self.session.query(Subject).filter(Subject.name==subject).first()
+
+        x = self.get_exam(exam_date, school_class_id, subject_row.name, examtype, timeperiod)
+        if not x:
+            x = Exam(date=exam_date,
+                     school_class_id=school_class_id,
+                     subject=subject_row.name,
+                     exam_type=examtype_id,
+                     time_period=timeperiod_id,
+                     comment=comment
+                     )
+            self.session.add(x)
+            self.session.commit()
+            x = self.get_exam(exam_date, school_class_id, subject_row.name, examtype, timeperiod)
+        else:
+            x.date = exam_date
+            x.subject = subject_row.name
+            x.exam_type = examtype_id
+            x.time_period = timeperiod_id
+            x.comment = comment
+            self.session.add(x)
+            self.session.commit()
+
+        for result in results:
+            student_id = result[0]
+            student_result = result[3]
+            student_comment = result[4]
+            self.set_exam_result(exam_id=x.id, student_id=student_id, result=student_result, comment=student_comment)
+
+        return 0
+
+    def get_exam_result(self, exam_id=None, student_id=None):
+        ret = self.session.query(ExamResult)
+        if exam_id:
+            ret = ret.filter(ExamResult.exam_id == exam_id)
+        if student_id:
+            ret = ret.filter(ExamResult.student == student_id)
+
+        if exam_id and student_id:
+            return ret.first()
+        else:
+            return ret.all()
+
+    def set_exam_result(self, exam_id, student_id, result, comment):
+        r = self.get_exam_result(exam_id, student_id)
+        if not r:
+            r = ExamResult(result=result,
+                           exam_id=exam_id,
+                           student=student_id,
+                           comment=comment)
+        else:
+            r.result = result
+            r.comment = comment
+
+        self.session.add(r)
+        self.session.commit()
+
+    def get_parameter(self, key):
+        return self.session.query(Parameter).filter(Parameter.key==key).first()
+
+    def set_parameter(self, key, value):
+        p = self.get_parameter(key=key)
+        if not p:
+            p = Parameter(key=key,
+                          value=value)
+        else:
+            p.value = value
+
+        self.session.add(p)
+        self.session.commit()
+        return 0

@@ -66,7 +66,7 @@ class SchoolClass(Base):
 
 class Exam(Base):
     __tablename__ = 'exam'
-    date = Column(Integer, nullable=False)
+    date = Column(Unicode(32), nullable=False)
 
     subject = Column(Unicode(256), ForeignKey('subject.name'))
     exam_type = Column(Integer, ForeignKey('exam_type.id'))

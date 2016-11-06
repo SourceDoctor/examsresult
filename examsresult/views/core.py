@@ -147,7 +147,7 @@ class CoreView(object):
         QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to save!")
         return 0
 
-    def action_add(self, data_import=False, data=()):
+    def action_add(self, data_import=False, with_id=False, data=()):
         # fill Data into Cells
         if not data_import:
             data = self._action_add_content(self.my_table)
@@ -159,10 +159,19 @@ class CoreView(object):
                 # add empty cell to id Column to have a reference to database
                 self.my_table.setItem(self.my_table.rowCount() - 1, 0, QTableWidgetItem(''))
 
-                column = 1
+                column_title = []
+                if with_id:
+                    column = 0
+                    column_title.append({'name': 'id', 'type': 'int', 'unique': True, 'editable': False})
+                else:
+                    column = 1
+                column_title.extend(self.column_title)
                 data_row = 0
-                while column <= len(self.column_title) - 1 and data_row <= len(data) - 1:
-                    self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
+                while column <= len(column_title) - 1 and data_row <= len(data) - 1:
+                    if with_id:
+                        self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column])))
+                    else:
+                        self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column - 1])))
                     column += 1
                     data_row += 1
                 self.set_changed(True)

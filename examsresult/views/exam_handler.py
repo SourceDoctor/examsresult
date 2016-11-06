@@ -18,9 +18,14 @@ class Exam(CoreView):
     table_height = 320
     table_width = 400
 
-    examresult = []
+    def __init__(self, dbhandler, parent, lng, exam_data, type='add'):
+        self.schoolyear = exam_data['schoolyear']
+        self.schoolclass = exam_data['schoolclass']
+        self.subject = exam_data['subject']
+        self.examtype = exam_data['examtype']
+        self.timeperiod = exam_data['timeperiod']
+        students = exam_data['students']
 
-    def __init__(self, dbhandler, parent, lng, type='add', students=[]):
         self.dbhandler = dbhandler
         self.lng = lng
         self.column_title = []
@@ -86,7 +91,7 @@ class Exam(CoreView):
         # set button_save object, so set_change - Handler doesn't crash
         self.button_save = QPushButton(self.lng['save'], self.window)
         self.button_save.move(self.table_left + self.table_width - self.button_save.width(), self.table_top + self.table_height)
-        self.button_save.clicked.connect(self.save_exam)
+        self.button_save.clicked.connect(self.action_save)
 
         button_cancel = QPushButton(self.lng['close'], self.window)
         button_cancel.move(370, 470)
@@ -112,7 +117,7 @@ class Exam(CoreView):
         self.button_set_date.clicked.connect(self.set_date)
 
         for student in students:
-            self.action_add(data_import=True, data=student)
+            self.action_add(data_import=True, with_id=True, data=student)
 
         self.set_changed(False)
 
@@ -130,6 +135,21 @@ class Exam(CoreView):
                 {'name': self.lng['result'], 'type': 'float', 'unique': False},
                 {'name': self.lng['comment'], 'type': 'string', 'unique': False}
                 ]
+
+    def _action_load_content(self):
+        school_class_id = self.dbhandler.get_schoolclass_id(self.schoolyear, self.schoolclass)
+        data = self.dbhandler.get_exam(exam_date=self.exam_date.text(),
+                                       school_class_id=school_class_id,
+                                       subject=self.subject,
+                                       examtype=self.examtype,
+                                       timeperiod=self.timeperiod)
+        student_results = self.dbhandler.get_exam_result(exam_id=data.id)
+
+        student_result_list = []
+        for s in student_results:
+            student = self.dbhandler.get_student_data(s.student)
+            student_result_list.append((student.id, student.lastname, student.firstname, s.result, s.comment))
+        return student_result_list
 
     def result_edit(self, cell):
         self.action_edit(cell, limit_column=[3, 4])
@@ -164,22 +184,15 @@ class Exam(CoreView):
 
             row += 1
 
-    def save_exam(self):
-        self.set_changed(False)
-
-    # def closeEvent(self, event):
-    #     index = -1
-    #     while index <= self.tab_window.count() - 1:
-    #         index += 1
-    #         title = self.tab_window.tabText(index)
-    #         if not title.startswith(self.changed_mark):
-    #             continue
-    #         answer = QMessageBox.question(self, self.lng['main']['title'], self.lng['main']['msg_close_unsaved'])
-    #         if answer == QMessageBox.No:
-    #             event.ignore()
-    #             return
-    #         break
-    #     self.action_app_close()
+    def _action_save_content(self, data):
+        self.dbhandler.set_exam(exam_date=self.exam_date.text(),
+                                schoolyear=self.schoolyear,
+                                schoolclassname=self.schoolclass,
+                                subject=self.subject,
+                                examtype=self.examtype,
+                                timeperiod=self.timeperiod,
+                                results=data,
+                                comment=self.text_exam_description.toPlainText())
 
     def closeEvent(self, event):
         if self.button_save.isEnabled():
