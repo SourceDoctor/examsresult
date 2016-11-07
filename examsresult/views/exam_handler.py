@@ -10,6 +10,8 @@ from examsresult.views.core import CoreView
 class Exam(CoreView):
 
     changed_mark_enabled = False
+    exam_id = None
+    students = None
 
     width = 500
     height = 500
@@ -19,12 +21,16 @@ class Exam(CoreView):
     table_width = 400
 
     def __init__(self, dbhandler, parent, lng, exam_data, type='add', single_test=False):
-        self.schoolyear = exam_data['schoolyear']
-        self.schoolclass = exam_data['schoolclass']
-        self.subject = exam_data['subject']
-        self.examtype = exam_data['examtype']
-        self.timeperiod = exam_data['timeperiod']
-        students = exam_data['students']
+        self.type = type
+        if 'exam_id' in exam_data:
+            self.exam_id = exam_data['exam_id']
+        else:
+            self.schoolyear = exam_data['schoolyear']
+            self.schoolclass = exam_data['schoolclass']
+            self.subject = exam_data['subject']
+            self.examtype = exam_data['examtype']
+            self.timeperiod = exam_data['timeperiod']
+            self.students = exam_data['students']
 
         self.dbhandler = dbhandler
         self.lng = lng
@@ -116,16 +122,19 @@ class Exam(CoreView):
         self.button_set_date.move(self.table_left + 240, 25)
         self.button_set_date.clicked.connect(self.set_date)
 
-        for student in students:
-            self.action_add(data_import=True, with_id=True, data=student)
-
-        self.set_changed(False)
+        if self.students:
+            for student in self.students:
+                self.action_add(data_import=True, with_id=True, data=student)
 
         self.window.show()
 
         if type == 'add':
             # run over all students to fill in results
             self.insert_result(add_defaults=single_test)
+        else:
+            self.load_data()
+
+        self.set_changed(False)
 
         self.window.exec_()
 
@@ -137,12 +146,25 @@ class Exam(CoreView):
                 ]
 
     def _action_load_content(self):
-        school_class_id = self.dbhandler.get_schoolclass_id(self.schoolyear, self.schoolclass)
-        data = self.dbhandler.get_exam(exam_date=self.exam_date.text(),
-                                       school_class_id=school_class_id,
-                                       subject=self.subject,
-                                       examtype=self.examtype,
-                                       timeperiod=self.timeperiod)
+        if self.exam_id != None:
+            data = self.dbhandler.get_exam_by_id(exam_id=self.exam_id)
+            school_class = self.dbhandler.get_schoolclass_data(data.school_class_id)
+            timeperiod = self.dbhandler.get_timeperiod_by_id(data.time_period)
+            examtype = self.dbhandler.get_examtype_by_id(data.exam_type)
+            self.exam_date.setText(data.date)
+            self.schoolyear = school_class.schoolyear
+            self.schoolclass = school_class.schoolclass
+            self.subject = data.subject
+            self.examtype = examtype.name
+            self.timeperiod = timeperiod.name
+            self.text_exam_description.setText(data.comment)
+        else:
+            school_class_id = self.dbhandler.get_schoolclass_id(self.schoolyear, self.schoolclass)
+            data = self.dbhandler.get_exam(exam_date=self.exam_date.text(),
+                                           school_class_id=school_class_id,
+                                           subject=self.subject,
+                                           examtype=self.examtype,
+                                           timeperiod=self.timeperiod)
         student_results = self.dbhandler.get_exam_result(exam_id=data.id)
 
         student_result_list = []
@@ -175,7 +197,7 @@ class Exam(CoreView):
         date = self.cal.selectedDate()
         self.exam_date.setText(date.toString())
 
-        if not self.exam_is_unique():
+        if not self.exam_is_unique(msg=not self.exam_id):
             return
 
         self.set_changed(True)
@@ -209,10 +231,11 @@ class Exam(CoreView):
 
     def _action_save_content(self, data):
 
-        if not self.exam_is_unique():
+        if not self.exam_id and not self.exam_is_unique():
             return False
 
-        self.dbhandler.set_exam(exam_date=self.exam_date.text(),
+        self.dbhandler.set_exam(id=self.exam_id,
+                                exam_date=self.exam_date.text(),
                                 schoolyear=self.schoolyear,
                                 schoolclassname=self.schoolclass,
                                 subject=self.subject,

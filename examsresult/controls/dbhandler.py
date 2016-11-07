@@ -110,6 +110,12 @@ class DBHandler(object):
             return school_class_row.id
         return None
 
+    def get_schoolclass_data(self, id):
+        school_class_row = self.session.query(SchoolClass).filter(SchoolClass.id==id).first()
+        if school_class_row:
+            return school_class_row
+        return None
+
     def get_examtype_id(self, examtype):
         ret = self.session.query(ExamType).filter(ExamType.name == examtype).first()
         if ret:
@@ -151,6 +157,12 @@ class DBHandler(object):
             data.append((d.id, d.name, d.weight))
         return data
 
+    def get_examtype_by_id(self, id):
+        ret = self.session.query(ExamType).filter(ExamType.id == id).first()
+        if ret:
+            return ret
+        return None
+
     def set_examtype(self, data):
         for d in data:
             if d[0] != '':
@@ -172,6 +184,12 @@ class DBHandler(object):
         for d in ret.all():
             data.append((d.id, d.name, d.weight))
         return data
+
+    def get_timeperiod_by_id(self, id):
+        ret = self.session.query(TimePeriod).filter(TimePeriod.id==id).first()
+        if ret:
+            return ret
+        return None
 
     def set_timeperiod(self, data):
         for d in data:
@@ -259,12 +277,14 @@ class DBHandler(object):
         for x in x_list:
             count = 0
             sum = 0
+            average = 0
             for r in x.exam_results:
                 if r.result:
                     count += 1
                     sum += r.result
             if count:
                 average = round(sum/count, 2)
+
             written_count = "%d/%d" % (count, len(x.exam_results))
             x_type = self.session.query(ExamType).filter(ExamType.id == x.exam_type).first()
             x_timeperiod = self.session.query(TimePeriod).filter(TimePeriod.id == x.time_period).first()
@@ -291,14 +311,21 @@ class DBHandler(object):
             filter(Exam.time_period==timeperiod_id).first()
         return ret
 
-    def set_exam(self, exam_date, schoolyear, schoolclassname, subject, examtype, timeperiod, results, comment):
+    def get_exam_by_id(self, exam_id):
+        ret = self.session.query(Exam).filter(Exam.id == exam_id).first()
+        return ret
+
+    def set_exam(self, exam_date, schoolyear, schoolclassname, subject, examtype, timeperiod, results, comment, id=None):
 
         school_class_id = self.get_schoolclass_id(schoolyear, schoolclassname)
         examtype_id = self.get_examtype_id(examtype)
         timeperiod_id = self.get_timeperiod_id(timeperiod)
         subject_row = self.session.query(Subject).filter(Subject.name==subject).first()
 
-        x = self.get_exam(exam_date, school_class_id, subject_row.name, examtype, timeperiod)
+        if id:
+            x = self.get_exam_by_id(id)
+        else:
+            x = self.get_exam(exam_date, school_class_id, subject_row.name, examtype, timeperiod)
         if not x:
             x = Exam(date=exam_date,
                      school_class_id=school_class_id,

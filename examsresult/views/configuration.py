@@ -297,7 +297,7 @@ class ViewExamConfigure(ViewConfigure):
         self.my_table.resizeColumnsToContents()
         self.my_table.setSortingEnabled(self.sorting)
 
-        self.my_table.doubleClicked.connect(self.action_edit)
+        self.my_table.doubleClicked.connect(self.change_result)
 
         # dummy Button
         self.button_save = QPushButton(lng['save'], mytab)
@@ -397,6 +397,17 @@ class ViewExamConfigure(ViewConfigure):
         }
 
         Exam(self.dbh, self.tab_window, self.lng, type='add', single_test=single_test, exam_data=exam_data)
+        self.load_data()
+
+    def change_result(self, cell):
+        row = cell.row()
+        column = 0
+        exam_id = self.my_table.item(row, column).text()
+
+        exam_data = {
+            'exam_id': exam_id,
+        }
+        Exam(self.dbh, self.tab_window, self.lng, type='edit', exam_data=exam_data)
         self.load_data()
 
     def _set_changed(self, status):
