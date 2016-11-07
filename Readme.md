@@ -17,9 +17,9 @@ Overview every time complete Result of Students or complete School Classes
 * import Students from CSV
 * import Students from a Class of a School Year before
 
-## Todos
 * handle an Exam for complete School Class or a single student
 
+## Todos
 * calculate each Timeperiod seperate and show result, 
 for each schoolyear final result calculate timeperiod results with their weights together
 

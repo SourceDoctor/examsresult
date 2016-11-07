@@ -147,6 +147,7 @@ msg_no_examtype= Keine Prüfungstypen definiert
 msg_no_timeperiod= Keine Zeitabschnitte definiert
 msg_close_unsaved=Wirklich schließen ohne zu speichern?
 msg_exam_not_unique=Diese Prüfung existiert schon, bitte prüfen Sie das nach
+msg_is_singletest=Ergebnis für einen oder mehrere einzelne Schüler?
 
 [window_report_schoolclass]
 title = Schulklasse Report

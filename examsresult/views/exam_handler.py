@@ -18,7 +18,7 @@ class Exam(CoreView):
     table_height = 320
     table_width = 400
 
-    def __init__(self, dbhandler, parent, lng, exam_data, type='add'):
+    def __init__(self, dbhandler, parent, lng, exam_data, type='add', single_test=False):
         self.schoolyear = exam_data['schoolyear']
         self.schoolclass = exam_data['schoolclass']
         self.subject = exam_data['subject']
@@ -125,7 +125,7 @@ class Exam(CoreView):
 
         if type == 'add':
             # run over all students to fill in results
-            self.insert_result()
+            self.insert_result(add_defaults=single_test)
 
         self.window.exec_()
 
@@ -183,7 +183,7 @@ class Exam(CoreView):
     def description_changed(self):
         self.set_changed(True)
 
-    def insert_result(self):
+    def insert_result(self, add_defaults=False):
         lastname_column = 1
         firstname_column = 2
         result_column = 3
@@ -194,7 +194,12 @@ class Exam(CoreView):
             firstname = self.my_table.item(row, firstname_column).text()
             input_text = "%s, %s" % (lastname, firstname)
 
-            result, ok = dialog.getDouble(self.my_table, self.lng['result'], input_text, decimals=self.float_precision)
+            if add_defaults:
+                result = 0.0
+                ok = True
+            else:
+                result, ok = dialog.getDouble(self.my_table, self.lng['result'], input_text, decimals=self.float_precision)
+
             if not ok:
                 return
             self.my_table.setItem(row, result_column, QTableWidgetItem(str(result)))

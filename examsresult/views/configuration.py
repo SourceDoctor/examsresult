@@ -374,6 +374,11 @@ class ViewExamConfigure(ViewConfigure):
         timeperiod, ok = dialog.getItem(self.tab_window, self.lng['title'], self.lng['timeperiod'], timeperiod_list, 0, False)
         if not ok:
             return
+        answer = QMessageBox.question(self.tab_window, self.lng['title'], self.lng['msg_is_singletest'])
+        if answer == QMessageBox.Yes:
+            single_test = True
+        else:
+            single_test = False
 
         students = self.dbh.get_students(schoolyear=self.listbox_schoolyear.currentText(),
                                          schoolclass=self.listbox_schoolclass.currentText()
@@ -391,7 +396,7 @@ class ViewExamConfigure(ViewConfigure):
             'students': student_list
         }
 
-        Exam(self.dbh, self.tab_window, self.lng, type='add', exam_data=exam_data)
+        Exam(self.dbh, self.tab_window, self.lng, type='add', single_test=single_test, exam_data=exam_data)
         self.load_data()
 
     def _set_changed(self, status):
