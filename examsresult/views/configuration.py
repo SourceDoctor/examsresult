@@ -100,6 +100,10 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
         self.button_remove.clicked.connect(self.student_remove)
 
+        self.button_csv_export = QPushButton(self.lng['csv_export'], mytab)
+        self.button_csv_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_remove.height())
+        self.button_csv_export.clicked.connect(self.do_csv_export)
+
         self.button_import = QToolButton(mytab)
         self.button_import.move(self.table_left + self.table_width + self.button_add.width(), self.table_top)
         self.button_import.setText(self.lng['import'])
@@ -239,6 +243,12 @@ class ViewSchoolClassConfigure(ViewConfigure):
             student = student[1:len(student)]
             self.action_add(data_import=True, data=student)
 
+    def do_csv_export(self):
+        schoolyear = self.listbox_schoolyear.currentText()
+        schoolclass = self.listbox_schoolclass.currentText()
+        filename = "%s_%s" % (schoolyear, schoolclass)
+        self.configure_csv_export(parent=self.tab_window, default_filename=filename)
+
 
 class ViewExamConfigure(ViewConfigure):
 
@@ -280,6 +290,10 @@ class ViewExamConfigure(ViewConfigure):
         self.button_remove = QPushButton(self.lng['remove'], mytab)
         self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
         self.button_remove.clicked.connect(self.action_remove)
+
+        self.button_csv_export = QPushButton(self.lng['csv_export'], mytab)
+        self.button_csv_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_remove.height())
+        self.button_csv_export.clicked.connect(self.do_csv_export)
 
         # hide Column 'id'
         #        table.setColumnHidden(0, True)
@@ -442,3 +456,10 @@ class ViewExamConfigure(ViewConfigure):
         schoolclassname = self.listbox_schoolclass.currentText()
         subject = self.listbox_subject.currentText()
         return self.dbh.get_exams(schoolyear, schoolclassname, subject)
+
+    def do_csv_export(self):
+        schoolyear = self.listbox_schoolyear.currentText()
+        schoolclass = self.listbox_schoolclass.currentText()
+        subject = self.listbox_subject.currentText()
+        filename = "%s_%s_%s" % (schoolyear, schoolclass, subject)
+        self.configure_csv_export(parent=self.tab_window, default_filename=filename)

@@ -1,4 +1,6 @@
-from PyQt5.QtWidgets import QMessageBox, QInputDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QMessageBox, QInputDialog, QTableWidgetItem, QFileDialog
+
+from examsresult.tools import csv_export
 
 
 class CoreView(object):
@@ -241,3 +243,27 @@ class CoreView(object):
             while column <= len(self.column_title) - 1:
                 self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column])))
                 column += 1
+
+    def csv_export(self, file, data):
+        csv_export(target_file=file, data=data)
+
+    def configure_csv_export(self, parent, default_filename):
+        file_handler = QFileDialog()
+        # Todo: set Default Filename to Save Dialog
+        file_tuple = file_handler.getSaveFileName(parent=parent, caption=self.lng['title'])
+        csv_file = file_tuple[0]
+        if not csv_file:
+            return
+        data = []
+        rows = self.my_table.rowCount()
+        columns = self.my_table.columnCount()
+        r = 0
+        while r <= rows - 1:
+            c = 1
+            row = ()
+            while c <= columns - 1:
+                row += (self.my_table.item(r, c).text(),)
+                c += 1
+            r += 1
+            data.append(row)
+        self.csv_export(file=csv_file, data=data)

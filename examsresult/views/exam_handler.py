@@ -99,6 +99,10 @@ class Exam(CoreView):
         self.button_save.move(self.table_left + self.table_width - self.button_save.width(), self.table_top + self.table_height)
         self.button_save.clicked.connect(self.action_save)
 
+        self.button_csv_export = QPushButton(self.lng['csv_export'], self.window)
+        self.button_csv_export.move(self.table_left + self.table_width - self.button_save.width() - self.button_csv_export.width(), self.table_top + self.table_height)
+        self.button_csv_export.clicked.connect(self.do_csv_export)
+
         button_cancel = QPushButton(self.lng['close'], self.window)
         button_cancel.move(370, 470)
         button_cancel.clicked.connect(self.window.close)
@@ -252,3 +256,7 @@ class Exam(CoreView):
                 event.ignore()
                 return
         self.window.close()
+
+    def do_csv_export(self):
+        filename = "%s_%s_%s_%s_%s" % (self.exam_date.text(), self.schoolyear, self.schoolclass, self.subject, self.examtype)
+        self.configure_csv_export(parent=self.window, default_filename=filename)

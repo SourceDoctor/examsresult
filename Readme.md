@@ -19,13 +19,15 @@ Overview every time complete Result of Students or complete School Classes
 
 * handle an Exam for complete School Class or a single student
 
-## Todos
-* calculate each Timeperiod seperate and show result, 
-for each schoolyear final result calculate timeperiod results with their weights together
+* CSV Export of School Class List
+* CSV Export of Exams List
+* CSV Export of Exams Results
 
-* CSV/Text Export of School Class List
-* CSV/Text Export of Student Results
-* CSV/Text Export of Exams Results
-* CSV/Text Export of Timeperiod/Schoolyear Results
+## Todos
+* calculates each Timeperiod seperate and show result, 
+* for schoolyear final result, system calculates timeperiod results with their weights together
+
+* CSV Export of Student Results (in Timeperiod and complete Schoolyear)
+* CSV Export of Schoolclass Results (in Timeperiod and complete Schoolyear)
 
 * "what if Simulation" (what happens if Student has in next Test(s) this result(s)?)

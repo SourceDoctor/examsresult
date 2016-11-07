@@ -1,5 +1,6 @@
 from configparser import RawConfigParser
 from glob import glob
+import csv
 
 language_extension = 'lng'
 language_path = '/lng'
@@ -47,3 +48,10 @@ def center_pos(window_object, width, height):
     left = (display.width() - width) / 2
     top = (display.height() - height) / 2
     return left, top
+
+
+def csv_export(target_file, data, quotechar=" ", delimiter=";"):
+    with open(target_file, 'w') as csvfile:
+        writer = csv.writer(csvfile, delimiter=delimiter, quotechar=quotechar, quoting=csv.QUOTE_MINIMAL)
+        for line in data:
+            writer.writerow(line)

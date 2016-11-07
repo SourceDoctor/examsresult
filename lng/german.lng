@@ -138,6 +138,7 @@ count = Anzahl
 average = Durchschnitt
 add = Hinzufügen
 remove = Entfernen
+csv_export=CSV Export
 save = Speichern
 close = Schließen
 exam_date = Prüfungsdatum
