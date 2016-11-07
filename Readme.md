@@ -23,9 +23,9 @@ Overview every time complete Result of Students or complete School Classes
 * calculate each Timeperiod seperate and show result, 
 for each schoolyear final result calculate timeperiod results with their weights together
 
-* CSV Export of School Class List
-* CSV Export of Student Results
-* CSV Export of Exams Results
-* CSV Export of Timeperiod/Schoolyear Results
+* CSV/Text Export of School Class List
+* CSV/Text Export of Student Results
+* CSV/Text Export of Exams Results
+* CSV/Text Export of Timeperiod/Schoolyear Results
 
 * "what if Simulation" (what happens if Student has in next Test(s) this result(s)?)
