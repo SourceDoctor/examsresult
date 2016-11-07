@@ -183,6 +183,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
                               schoolclass=self.listbox_schoolclass.currentText(),
                               students=data)
         self.set_changed(False)
+        return True
 
     def _set_changed(self, status):
         if status:

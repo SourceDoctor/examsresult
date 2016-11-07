@@ -146,6 +146,7 @@ set_date = Date
 msg_no_examtype= No Examtype defined
 msg_no_timeperiod= No Timeperiod defined
 msg_close_unsaved=Really close unsaved?
+msg_exam_not_unique=This Exams still exists, please recheck
 
 [window_report_schoolclass]
 title = Schoolclass Report

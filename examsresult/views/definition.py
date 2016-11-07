@@ -77,8 +77,8 @@ class ViewSchoolYear(ViewDefine):
         return [{'name': self.lng['name'], 'type': 'string', 'unique': True}]
 
     def _action_save_content(self, data):
-        ret = self.dbh.set_schoolyear(data=data)
-        return ret
+        self.dbh.set_schoolyear(data=data)
+        return True
 
     def _action_load_content(self):
         return self.dbh.get_schoolyear()
@@ -95,8 +95,8 @@ class ViewSchoolClass(ViewDefine):
         return [{'name': self.lng['name'], 'type': 'string', 'unique': True}]
 
     def _action_save_content(self, data):
-        ret = self.dbh.set_schoolclassname(data=data)
-        return ret
+        self.dbh.set_schoolclassname(data=data)
+        return True
 
     def _action_load_content(self):
         return self.dbh.get_schoolclassname()
@@ -113,8 +113,8 @@ class ViewSubject(ViewDefine):
         return [{'name': self.lng['name'], 'type': 'string', 'unique': True}]
 
     def _action_save_content(self, data):
-        ret = self.dbh.set_subject(data=data)
-        return ret
+        self.dbh.set_subject(data=data)
+        return True
 
     def _action_load_content(self):
         return self.dbh.get_subject()
@@ -133,8 +133,8 @@ class ViewExamsType(ViewDefine):
                 ]
 
     def _action_save_content(self, data):
-        ret = self.dbh.set_examtype(data=data)
-        return ret
+        self.dbh.set_examtype(data=data)
+        return True
 
     def _action_load_content(self):
         return self.dbh.get_examtype()
@@ -153,8 +153,8 @@ class ViewTimeperiod(ViewDefine):
                 ]
 
     def _action_save_content(self, data):
-        ret = self.dbh.set_timeperiod(data=data)
-        return ret
+        self.dbh.set_timeperiod(data=data)
+        return True
 
     def _action_load_content(self):
         return self.dbh.get_timeperiod()

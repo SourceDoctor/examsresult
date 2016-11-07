@@ -272,6 +272,13 @@ class DBHandler(object):
 
         return exam_list
 
+    def exam_is_unique(self, exam_date, schoolyear, schoolclass, subject, examtype, timeperiod):
+        school_class_id = self.get_schoolclass_id(schoolyear, schoolclass)
+        ret = self.get_exam(exam_date, school_class_id, subject, examtype, timeperiod)
+        if ret:
+            return False
+        return True
+
     def get_exam(self, exam_date, school_class_id, subject, examtype, timeperiod):
         examtype_id = self.get_examtype_id(examtype)
         timeperiod_id = self.get_timeperiod_id(timeperiod)

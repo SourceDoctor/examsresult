@@ -151,6 +151,20 @@ class Exam(CoreView):
             student_result_list.append((student.id, student.lastname, student.firstname, s.result, s.comment))
         return student_result_list
 
+    def exam_is_unique(self, msg=True):
+        exam_date = self.exam_date.text()
+        schoolyear = self.schoolyear
+        schoolclass = self.schoolclass
+        subject = self.subject
+        examtype = self.examtype
+        timeperiod = self.timeperiod
+        ret = self.dbhandler.exam_is_unique(exam_date, schoolyear, schoolclass, subject, examtype, timeperiod)
+        if ret:
+            return True
+        if msg:
+            QMessageBox.warning(self.window, self.lng['title'], self.lng['msg_exam_not_unique'])
+        return False
+
     def result_edit(self, cell):
         self.action_edit(cell, limit_column=[3, 4])
 
@@ -160,6 +174,10 @@ class Exam(CoreView):
         self.exam_date.setVisible(not self.exam_date.isVisible())
         date = self.cal.selectedDate()
         self.exam_date.setText(date.toString())
+
+        if not self.exam_is_unique():
+            return
+
         self.set_changed(True)
 
     def description_changed(self):
@@ -185,6 +203,10 @@ class Exam(CoreView):
             row += 1
 
     def _action_save_content(self, data):
+
+        if not self.exam_is_unique():
+            return False
+
         self.dbhandler.set_exam(exam_date=self.exam_date.text(),
                                 schoolyear=self.schoolyear,
                                 schoolclassname=self.schoolclass,
@@ -193,6 +215,7 @@ class Exam(CoreView):
                                 timeperiod=self.timeperiod,
                                 results=data,
                                 comment=self.text_exam_description.toPlainText())
+        return True
 
     def closeEvent(self, event):
         if self.button_save.isEnabled():

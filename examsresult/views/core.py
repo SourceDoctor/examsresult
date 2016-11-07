@@ -145,7 +145,7 @@ class CoreView(object):
 
     def _action_save_content(self, data):
         QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to save!")
-        return 0
+        return False
 
     def action_add(self, data_import=False, with_id=False, data=()):
         # fill Data into Cells
@@ -223,7 +223,9 @@ class CoreView(object):
             data.append(row_content)
             row += 1
 
-        self._action_save_content(data=data)
+        if not self._action_save_content(data=data):
+            return False
+
         self.load_data()
         self.set_changed(False)
 
