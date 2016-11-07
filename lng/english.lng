@@ -137,6 +137,7 @@ subject = Subject
 count = Count
 average = Average
 add = Add
+remove = Remove
 save = Save Changes
 close = Close
 exam_date = Date of Exam
@@ -148,6 +149,7 @@ msg_no_timeperiod= No Timeperiod defined
 msg_close_unsaved=Really close unsaved?
 msg_exam_not_unique=This Exams still exists, please recheck
 msg_is_singletest=Result for one or multiple single Students?
+msg_remove_exam=Really remove Exam?
 
 [window_report_schoolclass]
 title = Schoolclass Report

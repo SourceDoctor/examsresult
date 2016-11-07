@@ -277,6 +277,10 @@ class ViewExamConfigure(ViewConfigure):
         self.button_add.move(self.table_left + self.table_width + 10, self.table_top)
         self.button_add.clicked.connect(self.action_add)
 
+        self.button_remove = QPushButton(self.lng['remove'], mytab)
+        self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
+        self.button_remove.clicked.connect(self.action_remove)
+
         # hide Column 'id'
         #        table.setColumnHidden(0, True)
 
@@ -397,6 +401,19 @@ class ViewExamConfigure(ViewConfigure):
         }
 
         Exam(self.dbh, self.tab_window, self.lng, type='add', single_test=single_test, exam_data=exam_data)
+        self.load_data()
+
+    def action_remove(self, cell):
+        column = 0
+        try:
+            row = self.my_table.currentItem().row()
+        except AttributeError:
+            return
+        answer = QMessageBox.question(self.tab_window, self.lng['title'], self.lng['msg_remove_exam'])
+        if answer == QMessageBox.No:
+            return
+        exam_id = self.my_table.item(row, column).text()
+        self.dbh.remove_exam(exam_id=exam_id)
         self.load_data()
 
     def change_result(self, cell):

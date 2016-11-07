@@ -137,6 +137,7 @@ subject = Schulfach
 count = Anzahl
 average = Durchschnitt
 add = Hinzufügen
+remove = Entfernen
 save = Speichern
 close = Schließen
 exam_date = Prüfungsdatum
@@ -148,6 +149,7 @@ msg_no_timeperiod= Keine Zeitabschnitte definiert
 msg_close_unsaved=Wirklich schließen ohne zu speichern?
 msg_exam_not_unique=Diese Prüfung existiert schon, bitte prüfen Sie das nach
 msg_is_singletest=Ergebnis für einen oder mehrere einzelne Schüler?
+msg_remove_exam=Prüfung wirklich entfernen?
 
 [window_report_schoolclass]
 title = Schulklasse Report

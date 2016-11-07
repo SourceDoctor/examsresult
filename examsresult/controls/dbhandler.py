@@ -354,6 +354,15 @@ class DBHandler(object):
 
         return 0
 
+    def remove_exam(self, exam_id):
+        x = self.session.query(Exam).filter(Exam.id==exam_id).first()
+        self.session.delete(x)
+        results = self.session.query(ExamResult).filter(ExamResult.exam_id==exam_id).all()
+        for r in results:
+            self.session.delete(r)
+        self.session.commit()
+        return 0
+
     def get_exam_result(self, exam_id=None, student_id=None):
         ret = self.session.query(ExamResult)
         if exam_id:
