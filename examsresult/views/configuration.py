@@ -1,5 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
     QPushButton, QComboBox, QMessageBox, QToolButton, QMenu, QInputDialog
+
+from examsresult.tools import HIDE_ID_COLUMN
 from examsresult.views import CoreView
 from examsresult.views.exam_handler import Exam
 from examsresult.views.import_csv import CSVImport
@@ -113,8 +115,9 @@ class ViewSchoolClassConfigure(ViewConfigure):
         menu.addAction(self.lng['import_other_schoolclass'], self.student_import_other_class)
         self.button_import.setMenu(menu)
 
-        # hide Column 'id'
-        #        table.setColumnHidden(0, True)
+        if HIDE_ID_COLUMN:
+            # hide Column 'id'
+            self.my_table.setColumnHidden(0, True)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)
@@ -295,8 +298,9 @@ class ViewExamConfigure(ViewConfigure):
         self.button_csv_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_remove.height())
         self.button_csv_export.clicked.connect(self.do_csv_export)
 
-        # hide Column 'id'
-        #        table.setColumnHidden(0, True)
+        if HIDE_ID_COLUMN:
+            # hide Column 'id'
+            self.my_table.setColumnHidden(0, True)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)

@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTab
 from examsresult.controls.dbhandler import DBHandler
 from examsresult.tools import lng_load, center_pos, app_icon
 from examsresult.views.core import CoreView
+from examsresult.views.report import ViewReportStudent
 from examsresult.views.settings import ViewSettings
 from examsresult.views.configuration import ViewSchoolClassConfigure, ViewExamConfigure
 from examsresult.views.definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
@@ -106,7 +107,7 @@ class BaseView(QMainWindow, CoreView):
         QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
 
     def window_report_student(self, lng):
-        QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
+        ViewReportStudent(self.dbh, self.tab_window, lng)
 
     def window_configure_schoolclass(self, lng):
         ViewSchoolClassConfigure(self.dbh, self.tab_window, lng)

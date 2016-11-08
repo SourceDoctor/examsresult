@@ -1,4 +1,6 @@
 from PyQt5.QtWidgets import QTableWidget, QWidget, QPushButton, QAbstractItemView
+
+from examsresult.tools import HIDE_ID_COLUMN
 from .core import CoreView
 
 
@@ -29,8 +31,9 @@ class ViewDefine(CoreView):
             column_tuple += (col['name'],)
         self.my_table.setHorizontalHeaderLabels(column_tuple)
 
-        # hide Column 'id'
-#        table.setColumnHidden(0, True)
+        if HIDE_ID_COLUMN:
+            # hide Column 'id'
+            self.my_table.setColumnHidden(0, True)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)

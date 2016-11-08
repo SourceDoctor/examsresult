@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QDialog, QPushButton, QLabel, QTableWidget, \
     QMessageBox
 
 from examsresult.configuration import current_config
-from examsresult.tools import lng_list
+from examsresult.tools import lng_list, HIDE_ID_COLUMN
 from examsresult.views.core import CoreView
 
 
@@ -72,8 +72,9 @@ class Exam(CoreView):
         self.my_table.verticalHeader().setVisible(self.header_vertical)
         self.my_table.horizontalHeader().setVisible(self.header_horizontal)
 
-        # hide Column 'id'
-        #        table.setColumnHidden(0, True)
+        if HIDE_ID_COLUMN:
+            # hide Column 'id'
+            self.my_table.setColumnHidden(0, True)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)
