@@ -1,9 +1,9 @@
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTabWidget
+from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTabWidget, QInputDialog
 from examsresult.controls.dbhandler import DBHandler
 from examsresult.tools import lng_load, center_pos, app_icon
 from examsresult.views.core import CoreView
-from examsresult.views.report import ViewReportStudent
+from examsresult.views.report import ViewReportStudent, ViewReportSchoolclass
 from examsresult.views.settings import ViewSettings
 from examsresult.views.configuration import ViewSchoolClassConfigure, ViewExamConfigure
 from examsresult.views.definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
@@ -104,34 +104,116 @@ class BaseView(QMainWindow, CoreView):
         ViewSettings(parent=parent, lng=self.lng)
 
     def window_report_schoolclass(self, lng):
-        QMessageBox.information(self.tab_window, self.lng['main']['title'], "Give me something to do!")
+        schoolyear_list = []
+        schoolclass_list = []
+        subject_list = []
+
+        report_dialog = QInputDialog(parent=self.tab_window)
+
+        for y in self.dbh.get_schoolyear():
+            schoolyear_list.append(y[1])
+        schoolyear, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolyear'], schoolyear_list, 0, False)
+        if not ok:
+            return False
+
+        for c in self.dbh.get_schoolclassname(schoolyear=schoolyear):
+            schoolclass_list.append(c[1])
+        schoolclass, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolclass'], schoolclass_list, 0, False)
+        if not ok:
+            return False
+
+        for c in self.dbh.get_subject():
+            subject_list.append(c[1])
+        subject, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['subject'], subject_list, 0, False)
+        if not ok:
+            return False
+
+        data = {
+            'schoolyear': schoolyear,
+            'schoolclass': schoolclass,
+            'subject': subject,
+        }
+
+        ViewReportSchoolclass(self.dbh, self.tab_window, lng, data)
+        return True
 
     def window_report_student(self, lng):
-        ViewReportStudent(self.dbh, self.tab_window, lng)
+        schoolyear_list = []
+        schoolclass_list = []
+        subject_list = []
+        student_list = []
+        student_id_dict = {}
+
+        report_dialog = QInputDialog(parent=self.tab_window)
+
+        for y in self.dbh.get_schoolyear():
+            schoolyear_list.append(y[1])
+        schoolyear, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolyear'], schoolyear_list, 0, False)
+        if not ok:
+            return False
+
+        for c in self.dbh.get_schoolclassname(schoolyear=schoolyear):
+            schoolclass_list.append(c[1])
+        schoolclass, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolclass'], schoolclass_list, 0, False)
+        if not ok:
+            return False
+
+        for c in self.dbh.get_subject():
+            subject_list.append(c[1])
+        subject, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['subject'], subject_list, 0, False)
+        if not ok:
+            return False
+
+        for c in self.dbh.get_schoolclassstudents(schoolyear=schoolyear, schoolclass=schoolclass):
+            name = "%s, %s" % (c[1], c[2])
+            student_list.append(name)
+            student_id_dict[name] = c[0]
+        student, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['student'], student_list, 0, False)
+        if not ok:
+            return False
+        student_id = student_id_dict[student]
+
+        data = {
+            'schoolyear': schoolyear,
+            'schoolclass': schoolclass,
+            'subject': subject,
+            'student_id': student_id
+        }
+
+        ViewReportStudent(self.dbh, self.tab_window, lng, data)
+        return True
 
     def window_configure_schoolclass(self, lng):
         ViewSchoolClassConfigure(self.dbh, self.tab_window, lng)
+        return True
 
     def window_configure_exam(self, lng):
         ViewExamConfigure(self.dbh, self.tab_window, lng)
+        return True
 
     def window_define_schoolyear(self, lng):
         ViewSchoolYear(self.dbh, self.tab_window, lng)
+        return True
 
     def window_define_schoolclass(self, lng):
         ViewSchoolClass(self.dbh, self.tab_window, lng)
+        return True
 
     def window_define_subject(self, lng):
         ViewSubject(self.dbh, self.tab_window, lng)
+        return True
 
     def window_define_examstype(self, lng):
         ViewExamsType(self.dbh, self.tab_window, lng)
+        return True
 
     def window_define_timeperiod(self, lng):
         ViewTimeperiod(self.dbh, self.tab_window, lng)
+        return True
 
     def window_about(self, parent):
         ViewAbout(parent=parent, lng=self.lng)
+        return True
 
     def closeEvent(self, event):
         index = -1
@@ -160,8 +242,9 @@ class BaseView(QMainWindow, CoreView):
     def add_tab_event(self, tab_window_to_open, lng):
         # add Tab only if not still open
         if lng['title'] not in self.open_tabs:
-            tab_window_to_open(lng)
             self.open_tabs.append(lng['title'])
+            if not tab_window_to_open(lng):
+                self.open_tabs.remove(lng['title'])
 
         # set focus to requested Tab
         index = 0

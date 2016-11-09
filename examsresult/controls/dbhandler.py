@@ -59,6 +59,21 @@ class DBHandler(object):
         else:
             return self.session.query(model)
 
+    def get_schoolclassstudents(self, schoolyear=None, schoolclass=None):
+        student_list = []
+        class_data = self.session.query(SchoolClass)
+        if schoolyear:
+            class_data = class_data.filter(SchoolClass.schoolyear==schoolyear)
+        if schoolclass:
+            class_data = class_data.filter(SchoolClass.schoolclass==schoolclass)
+
+        class_data = class_data.all()
+        for c in class_data:
+            students = self.session.query(Student).filter(Student.school_class_id == c.id).all()
+            for s in students:
+                student_list.append((s.id, s.lastname, s.firstname, s.comment))
+        return student_list
+
     def get_schoolyear(self):
         ret = self._list(Schoolyear)
         data = []
@@ -81,11 +96,13 @@ class DBHandler(object):
         self.session.commit()
         return 0
 
-    def get_schoolclassname(self):
-        ret = self._list(SchoolClassName)
+    def get_schoolclassname(self, schoolyear=None):
         data = []
+        ret = self._list(SchoolClass)
+        if schoolyear:
+            ret = ret.filter(SchoolClass.schoolyear==schoolyear)
         for d in ret.all():
-            data.append((d.id, d.name))
+            data.append((d.id, d.schoolclass))
         return data
 
     def set_schoolclassname(self, data):
