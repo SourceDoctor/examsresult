@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QDialog, QPushButton, QLabel, QTableWidget, \
     QAbstractItemView, QTextEdit, QCalendarWidget, QInputDialog, QTableWidgetItem, \
-    QMessageBox
+    QMessageBox, QComboBox
 
 from examsresult.configuration import current_config
 from examsresult.tools import lng_list, HIDE_ID_COLUMN
@@ -12,12 +12,14 @@ class Exam(CoreView):
     changed_mark_enabled = False
     exam_id = None
     students = None
+    examtype = None
+    timeperiod = None
 
     width = 500
-    height = 500
+    height = 600
     table_left = 50
-    table_top = 110
-    table_height = 320
+    table_top = 170
+    table_height = 350
     table_width = 400
 
     def __init__(self, dbhandler, parent, lng, exam_data, type='add', single_test=False):
@@ -28,8 +30,6 @@ class Exam(CoreView):
             self.schoolyear = exam_data['schoolyear']
             self.schoolclass = exam_data['schoolclass']
             self.subject = exam_data['subject']
-            self.examtype = exam_data['examtype']
-            self.timeperiod = exam_data['timeperiod']
             self.students = exam_data['students']
 
         self.dbhandler = dbhandler
@@ -49,10 +49,28 @@ class Exam(CoreView):
 
         label_exam_description = QLabel(self.window)
         label_exam_description.setText(self.lng['exam_description'])
-        label_exam_description.move(self.table_left, 50)
+        label_exam_description.move(self.table_left, 40)
         self.text_exam_description = QTextEdit(self.window)
-        self.text_exam_description.setGeometry(self.table_left + 100, 52, 300, 40)
+        self.text_exam_description.setGeometry(self.table_left + 100, 42, 300, 40)
         self.text_exam_description.textChanged.connect(self.description_changed)
+
+        label_examtype = QLabel(self.window)
+        label_examtype.setText(self.lng['exam_examtype'])
+        label_examtype.move(self.table_left, 90)
+        self.listbox_examtype = QComboBox(self.window)
+        for i in self.get_examtypenames():
+            self.listbox_examtype.addItem(i)
+        self.listbox_examtype.move(self.table_left + 100, 87)
+        self.listbox_examtype.currentIndexChanged.connect(self.examtype_change)
+
+        label_timeperiod = QLabel(self.window)
+        label_timeperiod.setText(self.lng['exam_timeperiod'])
+        label_timeperiod.move(self.table_left, 120)
+        self.listbox_timeperiod = QComboBox(self.window)
+        for i in self.get_timeperiodnames():
+            self.listbox_timeperiod.addItem(i)
+        self.listbox_timeperiod.move(self.table_left + 100, 117)
+        self.listbox_timeperiod.currentIndexChanged.connect(self.timeperiod_change)
 
         label_students = QLabel(self.window)
         label_students.setText(self.lng['students'])
@@ -105,26 +123,26 @@ class Exam(CoreView):
         self.button_csv_export.clicked.connect(self.do_csv_export)
 
         button_cancel = QPushButton(self.lng['close'], self.window)
-        button_cancel.move(370, 470)
+        button_cancel.move(370, 560)
         button_cancel.clicked.connect(self.window.close)
 
         self.cal = QCalendarWidget(self.window)
         self.cal.setGridVisible(True)
-        self.cal.move(self.table_left + 100, 30)
+        self.cal.move(self.table_left + 100, 20)
         self.cal.clicked.connect(self.set_date)
         self.cal.setVisible(False)
 
         label_exam_date = QLabel(self.window)
         label_exam_date.setText(self.lng['exam_date'])
-        label_exam_date.move(self.table_left, 30)
+        label_exam_date.move(self.table_left, 20)
 
         date = self.cal.selectedDate()
         self.exam_date = QLabel(self.window)
         self.exam_date.setText(date.toString())
-        self.exam_date.setGeometry(self.table_left + 100, 22, 120, self.exam_date.height())
+        self.exam_date.setGeometry(self.table_left + 100, 12, 120, self.exam_date.height())
 
         self.button_set_date = QPushButton(self.lng['set_date'], self.window)
-        self.button_set_date.move(self.table_left + 240, 25)
+        self.button_set_date.move(self.table_left + 240, 15)
         self.button_set_date.clicked.connect(self.set_date)
 
         if self.students:
@@ -138,6 +156,9 @@ class Exam(CoreView):
             self.insert_result(add_defaults=single_test)
         else:
             self.load_data()
+
+        self.examtype_change()
+        self.timeperiod_change()
 
         self.set_changed(False)
 
@@ -160,9 +181,13 @@ class Exam(CoreView):
             self.schoolyear = school_class.schoolyear
             self.schoolclass = school_class.schoolclass
             self.subject = data.subject
+            self.text_exam_description.setText(data.comment)
             self.examtype = examtype.name
             self.timeperiod = timeperiod.name
-            self.text_exam_description.setText(data.comment)
+            examtype_list = self.get_examtypenames()
+            self.listbox_examtype.setCurrentIndex(examtype_list.index(self.examtype))
+            timeperiod_list = self.get_timeperiodnames()
+            self.listbox_timeperiod.setCurrentIndex(timeperiod_list.index(self.timeperiod))
         else:
             school_class_id = self.dbhandler.get_schoolclass_id(self.schoolyear, self.schoolclass)
             data = self.dbhandler.get_exam(exam_date=self.exam_date.text(),
@@ -258,6 +283,26 @@ class Exam(CoreView):
                 return
         self.window.close()
 
+    def get_examtypenames(self):
+        ret = []
+        for i in self.dbhandler.get_examtype():
+            ret.append(i[1])
+        return ret
+
+    def get_timeperiodnames(self):
+        ret = []
+        for i in self.dbhandler.get_timeperiod():
+            ret.append(i[1])
+        return ret
+
     def do_csv_export(self):
         filename = "%s_%s_%s_%s_%s" % (self.exam_date.text(), self.schoolyear, self.schoolclass, self.subject, self.examtype)
         self.configure_csv_export(parent=self.window, default_filename=filename)
+
+    def examtype_change(self):
+        self.examtype = self.listbox_examtype.currentText()
+        self.set_changed(True)
+
+    def timeperiod_change(self):
+        self.timeperiod = self.listbox_timeperiod.currentText()
+        self.set_changed(True)

@@ -51,18 +51,6 @@ class ViewConfigure(CoreView):
             ret.append(i[1])
         return ret
 
-    def get_examtypenames(self):
-        ret = []
-        for i in self.dbh.get_examtype():
-            ret.append(i[1])
-        return ret
-
-    def get_timeperiodnames(self):
-        ret = []
-        for i in self.dbh.get_timeperiod():
-            ret.append(i[1])
-        return ret
-
 
 class ViewSchoolClassConfigure(ViewConfigure):
 
@@ -379,23 +367,6 @@ class ViewExamConfigure(ViewConfigure):
         self._change(self.subject_change_enabled, self.listbox_subject, self.subject_listindex, index)
 
     def action_add(self, data_import=False, data=()):
-        examtype_list = self.get_examtypenames()
-        timeperiod_list = self.get_timeperiodnames()
-
-        if not examtype_list:
-            QMessageBox.critical(self.tab_window, self.lng['title'], self.lng['msg_no_examtype'])
-            return
-        if not timeperiod_list:
-            QMessageBox.critical(self.tab_window, self.lng['title'], self.lng['msg_no_timeperiod'])
-            return
-
-        dialog = QInputDialog()
-        examtype, ok = dialog.getItem(self.tab_window, self.lng['title'], self.lng['examtype'], examtype_list, 0, False)
-        if not ok:
-            return
-        timeperiod, ok = dialog.getItem(self.tab_window, self.lng['title'], self.lng['timeperiod'], timeperiod_list, 0, False)
-        if not ok:
-            return
         answer = QMessageBox.question(self.tab_window, self.lng['title'], self.lng['msg_is_singletest'])
         if answer == QMessageBox.Yes:
             single_test = True
@@ -413,8 +384,6 @@ class ViewExamConfigure(ViewConfigure):
             'schoolyear': self.listbox_schoolyear.currentText(),
             'schoolclass': self.listbox_schoolclass.currentText(),
             'subject': self.listbox_subject.currentText(),
-            'examtype': examtype,
-            'timeperiod': timeperiod,
             'students': student_list
         }
 
