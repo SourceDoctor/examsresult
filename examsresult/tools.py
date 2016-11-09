@@ -5,7 +5,7 @@ import csv
 language_extension = 'lng'
 language_path = '/lng'
 app_icon = '.%s/1476313854_report_pencil.png' % language_path
-HIDE_ID_COLUMN = True
+HIDE_ID_COLUMN = False
 
 
 def lng_load(language='english', type='ini'):
