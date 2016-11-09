@@ -157,6 +157,24 @@ msg_remove_exam=Really remove Exam?
 
 [window_report_schoolclass]
 title = Schoolclass Report
+schoolyear=Schoolyear
+schoolclass=Schoolclass
+subject = Subject
+examtype = Exam Type
+timeperiod = Timeperiod
+student = Student
+lastname= Lastname
+firstname = Firstname
+comment = Comment
 
 [window_report_student]
 title = Student Report
+schoolyear=Schoolyear
+schoolclass=Schoolclass
+subject = Subject
+examtype = Exam Type
+timeperiod = Timeperiod
+student = Student
+lastname= Lastname
+firstname = Firstname
+comment = Comment

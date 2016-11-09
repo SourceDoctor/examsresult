@@ -156,6 +156,24 @@ msg_remove_exam=Prüfung wirklich entfernen?
 
 [window_report_schoolclass]
 title = Schulklasse Report
+schoolyear=Schuljahr
+schoolclass=Schulklasse
+subject=Schulfach
+examtype = Prüfungsart
+timeperiod = Zeitabschnitt
+student=Schüler
+lastname= Nachname
+firstname = Vorname
+comment = Kommentar
 
 [window_report_student]
 title = Schüler Report
+schoolyear=Schuljahr
+schoolclass=Schulklasse
+subject=Schulfach
+examtype = Prüfungsart
+timeperiod = Zeitabschnitt
+student=Schüler
+lastname= Nachname
+firstname = Vorname
+comment = Kommentar
