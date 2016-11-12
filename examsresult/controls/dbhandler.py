@@ -381,7 +381,7 @@ class DBHandler(object):
         self.session.commit()
         return 0
 
-    def get_exam_result(self, exam_id=None, student_id=None, subject=None):
+    def get_exam_result(self, exam_id=None, student_id=None, subject=None, timeperiod_id=None):
         ret = self.session.query(ExamResult)
         if exam_id:
             ret = ret.filter(ExamResult.exam_id == exam_id)
@@ -396,6 +396,16 @@ class DBHandler(object):
                 if r.exam.subject != subject:
                     continue
                 result.append(r)
+        else:
+            result = ret
+
+        ret = result
+        result = []
+        if timeperiod_id:
+            for t in ret:
+                if t.exam.time_period != timeperiod_id:
+                    continue
+                result.append(t)
         else:
             result = ret
 
