@@ -72,6 +72,7 @@ class Exam(Base):
     exam_type = Column(Integer, ForeignKey('exam_type.id'))
     time_period = Column(Integer, ForeignKey('time_period.id'))
     school_class_id = Column(Integer, ForeignKey('school_class.id'))
+    exam_results = relationship("ExamResult", back_populates="exam")
 
     comment = Column(Unicode(1024), nullable=True)
 
@@ -81,7 +82,7 @@ class ExamResult(Base):
     result = Column(Float(precision=1), default=0)
 
     exam_id = Column(Integer, ForeignKey('exam.id'))
-    exam = relationship("Exam", backref="exam_results")
+    exam = relationship("Exam", back_populates="exam_results")
 
     student = Column(Integer, ForeignKey('student.id'))
     comment = Column(Unicode(1024), nullable=True)

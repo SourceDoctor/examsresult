@@ -387,13 +387,19 @@ class DBHandler(object):
             ret = ret.filter(ExamResult.exam_id == exam_id)
         if student_id:
             ret = ret.filter(ExamResult.student == student_id)
-#        if subject:
-#            ret = ret.filter(ExamResult.exam.subject == subject)
 
-        if exam_id and student_id:
-            return ret.first()
+        ret = ret.all()
+
+        result = []
+        if subject:
+            for r in ret:
+                if r.exam.subject != subject:
+                    continue
+                result.append(r)
         else:
-            return ret.all()
+            result = ret
+
+        return result
 
     def set_exam_result(self, exam_id, student_id, result, comment):
         r = self.get_exam_result(exam_id, student_id)
@@ -403,6 +409,7 @@ class DBHandler(object):
                            student=student_id,
                            comment=comment)
         else:
+            r = r[0]
             r.result = result
             r.comment = comment
 
