@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import QWidget, QLabel
 from examsresult.views import CoreView
 
+DIVISOR_PRECISION = 2
+
 
 class ViewReport(CoreView):
 
@@ -79,6 +81,8 @@ class ViewReportStudent(ViewReport):
 
         y_pos = 100
         time_period_data_list = self.dbh.get_timeperiod()
+        complete_sum = 0
+        complete_divisor = 0
         for period in time_period_data_list:
             sum = 0
             divisor = 0
@@ -96,9 +100,18 @@ class ViewReportStudent(ViewReport):
                 y_pos += 20
             average = 0
             if divisor:
-                average = round(float(sum)/divisor, 2)
+                average = round(float(sum)/divisor, DIVISOR_PRECISION)
+                complete_sum += sum * period[2]
+                complete_divisor += divisor * period[2]
             self.print_exam_result(mytab, y_pos, "", "", average, "")
             y_pos += 20
+
+        complete_average = 0
+        if complete_divisor:
+            complete_average = round(float(complete_sum) / complete_divisor, DIVISOR_PRECISION)
+
+        y_pos += 20
+        self.print_exam_result(mytab, y_pos, self.lng['schoolyear'], "", complete_average, "")
 
         self.tab_window.addTab(mytab, self.lng['title'])
 
