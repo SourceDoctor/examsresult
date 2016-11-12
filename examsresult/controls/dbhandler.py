@@ -190,6 +190,7 @@ class DBHandler(object):
                 s = ExamType(name=d[1], weight=d[2])
             else:
                 s.name = d[1]
+                s.weight = d[2]
             self.session.add(s)
 
         self.session.commit()
