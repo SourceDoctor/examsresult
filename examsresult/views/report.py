@@ -1,5 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QTableWidget, QLabel
-
+from PyQt5.QtWidgets import QWidget, QLabel
 from examsresult.views import CoreView
 
 
@@ -60,7 +59,39 @@ class ViewReportStudent(ViewReport):
         label_student_description.setText(student)
         label_student_description.move(100, 70)
 
+        self.print_exam_result(mytab, 100, "Date", "Examtype", "Result", "Comment")
+        self.print_exam_result(mytab, 120, "2016 Nov 11", "Examtype1", "2", "Comment")
+        self.print_exam_result(mytab, 140, "2016 Nov 11", "Examtype1", "2", "Comment")
+        self.print_exam_result(mytab, 160, "2016 Nov 11", "Examtype1", "2", "Comment")
+
+        results = self.dbh.get_exam_result(student_id=self.student_id, subject=self.subject)
+        print(str(results))
+        for r in results:
+            print(r.exam_id)
+            print(r.id)
+            print(r.result)
+#            print(r.exam.date)
+            print("----")
+
         self.tab_window.addTab(mytab, self.lng['title'])
+
+    def print_exam_result(self, root, y, date, type, result, comment):
+        x = 70
+        label_date = QLabel(root)
+        label_date.setText(date)
+        label_date.move(x, y)
+
+        label_type = QLabel(root)
+        label_type.setText(type)
+        label_type.move(x + 100, y)
+
+        label_result = QLabel(root)
+        label_result.setText(result)
+        label_result.move(x + 200, y)
+
+        label_comment = QLabel(root)
+        label_comment.setText(comment)
+        label_comment.move(x + 250, y)
 
 
 class ViewReportSchoolclass(ViewReport):
