@@ -11,6 +11,7 @@ def default_config():
         'language': 'english',
         'openbox_on_startup': False,
         'open_file_on_startup': '',
+        'schoolyear_result_calculation_method': 'complete',
         }
     return default_dict
 

@@ -23,9 +23,10 @@ Overview every time complete Result of Students or complete School Classes
 * CSV Export of Exams List
 * CSV Export of Exams Results
 
-## Todos
 * calculates each Timeperiod seperate and show result, 
 * for schoolyear final result, system calculates timeperiod results with their weights together
+
+## Todos
 
 * CSV Export of Student Results (in Timeperiod and complete Schoolyear)
 * CSV Export of Schoolclass Results (in Timeperiod and complete Schoolyear)
