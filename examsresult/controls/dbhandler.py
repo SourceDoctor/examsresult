@@ -282,13 +282,18 @@ class DBHandler(object):
         self.session.commit()
         return 0
 
-    def get_exams(self, schoolyear, schoolclassname, subject):
+    def get_exams(self, schoolyear, schoolclassname, subject, timeperiod_id=None):
         exam_list = []
 
         school_class_id = self.get_schoolclass_id(schoolyear, schoolclassname)
         if school_class_id:
             x_list = self.session.query(Exam).filter(Exam.school_class_id == school_class_id).filter(
-                Exam.subject == subject).all()
+                Exam.subject == subject)
+
+            if timeperiod_id:
+                x_list = x_list.filter(Exam.time_period == timeperiod_id)
+
+            x_list = x_list.all()
         else:
             x_list = []
 

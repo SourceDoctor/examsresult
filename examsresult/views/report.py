@@ -11,36 +11,17 @@ class ViewReport(CoreView):
     table_height = 350
     table_width = 500
 
-    def print_exam_result(self, root, y, date, type, result, comment):
-        x = 70
-        label_date = QLabel(root)
-        label_date.setText(date)
-        label_date.move(x, y)
+    y_pos = 10
 
-        label_type = QLabel(root)
-        label_type.setText(str(type))
-        label_type.move(x + 110, y)
-
-        label_result = QLabel(root)
-        label_result.setText(str(result))
-        label_result.move(x + 210, y)
-
-        label_comment = QLabel(root)
-        label_comment.setText(comment)
-        label_comment.move(x + 260, y)
-
-
-class ViewReportStudent(ViewReport):
+    show_schoolyear = True
+    show_schoolclass = True
+    show_subject = True
+    show_student = False
 
     def __init__(self, dbhandler, root_tab, lng, data):
         self.dbh = dbhandler
         self.tab_window = root_tab
         self.lng = lng
-
-        self.schoolyear = data['schoolyear']
-        self.schoolclass = data['schoolclass']
-        self.subject = data['subject']
-        self.student_id = data['student_id']
 
         self.column_title = []
         self.column_title.append({'name': 'id', 'type': 'int', 'unique': True, 'editable': False})
@@ -48,62 +29,104 @@ class ViewReportStudent(ViewReport):
 
         mytab = QWidget()
 
-        s = self.dbh.get_student_data(self.student_id)
-        student = "%s, %s" % (s.lastname, s.firstname)
+        if self.show_schoolyear:
+            self.schoolyear = data['schoolyear']
+            label_schoolyear_description = QLabel(mytab)
+            label_schoolyear_description.setText(self.lng['schoolyear'])
+            label_schoolyear_description.move(10, self.y_pos)
+            label_schoolyear_description = QLabel(mytab)
+            label_schoolyear_description.setText(self.schoolyear)
+            label_schoolyear_description.move(100, self.y_pos)
+            self.y_pos += 20
 
-        label_schoolyear_description = QLabel(mytab)
-        label_schoolyear_description.setText(self.lng['schoolyear'])
-        label_schoolyear_description.move(10, 10)
-        label_schoolyear_description = QLabel(mytab)
-        label_schoolyear_description.setText(self.schoolyear)
-        label_schoolyear_description.move(100, 10)
+        if self.show_schoolclass:
+            self.schoolclass = data['schoolclass']
+            label_schoolclass_description = QLabel(mytab)
+            label_schoolclass_description.setText(self.lng['schoolclass'])
+            label_schoolclass_description.move(10, self.y_pos)
+            label_schoolclass_description = QLabel(mytab)
+            label_schoolclass_description.setText(self.schoolclass)
+            label_schoolclass_description.move(100, self.y_pos)
+            self.y_pos += 20
 
-        label_schoolclass_description = QLabel(mytab)
-        label_schoolclass_description.setText(self.lng['schoolclass'])
-        label_schoolclass_description.move(10, 30)
-        label_schoolclass_description = QLabel(mytab)
-        label_schoolclass_description.setText(self.schoolclass)
-        label_schoolclass_description.move(100, 30)
+        if self.show_subject:
+            self.subject = data['subject']
+            label_subject_description = QLabel(mytab)
+            label_subject_description.setText(self.lng['subject'])
+            label_subject_description.move(10, self.y_pos)
+            label_subject_description = QLabel(mytab)
+            label_subject_description.setText(self.subject)
+            label_subject_description.move(100, self.y_pos)
+            self.y_pos += 20
 
-        label_subject_description = QLabel(mytab)
-        label_subject_description.setText(self.lng['subject'])
-        label_subject_description.move(10, 50)
-        label_subject_description = QLabel(mytab)
-        label_subject_description.setText(self.subject)
-        label_subject_description.move(100, 50)
+        if self.show_student:
+            self.student_id = data['student_id']
+            s = self.dbh.get_student_data(self.student_id)
+            student = "%s, %s" % (s.lastname, s.firstname)
 
-        label_student_description = QLabel(mytab)
-        label_student_description.setText(self.lng['student'])
-        label_student_description.move(10, 70)
-        label_student_description = QLabel(mytab)
-        label_student_description.setText(student)
-        label_student_description.move(100, 70)
+            label_student_description = QLabel(mytab)
+            label_student_description.setText(self.lng['student'])
+            label_student_description.move(10, self.y_pos)
+            label_student_description = QLabel(mytab)
+            label_student_description.setText(student)
+            label_student_description.move(100, self.y_pos)
+            self.y_pos += 20
 
-        y_pos = 100
+        self.y_pos = self.show_results(root=mytab, y_pos=self.y_pos + 10)
+
+        self.tab_window.addTab(mytab, self.lng['title'])
+
+    def show_results(self, root, y_pos=100):
+        return y_pos
+
+    def print_content(self, root, y, data):
+
+        def print_label(root, x, y, text):
+            label_date = QLabel(root)
+            label_date.setText(text)
+            label_date.move(x, y)
+
+        x_coord = 70
+        for text, x in data:
+            x_coord += x
+            print_label(root, x_coord, y, str(text))
+
+
+class ViewReportStudent(ViewReport):
+
+    show_student = True
+
+    def show_results(self, root, y_pos=100):
+
         time_period_data_list = self.dbh.get_timeperiod()
         complete_sum = 0
         complete_divisor = 0
         for period in time_period_data_list:
             sum = 0
             divisor = 0
-            self.print_exam_result(mytab, y_pos, period[1], "", "", "")
+            self.print_content(root, y_pos, [(period[1], 0)])
             y_pos += 20
-            self.print_exam_result(mytab, y_pos, "Date", "Examtype", "Result", "Comment")
+
+            data_list = [("Date", 0), ("Examtype", 110), ("Result", 100), ("Comment", 40)]
+            self.print_content(root, y_pos, data_list)
             y_pos += 20
-            results = self.dbh.get_exam_result(student_id=self.student_id, subject=self.subject, timeperiod_id=period[0])
+            results = self.dbh.get_exam_result(student_id=self.student_id, subject=self.subject,
+                                               timeperiod_id=period[0])
             for r in results:
                 x_t = self.dbh.get_examtype_by_id(r.exam.exam_type)
                 if r.result:
-                    sum += r.result * x_t.weight
-                    divisor += 1 * x_t.weight
-                self.print_exam_result(mytab, y_pos, r.exam.date, x_t.name, r.result, r.comment)
+                    sum += r.result * x_t.weight * period[2]
+                    divisor += 1 * x_t.weight * period[2]
+                data_list = [(r.exam.date, 0), (x_t.name, 110), (r.result, 100), (r.comment, 40)]
+                self.print_content(root, y_pos, data_list)
                 y_pos += 20
             average = 0
-            if divisor:
-                average = round(float(sum)/divisor, DIVISOR_PRECISION)
-                complete_sum += sum * period[2]
-                complete_divisor += divisor * period[2]
-            self.print_exam_result(mytab, y_pos, "", "", average, "")
+            if sum:
+                average = round(float(sum) / divisor, DIVISOR_PRECISION)
+                complete_sum += sum
+                complete_divisor += divisor
+            data_list = [("", 0), ("", 110), (average, 100), ("", 40)]
+            self.print_content(root, y_pos, data_list)
             y_pos += 20
 
         complete_average = 0
@@ -111,47 +134,56 @@ class ViewReportStudent(ViewReport):
             complete_average = round(float(complete_sum) / complete_divisor, DIVISOR_PRECISION)
 
         y_pos += 20
-        self.print_exam_result(mytab, y_pos, self.lng['schoolyear'], "", complete_average, "")
-
-        self.tab_window.addTab(mytab, self.lng['title'])
+        data_list = [(self.lng['schoolyear'], 0), ("", 110), (complete_average, 100), ("", 40)]
+        self.print_content(root, y_pos, data_list)
+        return y_pos
 
 
 class ViewReportSchoolclass(ViewReport):
 
-    def __init__(self, dbhandler, root_tab, lng, data):
-        self.dbh = dbhandler
-        self.tab_window = root_tab
-        self.lng = lng
+    def show_results(self, root, y_pos=100):
 
-        self.schoolyear = data['schoolyear']
-        self.schoolclass = data['schoolclass']
-        self.subject = data['subject']
+        timeperiod_list = self.dbh.get_timeperiod()
+        data_list = [(self.lng['student'], 0)]
+        for t in timeperiod_list:
+            data_list.append((t[1], 100))
+        data_list.append((self.lng['schoolyear'], 100))
 
-        self.column_title = []
-        self.column_title.append({'name': 'id', 'type': 'int', 'unique': True, 'editable': False})
-        self.column_title.extend(self._define_column_title())
+        self.print_content(root, y_pos, data_list)
+        y_pos += 20
 
-        mytab = QWidget()
+        for student in self.dbh.get_students(self.schoolyear, self.schoolclass):
+            name = "%s, %s" % (student[1], student[2])
+            data_list = [(name, 0)]
+            complete_t_p_result_sum = 0
+            complete_t_p_result_count = 0
+            complete_t_p_result_average = 0
+            for t in timeperiod_list:
+                t_p_result_list = []
+                exams = self.dbh.get_exams(self.schoolyear, self.schoolclass, self.subject, t[0])
+                for x in exams:
+                    t_p_result_list.extend(self.dbh.get_exam_result(exam_id=x[0], student_id=student[0], subject=self.subject, timeperiod_id=t[0]))
+                t_p_result_sum = 0
+                t_p_result_count = 0
+                t_p_result_average = 0
+                for tp in t_p_result_list:
+                    if tp.result:
+                        exam_type = self.dbh.get_examtype_by_id(tp.exam.exam_type)
+                        if tp.result:
+                            t_p_result_sum += tp.result * exam_type.weight * t[2]
+                            t_p_result_count += exam_type.weight * t[2]
+                if t_p_result_count:
+                    t_p_result_average = round(float(t_p_result_sum)/t_p_result_count, DIVISOR_PRECISION)
+                if t_p_result_sum:
+                    complete_t_p_result_sum += t_p_result_sum
+                    complete_t_p_result_count += t_p_result_count
+                data_list.append((t_p_result_average, 100))
 
-        label_schoolyear_description = QLabel(mytab)
-        label_schoolyear_description.setText(self.lng['schoolyear'])
-        label_schoolyear_description.move(10, 10)
-        label_schoolyear_description = QLabel(mytab)
-        label_schoolyear_description.setText(self.schoolyear)
-        label_schoolyear_description.move(100, 10)
+            if complete_t_p_result_count:
+                complete_t_p_result_average = round(float(complete_t_p_result_sum) / complete_t_p_result_count, DIVISOR_PRECISION)
+            data_list.append((complete_t_p_result_average, 100))
 
-        label_schoolclass_description = QLabel(mytab)
-        label_schoolclass_description.setText(self.lng['schoolclass'])
-        label_schoolclass_description.move(10, 30)
-        label_schoolclass_description = QLabel(mytab)
-        label_schoolclass_description.setText(self.schoolclass)
-        label_schoolclass_description.move(100, 30)
+            self.print_content(root, y_pos, data_list)
+            y_pos += 20
 
-        label_subject_description = QLabel(mytab)
-        label_subject_description.setText(self.lng['subject'])
-        label_subject_description.move(10, 50)
-        label_subject_description = QLabel(mytab)
-        label_subject_description.setText(self.subject)
-        label_subject_description.move(100, 50)
-
-        self.tab_window.addTab(mytab, self.lng['title'])
+        return y_pos
