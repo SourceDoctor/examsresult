@@ -2,6 +2,11 @@
 filetype_exf=Examsresult Files
 filetype_all=All Files
 
+[calculation_method]
+title = Schoolyear Result calculation method
+complete = calculate all results with their Examtype weights and Timeperiod weights together
+timeperiod = calculate every Timeperiod result seperatly and work with them
+
 [main]
 language=english
 title=Examsresult

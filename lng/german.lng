@@ -2,6 +2,11 @@
 filetype_exf=Examsresult Dateien
 filetype_all=Allee Dateien
 
+[calculation_method]
+title = Art zur Berechnung der Schuljahresnote
+complete = berechne aus allen Einzelnoten mit ihren jeweiligen Prüfungsgewichtungen und Zeitperiodengewichtungen
+timeperiod = berechne jede Zeitperiode einzeln und aus diesen Ergebnissen die Schuljahresnote
+
 [main]
 language=deutsch
 title=Examsresult
