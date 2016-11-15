@@ -31,4 +31,10 @@ Overview every time complete Result of Students or complete School Classes
 * CSV Export of Student Results (in Timeperiod and complete Schoolyear)
 * CSV Export of Schoolclass Results (in Timeperiod and complete Schoolyear)
 
+* create PDF of Student Results (in Timeperiod and complete Schoolyear)
+* create PDF of Schoolclass Results (in Timeperiod and complete Schoolyear)
+* create PDF of School Class List
+* create PDF of Exams List
+* create PDF of Exams Results
+
 * "what if Simulation" (what happens if Student has in next Test(s) this result(s)?)
