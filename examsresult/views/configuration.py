@@ -238,7 +238,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
         schoolyear = self.listbox_schoolyear.currentText()
         schoolclass = self.listbox_schoolclass.currentText()
         filename = "%s_%s" % (schoolyear, schoolclass)
-        self.configure_csv_export(parent=self.tab_window, default_filename=filename)
+        self.configure_export_csv(parent=self.tab_window, default_filename=filename)
 
 
 class ViewExamConfigure(ViewConfigure):
@@ -435,4 +435,4 @@ class ViewExamConfigure(ViewConfigure):
         schoolclass = self.listbox_schoolclass.currentText()
         subject = self.listbox_subject.currentText()
         filename = "%s_%s_%s" % (schoolyear, schoolclass, subject)
-        self.configure_csv_export(parent=self.tab_window, default_filename=filename)
+        self.configure_export_csv(parent=self.tab_window, default_filename=filename)

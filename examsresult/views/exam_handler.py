@@ -297,7 +297,7 @@ class Exam(CoreView):
 
     def do_csv_export(self):
         filename = "%s_%s_%s_%s_%s" % (self.exam_date.text(), self.schoolyear, self.schoolclass, self.subject, self.examtype)
-        self.configure_csv_export(parent=self.window, default_filename=filename)
+        self.configure_export_csv(parent=self.window, default_filename=filename)
 
     def examtype_change(self):
         self.examtype = self.listbox_examtype.currentText()

@@ -51,7 +51,7 @@ def center_pos(window_object, width, height):
     return left, top
 
 
-def csv_export(target_file, data, quotechar=" ", delimiter=";"):
+def export_csv(target_file, data, quotechar=" ", delimiter=";"):
     with open(target_file, 'w') as csvfile:
         writer = csv.writer(csvfile, delimiter=delimiter, quotechar=quotechar, quoting=csv.QUOTE_MINIMAL)
         for line in data:
