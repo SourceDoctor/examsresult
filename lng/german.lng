@@ -170,6 +170,7 @@ student=Schüler
 lastname= Nachname
 firstname = Vorname
 comment = Kommentar
+results = Ergebnisse
 
 [window_report_student]
 title = Schüler Report
@@ -183,3 +184,4 @@ lastname= Nachname
 firstname = Vorname
 comment = Kommentar
 periodresult = Zeitabschnitt Note
+results = Ergebnisse

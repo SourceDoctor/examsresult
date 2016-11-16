@@ -172,6 +172,7 @@ student = Student
 lastname= Lastname
 firstname = Firstname
 comment = Comment
+results = Results
 
 [window_report_student]
 title = Student Report
@@ -187,3 +188,4 @@ firstname = Firstname
 comment = Comment
 result = Result
 periodresult = Periodresult
+results = Results

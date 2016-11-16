@@ -78,8 +78,12 @@ class ViewReport(CoreView):
             self.y_pos += 20
 
         self.y_pos += 20
-        self.table_top = self.y_pos
+        label_results = QLabel(mytab)
+        label_results.setText(self.lng['results'])
+        label_results.move(self.table_left, self.y_pos)
 
+        self.y_pos += 20
+        self.table_top = self.y_pos
         self.my_table = QTableWidget(mytab)
         self.my_table.setGeometry(self.table_left, self.table_top, self.table_width, self.table_height)
 
