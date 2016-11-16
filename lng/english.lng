@@ -172,6 +172,7 @@ student = Student
 lastname= Lastname
 firstname = Firstname
 comment = Comment
+csv_export = CSV Export
 results = Results
 
 [window_report_student]
@@ -185,6 +186,7 @@ timeperiod = Timeperiod
 student = Student
 lastname= Lastname
 firstname = Firstname
+csv_export = CSV Export
 comment = Comment
 result = Result
 periodresult = Periodresult

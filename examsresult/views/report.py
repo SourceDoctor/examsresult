@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QTableWidget
+from PyQt5.QtWidgets import QWidget, QLabel, QTableWidget, QPushButton
 
 from examsresult import current_config
 from examsresult.views import CoreView
@@ -67,13 +67,13 @@ class ViewReport(CoreView):
         if self.show_student:
             self.student_id = data['student_id']
             s = self.dbh.get_student_data(self.student_id)
-            student = "%s, %s" % (s.lastname, s.firstname)
+            self.student = "%s, %s" % (s.lastname, s.firstname)
 
             label_student_description = QLabel(mytab)
             label_student_description.setText(self.lng['student'])
             label_student_description.move(10, self.y_pos)
             label_student_description = QLabel(mytab)
-            label_student_description.setText(student)
+            label_student_description.setText(self.student)
             label_student_description.move(100, self.y_pos)
             self.y_pos += 20
 
@@ -102,7 +102,18 @@ class ViewReport(CoreView):
         self.my_table.resizeColumnsToContents()
         self.my_table.setSortingEnabled(self.sorting)
 
+        self.button_csv_export = QPushButton(self.lng['csv_export'], mytab)
+        self.button_csv_export.move(self.table_left + self.table_width + 10, self.table_top)
+        self.button_csv_export.clicked.connect(self.do_csv_export)
+
         self.tab_window.addTab(mytab, self.lng['title'])
+
+    def do_csv_export(self):
+        filename = self.export_file_title()
+        self.configure_export_csv(parent=self.tab_window, default_filename=filename)
+
+    def export_file_title(self):
+        return ""
 
 
 class ViewReportStudent(ViewReport):
@@ -120,6 +131,9 @@ class ViewReportStudent(ViewReport):
 
     def _action_load_content(self):
         return self.show_results()
+
+    def export_file_title(self):
+        return "%s_%s" % (self.schoolclass, self.student)
 
     def show_results(self):
 
@@ -185,6 +199,9 @@ class ViewReportSchoolclass(ViewReport):
         column_title.append({'name': self.lng['schoolyear'], 'type': 'string', 'unique': False})
 
         return column_title
+
+    def export_file_title(self):
+        return "%s_%s" % (self.schoolyear, self.schoolclass)
 
     def _action_load_content(self):
         return self.show_results()

@@ -169,6 +169,7 @@ timeperiod = Zeitabschnitt
 student=Schüler
 lastname= Nachname
 firstname = Vorname
+csv_export = CSV Export
 comment = Kommentar
 results = Ergebnisse
 
@@ -182,6 +183,7 @@ timeperiod = Zeitabschnitt
 student=Schüler
 lastname= Nachname
 firstname = Vorname
+csv_export = CSV Export
 comment = Kommentar
 periodresult = Zeitabschnitt Note
 results = Ergebnisse
