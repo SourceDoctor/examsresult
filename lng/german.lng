@@ -182,3 +182,4 @@ student=Schüler
 lastname= Nachname
 firstname = Vorname
 comment = Kommentar
+periodresult = Zeitabschnitt Note

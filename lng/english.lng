@@ -162,6 +162,7 @@ msg_remove_exam=Really remove Exam?
 
 [window_report_schoolclass]
 title = Schoolclass Report
+date = Date
 schoolyear=Schoolyear
 schoolclass=Schoolclass
 subject = Subject
@@ -174,6 +175,7 @@ comment = Comment
 
 [window_report_student]
 title = Student Report
+date = Date
 schoolyear=Schoolyear
 schoolclass=Schoolclass
 subject = Subject
@@ -183,3 +185,5 @@ student = Student
 lastname= Lastname
 firstname = Firstname
 comment = Comment
+result = Result
+periodresult = Periodresult
