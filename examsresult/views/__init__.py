@@ -51,7 +51,10 @@ class BaseView(QMainWindow, CoreView):
 
     def toggle_menu(self, db_state):
         # Enable/Disable Menu Entries
+        self.report_schoolclass_action.setEnabled(db_state)
+        self.report_student_action.setEnabled(db_state)
         self.schoolclass_configure_action.setEnabled(db_state)
+        self.exam_configure_action.setEnabled(db_state)
         self.schoolyear_action.setEnabled(db_state)
         self.schoolclass_action.setEnabled(db_state)
         self.subject_action.setEnabled(db_state)
