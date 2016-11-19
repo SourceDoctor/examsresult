@@ -1,6 +1,7 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QTableWidget, QPushButton
+from PyQt5.QtWidgets import QWidget, QLabel, QTableWidget, QPushButton, QAbstractItemView
 
 from examsresult import current_config
+from examsresult.tools import HIDE_ID_COLUMN
 from examsresult.views import CoreView
 
 DIVISOR_PRECISION = 2
@@ -26,41 +27,37 @@ class ViewReport(CoreView):
         self.dbh = dbhandler
         self.tab_window = root_tab
         self.lng = lng
-        self.config = current_config
-
         self.column_title = []
         self.column_title.append({'name': 'id', 'type': 'int', 'unique': True, 'editable': False})
         self.column_title.extend(self._define_column_title())
+        self.config = current_config
 
         mytab = QWidget()
 
+        self.my_table = QTableWidget(mytab)
+        self.tab_window.addTab(mytab, self.lng['title'])
+
         if self.show_schoolyear:
             self.schoolyear = data['schoolyear']
-            label_schoolyear_description = QLabel(mytab)
-            label_schoolyear_description.setText(self.lng['schoolyear'])
+            label_schoolyear_description = QLabel(self.lng['schoolyear'], mytab)
             label_schoolyear_description.move(10, self.y_pos)
-            label_schoolyear_description = QLabel(mytab)
-            label_schoolyear_description.setText(self.schoolyear)
+            label_schoolyear_description = QLabel(self.schoolyear, mytab)
             label_schoolyear_description.move(100, self.y_pos)
             self.y_pos += 20
 
         if self.show_schoolclass:
             self.schoolclass = data['schoolclass']
-            label_schoolclass_description = QLabel(mytab)
-            label_schoolclass_description.setText(self.lng['schoolclass'])
+            label_schoolclass_description = QLabel(self.lng['schoolclass'], mytab)
             label_schoolclass_description.move(10, self.y_pos)
-            label_schoolclass_description = QLabel(mytab)
-            label_schoolclass_description.setText(self.schoolclass)
+            label_schoolclass_description = QLabel(self.schoolclass, mytab)
             label_schoolclass_description.move(100, self.y_pos)
             self.y_pos += 20
 
         if self.show_subject:
             self.subject = data['subject']
-            label_subject_description = QLabel(mytab)
-            label_subject_description.setText(self.lng['subject'])
+            label_subject_description = QLabel(self.lng['subject'], mytab)
             label_subject_description.move(10, self.y_pos)
-            label_subject_description = QLabel(mytab)
-            label_subject_description.setText(self.subject)
+            label_subject_description = QLabel(self.subject, mytab)
             label_subject_description.move(100, self.y_pos)
             self.y_pos += 20
 
@@ -69,22 +66,18 @@ class ViewReport(CoreView):
             s = self.dbh.get_student_data(self.student_id)
             self.student = "%s, %s" % (s.lastname, s.firstname)
 
-            label_student_description = QLabel(mytab)
-            label_student_description.setText(self.lng['student'])
+            label_student_description = QLabel(self.lng['student'], mytab)
             label_student_description.move(10, self.y_pos)
-            label_student_description = QLabel(mytab)
-            label_student_description.setText(self.student)
+            label_student_description = QLabel(self.student, mytab)
             label_student_description.move(100, self.y_pos)
             self.y_pos += 20
 
         self.y_pos += 20
-        label_results = QLabel(mytab)
-        label_results.setText(self.lng['results'])
+        label_results = QLabel(self.lng['results'], mytab)
         label_results.move(self.table_left, self.y_pos)
 
         self.y_pos += 20
         self.table_top = self.y_pos
-        self.my_table = QTableWidget(mytab)
         self.my_table.setGeometry(self.table_left, self.table_top, self.table_width, self.table_height)
 
         self.my_table.setColumnCount(len(self.column_title))
@@ -97,16 +90,32 @@ class ViewReport(CoreView):
             column_tuple += (col['name'],)
         self.my_table.setHorizontalHeaderLabels(column_tuple)
 
-        self.load_data()
-
-        self.my_table.resizeColumnsToContents()
-        self.my_table.setSortingEnabled(self.sorting)
-
         self.button_csv_export = QPushButton(self.lng['csv_export'], mytab)
         self.button_csv_export.move(self.table_left + self.table_width + 10, self.table_top)
         self.button_csv_export.clicked.connect(self.do_csv_export)
 
-        self.tab_window.addTab(mytab, self.lng['title'])
+        if HIDE_ID_COLUMN:
+            # hide Column 'id'
+            self.my_table.setColumnHidden(0, True)
+
+        if self.row_title:
+            self.my_table.setVerticalHeaderLabels(self.row_title)
+
+        if self.full_row_select:
+            self.my_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+
+        if self.full_column_select:
+            self.my_table.setSelectionBehavior(QAbstractItemView.SelectColumns)
+
+        if self.cell_editable:
+            self.my_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+        # Fixme: on doubleclick-Edit Cell has blinking Cursor focus
+
+        self.load_data()
+
+        self.my_table.resizeColumnsToContents()
+        self.my_table.setSortingEnabled(self.sorting)
 
     def do_csv_export(self):
         filename = self.export_file_title()

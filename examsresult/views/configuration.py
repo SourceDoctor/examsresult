@@ -121,7 +121,6 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
         # Fixme: on doubleclick-Edit Cell has blinking Cursor focus
 
-        self.my_table.resizeColumnsToContents()
         self.my_table.setSortingEnabled(self.sorting)
 
         self.my_table.doubleClicked.connect(self.action_edit)
@@ -152,6 +151,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
         # load Content from Database
         self.load_data()
+        self.my_table.resizeColumnsToContents()
 
         self.set_changed(False)
         self.button_add.setFocus()
@@ -304,7 +304,6 @@ class ViewExamConfigure(ViewConfigure):
 
         # Fixme: on doubleclick-Edit Cell has blinking Cursor focus
 
-        self.my_table.resizeColumnsToContents()
         self.my_table.setSortingEnabled(self.sorting)
 
         self.my_table.doubleClicked.connect(self.change_result)
@@ -344,6 +343,7 @@ class ViewExamConfigure(ViewConfigure):
 
         # load Content from Database
         self.load_data()
+        self.my_table.resizeColumnsToContents()
 
         self.set_changed(False)
         self.button_add.setFocus()
