@@ -125,78 +125,6 @@ class ViewReport(CoreView):
         return ""
 
 
-class ViewReportStudent(ViewReport):
-
-    show_student = True
-
-    def _define_column_title(self):
-        return [{'name': self.lng['date'], 'type': 'string', 'unique': False},
-                {'name': self.lng['timeperiod'], 'type': 'string', 'unique': False},
-                {'name': self.lng['examtype'], 'type': 'string', 'unique': False},
-                {'name': self.lng['result'], 'type': 'string', 'unique': False},
-                {'name': self.lng['periodresult'], 'type': 'string', 'unique': False},
-                {'name': self.lng['comment'], 'type': 'string', 'unique': False},
-                ]
-
-    def _action_load_content(self):
-        return self.show_results()
-
-    @property
-    def export_file_title(self):
-        return "%s_%s_%s" % (self.schoolclass, self.subject, self.student)
-
-    def show_results(self):
-
-        timeperiod_list = self.dbh.get_timeperiod()
-        complete_t_p_result_sum = 0
-        complete_t_p_result_count = 0
-        complete_t_p_result_average = 0
-
-        result_list = []
-        result_count = 1
-
-        for period in timeperiod_list:
-            t_p_result_sum = 0
-            t_p_result_count = 0
-            t_p_result_average = 0
-
-            results = self.dbh.get_exam_result(student_id=self.student_id, subject=self.subject,
-                                               timeperiod_id=period[0])
-            for r in results:
-                x_t = self.dbh.get_examtype_by_id(r.exam.exam_type)
-                if r.result:
-                    t_p_result_sum += r.result * x_t.weight
-                    t_p_result_count += x_t.weight
-                # print result
-                result_list.append((result_count, r.exam.date, period[1], x_t.name, r.result, "", r.comment))
-                result_count += 1
-
-            if t_p_result_count:
-                t_p_result_average = round(float(t_p_result_sum) / t_p_result_count, DIVISOR_PRECISION)
-
-            if t_p_result_sum:
-                if self.config['schoolyear_result_calculation_method'] == 'complete':
-                    complete_t_p_result_sum += t_p_result_sum * period[2]
-                    complete_t_p_result_count += t_p_result_count * period[2]
-                elif self.config['schoolyear_result_calculation_method'] == 'timeperiod':
-                    complete_t_p_result_sum += t_p_result_average * period[2]
-                    complete_t_p_result_count += period[2]
-                else:
-                    print("unknown calculation method")
-            # print Average
-            result_list.append((result_count, "", period[1], "", "", t_p_result_average, ""))
-            result_count += 1
-
-        if complete_t_p_result_count:
-            complete_t_p_result_average = round(float(complete_t_p_result_sum)/complete_t_p_result_count, DIVISOR_PRECISION)
-
-        # print schoolyear
-        result_list.append((result_count, "", self.lng['schoolyear'], "", "", complete_t_p_result_average, ""))
-        result_count += 1
-
-        return result_list
-
-
 class ViewReportSchoolclass(ViewReport):
 
     def _define_column_title(self):
@@ -266,5 +194,77 @@ class ViewReportSchoolclass(ViewReport):
             # print student result
             result_list.append(data_list)
             result_count += 1
+
+        return result_list
+
+
+class ViewReportStudent(ViewReport):
+
+    show_student = True
+
+    def _define_column_title(self):
+        return [{'name': self.lng['date'], 'type': 'string', 'unique': False},
+                {'name': self.lng['timeperiod'], 'type': 'string', 'unique': False},
+                {'name': self.lng['examtype'], 'type': 'string', 'unique': False},
+                {'name': self.lng['result'], 'type': 'string', 'unique': False},
+                {'name': self.lng['periodresult'], 'type': 'string', 'unique': False},
+                {'name': self.lng['comment'], 'type': 'string', 'unique': False},
+                ]
+
+    def _action_load_content(self):
+        return self.show_results()
+
+    @property
+    def export_file_title(self):
+        return "%s_%s_%s" % (self.schoolclass, self.subject, self.student)
+
+    def show_results(self):
+
+        timeperiod_list = self.dbh.get_timeperiod()
+        complete_t_p_result_sum = 0
+        complete_t_p_result_count = 0
+        complete_t_p_result_average = 0
+
+        result_list = []
+        result_count = 1
+
+        for period in timeperiod_list:
+            t_p_result_sum = 0
+            t_p_result_count = 0
+            t_p_result_average = 0
+
+            results = self.dbh.get_exam_result(student_id=self.student_id, subject=self.subject,
+                                               timeperiod_id=period[0])
+            for r in results:
+                x_t = self.dbh.get_examtype_by_id(r.exam.exam_type)
+                if r.result:
+                    t_p_result_sum += r.result * x_t.weight
+                    t_p_result_count += x_t.weight
+                # print result
+                result_list.append((result_count, r.exam.date, period[1], x_t.name, r.result, "", r.comment))
+                result_count += 1
+
+            if t_p_result_count:
+                t_p_result_average = round(float(t_p_result_sum) / t_p_result_count, DIVISOR_PRECISION)
+
+            if t_p_result_sum:
+                if self.config['schoolyear_result_calculation_method'] == 'complete':
+                    complete_t_p_result_sum += t_p_result_sum * period[2]
+                    complete_t_p_result_count += t_p_result_count * period[2]
+                elif self.config['schoolyear_result_calculation_method'] == 'timeperiod':
+                    complete_t_p_result_sum += t_p_result_average * period[2]
+                    complete_t_p_result_count += period[2]
+                else:
+                    print("unknown calculation method")
+            # print Average
+            result_list.append((result_count, "", period[1], "", "", t_p_result_average, ""))
+            result_count += 1
+
+        if complete_t_p_result_count:
+            complete_t_p_result_average = round(float(complete_t_p_result_sum)/complete_t_p_result_count, DIVISOR_PRECISION)
+
+        # print schoolyear
+        result_list.append((result_count, "", self.lng['schoolyear'], "", "", complete_t_p_result_average, ""))
+        result_count += 1
 
         return result_list
