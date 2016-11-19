@@ -90,9 +90,8 @@ class Exam(CoreView):
         self.my_table.verticalHeader().setVisible(self.header_vertical)
         self.my_table.horizontalHeader().setVisible(self.header_horizontal)
 
-        if HIDE_ID_COLUMN:
-            # hide Column 'id'
-            self.my_table.setColumnHidden(0, True)
+        # hide Column 'id'
+        self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)

@@ -94,9 +94,8 @@ class ViewReport(CoreView):
         self.button_csv_export.move(self.table_left + self.table_width + 10, self.table_top)
         self.button_csv_export.clicked.connect(lambda: self.do_csv_export())
 
-        if HIDE_ID_COLUMN:
-            # hide Column 'id'
-            self.my_table.setColumnHidden(0, True)
+        # hide Column 'id'
+        self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)

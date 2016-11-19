@@ -103,9 +103,8 @@ class ViewSchoolClassConfigure(ViewConfigure):
         menu.addAction(self.lng['import_other_schoolclass'], self.student_import_other_class)
         self.button_import.setMenu(menu)
 
-        if HIDE_ID_COLUMN:
-            # hide Column 'id'
-            self.my_table.setColumnHidden(0, True)
+        # hide Column 'id'
+        self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)
@@ -286,9 +285,8 @@ class ViewExamConfigure(ViewConfigure):
         self.button_csv_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_remove.height())
         self.button_csv_export.clicked.connect(self.do_csv_export)
 
-        if HIDE_ID_COLUMN:
-            # hide Column 'id'
-            self.my_table.setColumnHidden(0, True)
+        # hide Column 'id'
+        self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)

@@ -31,9 +31,8 @@ class ViewDefine(CoreView):
             column_tuple += (col['name'],)
         self.my_table.setHorizontalHeaderLabels(column_tuple)
 
-        if HIDE_ID_COLUMN:
-            # hide Column 'id'
-            self.my_table.setColumnHidden(0, True)
+        # hide Column 'id'
+        self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)
