@@ -92,7 +92,7 @@ class ViewReport(CoreView):
 
         self.button_csv_export = QPushButton(self.lng['csv_export'], mytab)
         self.button_csv_export.move(self.table_left + self.table_width + 10, self.table_top)
-        self.button_csv_export.clicked.connect(self.do_csv_export)
+        self.button_csv_export.clicked.connect(lambda: self.do_csv_export())
 
         if HIDE_ID_COLUMN:
             # hide Column 'id'
@@ -118,9 +118,9 @@ class ViewReport(CoreView):
         self.my_table.setSortingEnabled(self.sorting)
 
     def do_csv_export(self):
-        filename = self.export_file_title()
-        self.configure_export_csv(parent=self.tab_window, default_filename=filename)
+        self.configure_export_csv(parent=self.tab_window, default_filename=self.export_file_title)
 
+    @property
     def export_file_title(self):
         return ""
 
@@ -141,8 +141,9 @@ class ViewReportStudent(ViewReport):
     def _action_load_content(self):
         return self.show_results()
 
+    @property
     def export_file_title(self):
-        return "%s_%s" % (self.schoolclass, self.student)
+        return "%s_%s_%s" % (self.schoolclass, self.subject, self.student)
 
     def show_results(self):
 
@@ -209,6 +210,7 @@ class ViewReportSchoolclass(ViewReport):
 
         return column_title
 
+    @property
     def export_file_title(self):
         return "%s_%s" % (self.schoolyear, self.schoolclass)
 
