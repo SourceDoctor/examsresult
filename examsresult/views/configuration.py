@@ -254,6 +254,15 @@ class ViewSchoolClassConfigure(ViewConfigure):
         # Todo: Feed me
         obj.drawString(100, 750, "empty Schoolclass Template")
 
+    @property
+    def pdf_head_text(self):
+        return "%s: %s %s" % (self.lng['schoolclass'], self.listbox_schoolyear.currentText(), self.listbox_schoolclass.currentText())
+
+    @property
+    def pdf_foot_text(self):
+        # Todo: Feed me
+        return "Foot"
+
 
 class ViewExamConfigure(ViewConfigure):
 
@@ -465,3 +474,12 @@ class ViewExamConfigure(ViewConfigure):
     def pdf_template(self, obj, data):
         # Todo: Feed me
         obj.drawString(100, 750, "empty Exam Template")
+
+    @property
+    def pdf_head_text(self):
+        return "%s: %s %s %s" % (self.lng['exams'], self.listbox_schoolyear.currentText(), self.listbox_schoolclass.currentText(), self.listbox_subject.currentText())
+
+    @property
+    def pdf_foot_text(self):
+        # Todo: Feed me
+        return "Foot"

@@ -128,6 +128,14 @@ class ViewReport(CoreView):
     def export_file_title(self):
         return ""
 
+    @property
+    def pdf_head_text(self):
+        return "Head"
+
+    @property
+    def pdf_foot_text(self):
+        return "Foot"
+
 
 class ViewReportSchoolclass(ViewReport):
 
@@ -203,7 +211,17 @@ class ViewReportSchoolclass(ViewReport):
 
     def pdf_template(self, obj, data):
         # Todo: Feed me
-        obj.drawString(100, 750, "empty Report Schoolclass Template")
+        obj.drawString(100, 400, "empty Report Schoolclass Template")
+        pass
+
+    @property
+    def pdf_head_text(self):
+        return "%s: %s %s" % (self.lng['schoolclass'], self.schoolyear, self.schoolclass)
+
+    @property
+    def pdf_foot_text(self):
+        # Todo: Feed me
+        return "Foot"
 
 
 class ViewReportStudent(ViewReport):
@@ -279,4 +297,13 @@ class ViewReportStudent(ViewReport):
 
     def pdf_template(self, obj, data):
         # Todo: Feed me
-        obj.drawString(100, 750, "empty Report Student Template")
+        obj.drawString(100, 400, "empty Report Student Template")
+
+    @property
+    def pdf_head_text(self):
+        return "%s: %s %s %s %s" % (self.lng['student'], self.schoolyear, self.schoolclass, self.subject, self.student)
+
+    @property
+    def pdf_foot_text(self):
+        # Todo: Feed me
+        return "Foot"

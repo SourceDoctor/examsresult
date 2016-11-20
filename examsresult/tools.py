@@ -1,5 +1,6 @@
 from configparser import RawConfigParser
 from glob import glob
+from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import csv
 
@@ -63,16 +64,63 @@ def export_csv(target_file, data, quotechar=" ", delimiter=";"):
 
 
 class ExportPdf(object):
-    def __init__(self, target_file, template, data):
+
+    min_x = 2
+    max_x = 610
+    min_y = 2
+    max_y = 780
+    line_distance_x = 10
+    line_distance_y = 30
+
+    font_size = 12
+
+    head_text = "Head"
+    foot_text = "Foot"
+
+    def __init__(self, target_file, template, head_text="Head", foot_text="Foot", data=None):
         if not target_file.endswith(".pdf"):
             target_file += ".pdf"
-        self.pdf_export = canvas.Canvas(target_file)
+
+        self.pdf_export = canvas.Canvas(target_file, pagesize=letter)
+        self.pdf_export.setLineWidth(.3)
+        self.pdf_export.setFont('Helvetica', self.font_size)
+
         self.template = template
+        self.head_text = head_text
+        self.foot_text = foot_text
         self.data = data
 
     def template(self, data):
         self.pdf_export.drawString(100, 750, "no content")
 
     def save(self):
+        self.template_head()
         self.template(self.pdf_export, self.data)
+        self.template_foot()
         self.pdf_export.save()
+
+    def template_head(self):
+        self.pdf_export.line(self.min_x + self.line_distance_x,
+                             self.max_y - self.line_distance_y,
+                             self.max_x - self.line_distance_x,
+                             self.max_y - self.line_distance_y
+                             )
+        self.pdf_export.drawString(self.min_x + 10, self.max_y - 20, self.head_text)
+
+    def template_foot(self):
+        project_name_offset = self.font_size
+        project_name = "created by Examsresult"
+        self.pdf_export.line(self.min_x + self.line_distance_x,
+                             self.min_y + self.line_distance_y + project_name_offset,
+                             self.max_x - self.line_distance_x,
+                             self.min_y + self.line_distance_y + project_name_offset
+                             )
+        self.pdf_export.drawString(50,
+                                   self.min_y + self.line_distance_y,
+                                   self.foot_text
+                                   )
+        # Todo: align right instead of fixed Offset
+        self.pdf_export.drawString(self.max_x - 8 * len(project_name),
+                                   self.min_y + 10,
+                                   project_name
+                                   )

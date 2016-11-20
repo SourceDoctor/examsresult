@@ -123,7 +123,7 @@ class Exam(CoreView):
         self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
         menu = QMenu()
         menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
-        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title))
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, root=self.window))
         self.button_export.setMenu(menu)
 
         button_cancel = QPushButton(self.lng['close'], self.window)
@@ -317,4 +317,13 @@ class Exam(CoreView):
 
     def pdf_template(self, obj, data):
         # Todo: Feed me
-        obj.drawString(100, 750, "empty Exam Result Template")
+        obj.drawString(100, 400, "empty Exam Result Template")
+
+    @property
+    def pdf_head_text(self):
+        return "%s: %s %s %s" % (self.lng['title_result'], self.schoolclass, self.subject, self.exam_date.text())
+
+    @property
+    def pdf_foot_text(self):
+        # Todo: Feed me
+        return "Foot"

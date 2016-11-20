@@ -268,11 +268,21 @@ class CoreView(object):
             data.append(row)
         export_csv(target_file=csv_file, data=data)
 
-    def do_pdf_export(self, default_filename):
+    def do_pdf_export(self, default_filename, root=None):
         data = [()]
-        filename = self.file_save(self.tab_window, self.lng['title'], default_filename=default_filename)
-        pdf = ExportPdf(target_file=filename, template=self.pdf_template, data=data)
+        if not root:
+            root = self.tab_window
+        filename = self.file_save(root, self.lng['title'], default_filename=default_filename)
+        pdf = ExportPdf(target_file=filename, template=self.pdf_template, data=data, head_text=self.pdf_head_text, foot_text=self.pdf_foot_text)
         pdf.save()
 
     def pdf_template(self, obj, data):
         obj.drawString(100, 750, "Empty Template")
+
+    @property
+    def pdf_head_text(self):
+        return "Head"
+
+    @property
+    def pdf_foot_text(self):
+        return "Foot"
