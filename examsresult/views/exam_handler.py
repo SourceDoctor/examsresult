@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QDialog, QPushButton, QLabel, QTableWidget, \
     QAbstractItemView, QTextEdit, QCalendarWidget, QInputDialog, QTableWidgetItem, \
-    QMessageBox, QComboBox
+    QMessageBox, QComboBox, QToolButton, QMenu
 
 from examsresult.configuration import current_config
 from examsresult.tools import lng_list, HIDE_ID_COLUMN
@@ -117,9 +117,14 @@ class Exam(CoreView):
         self.button_save.move(self.table_left + self.table_width - self.button_save.width(), self.table_top + self.table_height)
         self.button_save.clicked.connect(self.action_save)
 
-        self.button_csv_export = QPushButton(self.lng['csv_export'], self.window)
-        self.button_csv_export.move(self.table_left + self.table_width - self.button_save.width() - self.button_csv_export.width(), self.table_top + self.table_height)
-        self.button_csv_export.clicked.connect(self.do_csv_export)
+        self.button_export = QToolButton(self.window)
+        self.button_export.move(self.table_left + self.table_width - self.button_save.width() - self.button_export.width(), self.table_top + self.table_height)
+        self.button_export.setText(self.lng['export'])
+        self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
+        menu = QMenu()
+        menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title))
+        self.button_export.setMenu(menu)
 
         button_cancel = QPushButton(self.lng['close'], self.window)
         button_cancel.move(370, 560)
@@ -162,6 +167,10 @@ class Exam(CoreView):
         self.set_changed(False)
 
         self.window.exec_()
+
+    @property
+    def export_file_title(self):
+        return "%s_%s_%s_%s" % (self.schoolyear, self.schoolclass, self.subject, self.exam_date)
 
     def _define_column_title(self):
         return [{'name': self.lng['lastname'], 'type': 'string', 'unique': False},
@@ -305,3 +314,7 @@ class Exam(CoreView):
     def timeperiod_change(self):
         self.timeperiod = self.listbox_timeperiod.currentText()
         self.set_changed(True)
+
+    def pdf_template(self, obj, data):
+        # Todo: Feed me
+        obj.drawString(100, 750, "empty Exam Result Template")

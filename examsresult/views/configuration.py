@@ -90,9 +90,14 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
         self.button_remove.clicked.connect(self.student_remove)
 
-        self.button_csv_export = QPushButton(self.lng['csv_export'], mytab)
-        self.button_csv_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_remove.height())
-        self.button_csv_export.clicked.connect(self.do_csv_export)
+        self.button_export = QToolButton(mytab)
+        self.button_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_remove.height())
+        self.button_export.setText(self.lng['export'])
+        self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
+        menu = QMenu()
+        menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title))
+        self.button_export.setMenu(menu)
 
         self.button_import = QToolButton(mytab)
         self.button_import.move(self.table_left + self.table_width + self.button_add.width(), self.table_top)
@@ -154,6 +159,12 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
         self.set_changed(False)
         self.button_add.setFocus()
+
+    @property
+    def export_file_title(self):
+        schoolyear = self.listbox_schoolyear.currentText()
+        schoolclass = self.listbox_schoolclass.currentText()
+        return "%s_%s" % (schoolyear, schoolclass)
 
     def _define_column_title(self):
         return [{'name': self.lng['lastname'], 'type': 'string', 'unique': False},
@@ -239,6 +250,10 @@ class ViewSchoolClassConfigure(ViewConfigure):
         filename = "%s_%s" % (schoolyear, schoolclass)
         self.configure_export_csv(parent=self.tab_window, default_filename=filename)
 
+    def pdf_template(self, obj, data):
+        # Todo: Feed me
+        obj.drawString(100, 750, "empty Schoolclass Template")
+
 
 class ViewExamConfigure(ViewConfigure):
 
@@ -281,9 +296,14 @@ class ViewExamConfigure(ViewConfigure):
         self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
         self.button_remove.clicked.connect(self.action_remove)
 
-        self.button_csv_export = QPushButton(self.lng['csv_export'], mytab)
-        self.button_csv_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_remove.height())
-        self.button_csv_export.clicked.connect(self.do_csv_export)
+        self.button_export = QToolButton(mytab)
+        self.button_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_remove.height())
+        self.button_export.setText(self.lng['export'])
+        self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
+        menu = QMenu()
+        menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title))
+        self.button_export.setMenu(menu)
 
         # hide Column 'id'
         self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
@@ -345,6 +365,13 @@ class ViewExamConfigure(ViewConfigure):
 
         self.set_changed(False)
         self.button_add.setFocus()
+
+    @property
+    def export_file_title(self):
+        schoolyear = self.listbox_schoolyear.currentText()
+        schoolclass = self.listbox_schoolclass.currentText()
+        subject = self.listbox_subject.currentText()
+        return "%s_%s_%s" % (schoolyear, schoolclass, subject)
 
     def _define_column_title(self):
         return [{'name': self.lng['date'], 'type': 'string', 'unique': False},
@@ -434,3 +461,7 @@ class ViewExamConfigure(ViewConfigure):
         subject = self.listbox_subject.currentText()
         filename = "%s_%s_%s" % (schoolyear, schoolclass, subject)
         self.configure_export_csv(parent=self.tab_window, default_filename=filename)
+
+    def pdf_template(self, obj, data):
+        # Todo: Feed me
+        obj.drawString(100, 750, "empty Exam Template")

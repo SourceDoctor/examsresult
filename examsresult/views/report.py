@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QTableWidget, QPushButton, QAbstractItemView
+from PyQt5.QtWidgets import QWidget, QLabel, QTableWidget, QAbstractItemView, QMenu, QToolButton
 
 from examsresult import current_config
 from examsresult.tools import HIDE_ID_COLUMN
@@ -90,9 +90,14 @@ class ViewReport(CoreView):
             column_tuple += (col['name'],)
         self.my_table.setHorizontalHeaderLabels(column_tuple)
 
-        self.button_csv_export = QPushButton(self.lng['csv_export'], mytab)
-        self.button_csv_export.move(self.table_left + self.table_width + 10, self.table_top)
-        self.button_csv_export.clicked.connect(lambda: self.do_csv_export())
+        self.button_export = QToolButton(mytab)
+        self.button_export.move(self.table_left + self.table_width + 10, self.table_top)
+        self.button_export.setText(self.lng['export'])
+        self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
+        menu = QMenu()
+        menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title))
+        self.button_export.setMenu(menu)
 
         # hide Column 'id'
         self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
@@ -196,6 +201,10 @@ class ViewReportSchoolclass(ViewReport):
 
         return result_list
 
+    def pdf_template(self, obj, data):
+        # Todo: Feed me
+        obj.drawString(100, 750, "empty Report Schoolclass Template")
+
 
 class ViewReportStudent(ViewReport):
 
@@ -267,3 +276,7 @@ class ViewReportStudent(ViewReport):
         result_count += 1
 
         return result_list
+
+    def pdf_template(self, obj, data):
+        # Todo: Feed me
+        obj.drawString(100, 750, "empty Report Student Template")

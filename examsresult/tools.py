@@ -1,10 +1,12 @@
 from configparser import RawConfigParser
 from glob import glob
+from reportlab.pdfgen import canvas
 import csv
 
 language_extension = 'lng'
 language_path = '/lng'
 app_icon = '.%s/1476313854_report_pencil.png' % language_path
+
 HIDE_ID_COLUMN = False
 
 
@@ -52,7 +54,25 @@ def center_pos(window_object, width, height):
 
 
 def export_csv(target_file, data, quotechar=" ", delimiter=";"):
+    if not target_file.endswith(".csv"):
+        target_file += ".csv"
     with open(target_file, 'w') as csvfile:
         writer = csv.writer(csvfile, delimiter=delimiter, quotechar=quotechar, quoting=csv.QUOTE_MINIMAL)
         for line in data:
             writer.writerow(line)
+
+
+class ExportPdf(object):
+    def __init__(self, target_file, template, data):
+        if not target_file.endswith(".pdf"):
+            target_file += ".pdf"
+        self.pdf_export = canvas.Canvas(target_file)
+        self.template = template
+        self.data = data
+
+    def template(self, data):
+        self.pdf_export.drawString(100, 750, "no content")
+
+    def save(self):
+        self.template(self.pdf_export, self.data)
+        self.pdf_export.save()

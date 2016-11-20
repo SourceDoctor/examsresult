@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMessageBox, QInputDialog, QTableWidgetItem, QFileDialog
 
-from examsresult.tools import export_csv
+from examsresult.tools import export_csv, ExportPdf
 
 
 class CoreView(object):
@@ -244,14 +244,14 @@ class CoreView(object):
                 self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column])))
                 column += 1
 
-    def export_csv(self, file, data):
-        export_csv(target_file=file, data=data)
-
-    def configure_export_csv(self, parent, default_filename):
+    def file_save(self, parent, caption, default_filename):
         file_handler = QFileDialog()
         # Todo: set Default Filename to Save Dialog
-        file_tuple = file_handler.getSaveFileName(parent=parent, caption=self.lng['title'])
-        csv_file = file_tuple[0]
+        file_tuple = file_handler.getSaveFileName(parent=parent, caption=caption)
+        return file_tuple[0]
+
+    def configure_export_csv(self, parent, default_filename):
+        csv_file = self.file_save(parent=parent, caption=self.lng['title'], default_filename=default_filename)
         if not csv_file:
             return
         data = []
@@ -266,4 +266,13 @@ class CoreView(object):
                 c += 1
             r += 1
             data.append(row)
-        self.export_csv(file=csv_file, data=data)
+        export_csv(target_file=csv_file, data=data)
+
+    def do_pdf_export(self, default_filename):
+        data = [()]
+        filename = self.file_save(self.tab_window, self.lng['title'], default_filename=default_filename)
+        pdf = ExportPdf(target_file=filename, template=self.pdf_template, data=data)
+        pdf.save()
+
+    def pdf_template(self, obj, data):
+        obj.drawString(100, 750, "Empty Template")
