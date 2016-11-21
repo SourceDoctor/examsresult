@@ -123,7 +123,7 @@ class Exam(CoreView):
         self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
         menu = QMenu()
         menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
-        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, root=self.window))
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, root=self.window, data=self._action_load_content()))
         self.button_export.setMenu(menu)
 
         button_cancel = QPushButton(self.lng['close'], self.window)
@@ -179,7 +179,9 @@ class Exam(CoreView):
                 {'name': self.lng['comment'], 'type': 'string', 'unique': False}
                 ]
 
-    def _action_load_content(self):
+    def _action_load_content(self, keep_change_state=False):
+        change_state = self.is_changed
+
         if self.exam_id != None:
             data = self.dbhandler.get_exam_by_id(exam_id=self.exam_id)
             school_class = self.dbhandler.get_schoolclass_data(data.school_class_id)
@@ -209,6 +211,9 @@ class Exam(CoreView):
         for s in student_results:
             student = self.dbhandler.get_student_data(s.student)
             student_result_list.append((student.id, student.lastname, student.firstname, s.result, s.comment))
+
+        if keep_change_state:
+            self.set_changed(change_state)
         return student_result_list
 
     def exam_is_unique(self, msg=True):
@@ -316,14 +321,86 @@ class Exam(CoreView):
         self.set_changed(True)
 
     def pdf_template(self, obj, data):
-        # Todo: Feed me
-        obj.drawString(100, 400, "empty Exam Result Template")
+        y = obj.body_max_y
+        x = obj.body_min_x
+
+        font_width = round(obj.font_size * 3 / 5, 0)
+
+        lastname_max_len = len(self.lng['lastname'])
+        firstname_max_len = len(self.lng['firstname'])
+        result_max_len = len(self.lng['result'])
+
+        for row in data:
+            if len(row[1]) > lastname_max_len:
+                lastname_max_len = len(row[1])
+            if len(row[2]) > firstname_max_len:
+                firstname_max_len = len(row[2])
+            if len(str(row[3])) > result_max_len:
+                result_max_len = len(str(row[3]))
+
+        lastname_width = font_width * lastname_max_len
+        firstname_width = font_width * firstname_max_len
+        result_width = font_width * result_max_len
+
+        result_count = 0
+        result_sum = 0
+        result_average = 0
+        for row in data:
+            if row[3]:
+                result_sum += row[3]
+                result_count += 1
+        if result_count:
+            result_average = round(float(result_sum)/result_count, 2)
+
+        exam_count = "%s/%s" % (result_count, len(data))
+
+        # Exam Details
+        exam_detail_offset = 100
+        obj.drawString(x, y, self.lng['examtype'])
+        obj.drawString(x + exam_detail_offset, y, self.listbox_examtype.currentText())
+        y -= obj.font_size
+        obj.drawString(x, y, self.lng['timeperiod'])
+        obj.drawString(x + exam_detail_offset, y, self.listbox_timeperiod.currentText())
+        y -= obj.font_size
+        obj.drawString(x, y, self.lng['exam_description'])
+        obj.drawString(x + exam_detail_offset, y, self.text_exam_description.toPlainText())
+        y -= obj.font_size
+        obj.drawString(x, y, self.lng['count'])
+        obj.drawString(x + exam_detail_offset, y, exam_count)
+        y -= obj.font_size
+        obj.drawString(x, y, self.lng['average'])
+        obj.drawString(x + exam_detail_offset, y, str(result_average))
+        y -= obj.font_size
+
+        y -= obj.font_size
+        # Exam Results
+        offset = 0
+        obj.drawString(x, y, self.lng['lastname'])
+        offset += lastname_width
+        obj.drawString(x + offset, y, self.lng['firstname'])
+        offset += firstname_width#
+        obj.drawString(x + offset, y, self.lng['result'])
+        offset += result_width
+        obj.drawString(x + offset, y, self.lng['comment'])
+
+        y -= 4
+        obj.line(x, y, x + offset + 100, y)
+
+        for row in data:
+            y -= obj.font_size
+            offset = 0
+            obj.drawString(x, y, row[1])
+            offset += lastname_width
+            obj.drawString(x + offset, y, row[2])
+            offset += firstname_width
+            obj.drawString(x + offset, y, str(row[3]))
+            offset += result_width
+            obj.drawString(x + offset, y, row[4])
 
     @property
     def pdf_head_text(self):
-        return "%s: %s %s %s" % (self.lng['title_result'], self.schoolclass, self.subject, self.exam_date.text())
+        return "%s: %s %s %s %s" % (self.lng['title_result'], self.schoolyear, self.schoolclass, self.subject, self.exam_date.text())
 
     @property
     def pdf_foot_text(self):
-        # Todo: Feed me
-        return "Foot"
+        return ""

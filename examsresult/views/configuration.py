@@ -96,7 +96,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
         menu = QMenu()
         menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
-        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title))
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, data=self._action_load_content()))
         self.button_export.setMenu(menu)
 
         self.button_import = QToolButton(mytab)
@@ -251,8 +251,41 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.configure_export_csv(parent=self.tab_window, default_filename=filename)
 
     def pdf_template(self, obj, data):
-        # Todo: Feed me
-        obj.drawString(100, 750, "empty Schoolclass Template")
+        y = obj.body_max_y
+        x = obj.body_min_x
+
+        font_width = round(obj.font_size * 3/5, 0)
+
+        lastname_max_len = len(self.lng['lastname'])
+        firstname_max_len = len(self.lng['firstname'])
+
+        for row in data:
+            if len(row[1]) > lastname_max_len:
+                lastname_max_len = len(row[1])
+            if len(row[2]) > firstname_max_len:
+                firstname_max_len = len(row[2])
+
+        lastname_width = font_width * lastname_max_len
+        firstname_width = font_width * firstname_max_len
+
+        offset = 0
+        obj.drawString(x, y, self.lng['lastname'])
+        offset += lastname_width
+        obj.drawString(x + offset, y, self.lng['firstname'])
+        offset += firstname_width
+        obj.drawString(x + offset, y, self.lng['comment'])
+        offset += 100
+        y -= 4
+        obj.line(x, y, x + offset, y)
+
+        for row in data:
+            y -= obj.font_size
+            offset = 0
+            obj.drawString(x, y, row[1])
+            offset += lastname_width
+            obj.drawString(x + offset, y, row[2])
+            offset += firstname_width
+            obj.drawString(x + offset, y, row[3])
 
     @property
     def pdf_head_text(self):
@@ -260,8 +293,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
     @property
     def pdf_foot_text(self):
-        # Todo: Feed me
-        return "Foot"
+        return ""
 
 
 class ViewExamConfigure(ViewConfigure):
@@ -311,7 +343,7 @@ class ViewExamConfigure(ViewConfigure):
         self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
         menu = QMenu()
         menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
-        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title))
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, data=self._action_load_content()))
         self.button_export.setMenu(menu)
 
         # hide Column 'id'
@@ -472,8 +504,64 @@ class ViewExamConfigure(ViewConfigure):
         self.configure_export_csv(parent=self.tab_window, default_filename=filename)
 
     def pdf_template(self, obj, data):
-        # Todo: Feed me
-        obj.drawString(100, 750, "empty Exam Template")
+        y = obj.body_max_y
+        x = obj.body_min_x
+
+        font_width = round(obj.font_size * 3/5, 0)
+
+        date_max_len = len(self.lng['date'])
+        examtype_max_len = len(self.lng['examtype'])
+        timeperiod_max_len = len(self.lng['timeperiod'])
+        count_max_len = len(self.lng['count'])
+        average_max_len = len(self.lng['average'])
+
+        for row in data:
+            if len(row[1]) > date_max_len:
+                date_max_len = len(row[1])
+            if len(row[2]) > examtype_max_len:
+                examtype_max_len = len(row[2])
+            if len(row[3]) > timeperiod_max_len:
+                timeperiod_max_len= len(row[3])
+            if len(row[4]) > count_max_len:
+                count_max_len = len(row[4])
+            if len(str(row[5])) > average_max_len:
+                average_max_len = len(str(row[5]))
+
+        date_width = font_width * date_max_len
+        exam_type_width = font_width * examtype_max_len
+        timeperiod_width = font_width * timeperiod_max_len
+        count_width = font_width * count_max_len
+        average_width = font_width * average_max_len
+
+        offset = 0
+        obj.drawString(x, y, self.lng['date'])
+        offset += date_width
+        obj.drawString(x + offset, y, self.lng['examtype'])
+        offset += exam_type_width
+        obj.drawString(x + offset, y, self.lng['timeperiod'])
+        offset += timeperiod_width
+        obj.drawString(x + offset, y, self.lng['count'])
+        offset += count_width
+        obj.drawString(x + offset, y, self.lng['average'])
+        offset += average_width
+        obj.drawString(x + offset, y, self.lng['comment'])
+        y -= 4
+        obj.line(x, y, x + offset + 100, y)
+
+        for row in data:
+            y -= obj.font_size
+            offset = 0
+            obj.drawString(x, y, row[1])
+            offset += date_width
+            obj.drawString(x + offset, y, row[2])
+            offset += exam_type_width
+            obj.drawString(x + offset, y, row[3])
+            offset += timeperiod_width
+            obj.drawString(x + offset, y, row[4])
+            offset += count_width
+            obj.drawString(x + offset, y, str(row[5]))
+            offset += average_width
+            obj.drawString(x + offset, y, row[6])
 
     @property
     def pdf_head_text(self):
@@ -481,5 +569,4 @@ class ViewExamConfigure(ViewConfigure):
 
     @property
     def pdf_foot_text(self):
-        # Todo: Feed me
-        return "Foot"
+        return ""

@@ -69,9 +69,14 @@ class ExportPdf(object):
     max_x = 610
     min_y = 2
     max_y = 780
+    body_min_x = min_x + 50
+    body_max_x = max_x - 50
+    body_min_y = min_y + 50 + 10
+    body_max_y = max_y - 50 - 10
     line_distance_x = 10
     line_distance_y = 30
 
+    font_normal = 'Helvetica'
     font_size = 12
 
     head_text = "Head"
@@ -83,8 +88,12 @@ class ExportPdf(object):
 
         self.pdf_export = canvas.Canvas(target_file, pagesize=letter)
         self.pdf_export.setLineWidth(.3)
-        self.pdf_export.setFont('Helvetica', self.font_size)
-
+        self.pdf_export.setFont(self.font_normal, self.font_size)
+        self.pdf_export.font_size = self.font_size
+        self.pdf_export.body_min_x = self.body_min_x
+        self.pdf_export.body_max_x = self.body_max_x
+        self.pdf_export.body_min_y = self.body_min_y
+        self.pdf_export.body_max_y = self.body_max_y
         self.template = template
         self.head_text = head_text
         self.foot_text = foot_text
@@ -100,12 +109,14 @@ class ExportPdf(object):
         self.pdf_export.save()
 
     def template_head(self):
+        self.pdf_export.setFont(self.font_normal, self.font_size + 2)
         self.pdf_export.line(self.min_x + self.line_distance_x,
                              self.max_y - self.line_distance_y,
                              self.max_x - self.line_distance_x,
                              self.max_y - self.line_distance_y
                              )
         self.pdf_export.drawString(self.min_x + 10, self.max_y - 20, self.head_text)
+        self.pdf_export.setFont(self.font_normal, self.font_size)
 
     def template_foot(self):
         project_name_offset = self.font_size
@@ -120,7 +131,9 @@ class ExportPdf(object):
                                    self.foot_text
                                    )
         # Todo: align right instead of fixed Offset
+        self.pdf_export.setFont(self.font_normal, self.font_size - 2)
         self.pdf_export.drawString(self.max_x - 8 * len(project_name),
                                    self.min_y + 10,
                                    project_name
                                    )
+        self.pdf_export.setFont(self.font_normal, self.font_size)

@@ -96,7 +96,7 @@ class ViewReport(CoreView):
         self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
         menu = QMenu()
         menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
-        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title))
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, data=self.show_results()))
         self.button_export.setMenu(menu)
 
         # hide Column 'id'
@@ -120,6 +120,9 @@ class ViewReport(CoreView):
 
         self.my_table.resizeColumnsToContents()
         self.my_table.setSortingEnabled(self.sorting)
+
+    def show_results(self):
+        return []
 
     def do_csv_export(self):
         self.configure_export_csv(parent=self.tab_window, default_filename=self.export_file_title)
@@ -210,18 +213,67 @@ class ViewReportSchoolclass(ViewReport):
         return result_list
 
     def pdf_template(self, obj, data):
-        # Todo: Feed me
-        obj.drawString(100, 400, "empty Report Schoolclass Template")
-        pass
+        y = obj.body_max_y
+        x = obj.body_min_x
+
+        font_width = round(obj.font_size * 3/5, 0)
+
+        title_list = []
+        string_len = []
+        # get maximal length
+        first_element = True
+        for t in self.column_title:
+            if first_element:
+                first_element = False
+                continue
+            title_list.append(t['name'])
+            string_len.append(len(t['name']))
+
+        for row in data:
+            i = 1
+            while i < len(string_len):
+                if len(str(row[i])) > string_len[i - 1]:
+                    string_len[i - 1] = len(str(row[i]))
+                i += 1
+
+        string_width = []
+        i = 0
+        while i < len(string_len):
+            string_width.append(font_width * string_len[i])
+            i += 1
+
+        # print title
+        offset = 0
+        i = 0
+        for title in title_list:
+            obj.drawString(x + offset, y, str(title))
+            offset += string_width[i]
+            i += 1
+
+        # print seperator Line
+        y -= 4
+        obj.line(x, y, x + offset, y)
+        # print period results
+        for row in data:
+            offset = 0
+            y -= obj.font_size
+            i = -1
+            first_element = True
+            while i < len(row) - 1:
+                i += 1
+                if first_element:
+                    first_element = False
+                    continue
+                obj.drawString(x + offset, y, str(row[i]))
+                offset += string_width[i - 1]
 
     @property
     def pdf_head_text(self):
-        return "%s: %s %s" % (self.lng['schoolclass'], self.schoolyear, self.schoolclass)
+        return "%s: %s %s %s" % (self.lng['title'], self.schoolyear, self.schoolclass, self.subject)
 
     @property
     def pdf_foot_text(self):
-        # Todo: Feed me
-        return "Foot"
+        return ""
 
 
 class ViewReportStudent(ViewReport):
@@ -296,14 +348,78 @@ class ViewReportStudent(ViewReport):
         return result_list
 
     def pdf_template(self, obj, data):
-        # Todo: Feed me
-        obj.drawString(100, 400, "empty Report Student Template")
+        y = obj.body_max_y
+        x = obj.body_min_x
+
+        font_width = round(obj.font_size * 3/5, 0)
+
+        date_max_len = len(self.lng['date'])
+        timeperiod_max_len = len(self.lng['timeperiod'])
+        examtype_max_len = len(self.lng['examtype'])
+        result_max_len = len(self.lng['result'])
+        periodresult_max_len = len(self.lng['periodresult'])
+
+        for row in data:
+            if len(row[1]) > date_max_len:
+                date_max_len = len(row[1])
+            if len(row[2]) > timeperiod_max_len:
+                timeperiod_max_len = len(row[2])
+            if len(row[3]) > examtype_max_len:
+                examtype_max_len = len(row[3])
+            if len(str(row[4])) > result_max_len:
+                result_max_len = len(str(row[4]))
+            if len(str(row[5])) > periodresult_max_len:
+                periodresult_max_len = len(str(row[5]))
+
+        date_max_width = font_width * date_max_len
+        timeperiod_max_width = font_width * timeperiod_max_len
+        examtype_max_width = font_width * examtype_max_len
+        result_max_width = font_width * result_max_len
+        periodresult_max_width = font_width * periodresult_max_len
+
+        y -= obj.font_size
+        offset = 0
+        obj.drawString(x, y, self.lng['date'])
+        offset += date_max_width
+        obj.drawString(x + offset, y, self.lng['timeperiod'])
+        offset += timeperiod_max_width
+        obj.drawString(x + offset, y, self.lng['examtype'])
+        offset += examtype_max_width
+        obj.drawString(x + offset, y, self.lng['result'])
+        offset += result_max_width
+        obj.drawString(x + offset, y, self.lng['periodresult'])
+        offset += periodresult_max_width
+        obj.drawString(x + offset, y, self.lng['comment'])
+
+        y -= 4
+        obj.line(x, y, x + offset + 100, y)
+
+        for row in data:
+            if not row[1]:
+                # Period end
+                y -= 4
+                obj.line(x, y, x + offset + 100, y)
+
+            y -= obj.font_size
+            offset = 0
+            obj.drawString(x, y, row[1])
+            offset += date_max_width
+            obj.drawString(x + offset, y, row[2])
+            offset += timeperiod_max_width
+            obj.drawString(x + offset, y, str(row[3]))
+            offset += examtype_max_width
+            obj.drawString(x + offset, y, str(row[4]))
+            offset += result_max_width
+            obj.drawString(x + offset, y, str(row[5]))
+            offset += periodresult_max_width
+            obj.drawString(x + offset, y, row[6])
+            if not row[1]:
+                y -= obj.font_size
 
     @property
     def pdf_head_text(self):
-        return "%s: %s %s %s %s" % (self.lng['student'], self.schoolyear, self.schoolclass, self.subject, self.student)
+        return "%s: %s %s %s %s" % (self.lng['title'], self.schoolyear, self.schoolclass, self.subject, self.student)
 
     @property
     def pdf_foot_text(self):
-        # Todo: Feed me
-        return "Foot"
+        return ""

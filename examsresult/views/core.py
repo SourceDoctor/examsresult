@@ -268,8 +268,7 @@ class CoreView(object):
             data.append(row)
         export_csv(target_file=csv_file, data=data)
 
-    def do_pdf_export(self, default_filename, root=None):
-        data = [()]
+    def do_pdf_export(self, default_filename, root=None, data=[]):
         if not root:
             root = self.tab_window
         filename = self.file_save(root, self.lng['title'], default_filename=default_filename)
@@ -281,8 +280,8 @@ class CoreView(object):
 
     @property
     def pdf_head_text(self):
-        return "Head"
+        return "empty Head"
 
     @property
     def pdf_foot_text(self):
-        return "Foot"
+        return "empty Foot"
