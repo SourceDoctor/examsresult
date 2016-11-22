@@ -297,16 +297,10 @@ class Exam(CoreView):
         self.window.close()
 
     def get_examtypenames(self):
-        ret = []
-        for i in self.dbhandler.get_examtype():
-            ret.append(i[1])
-        return ret
+        return [x[1] for x in self.dbhandler.get_examtype()]
 
     def get_timeperiodnames(self):
-        ret = []
-        for i in self.dbhandler.get_timeperiod():
-            ret.append(i[1])
-        return ret
+        return [x[1] for x in self.dbhandler.get_timeperiod()]
 
     def do_csv_export(self):
         filename = "%s_%s_%s_%s_%s" % (self.exam_date.text(), self.schoolyear, self.schoolclass, self.subject, self.examtype)

@@ -107,26 +107,19 @@ class BaseView(QMainWindow, CoreView):
         ViewSettings(parent=parent, lng=self.lng)
 
     def window_report_schoolclass(self, lng):
-        schoolyear_list = []
-        schoolclass_list = []
-        subject_list = []
-
         report_dialog = QInputDialog(parent=self.tab_window)
 
-        for y in self.dbh.get_schoolyear():
-            schoolyear_list.append(y[1])
+        schoolyear_list = [y[1] for y in self.dbh.get_schoolyear()]
         schoolyear, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolyear'], schoolyear_list, 0, False)
         if not ok:
             return False
 
-        for c in self.dbh.get_schoolclassname(schoolyear=schoolyear):
-            schoolclass_list.append(c[1])
+        schoolclass_list = [c[1] for c in self.dbh.get_schoolclassname(schoolyear=schoolyear)]
         schoolclass, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolclass'], schoolclass_list, 0, False)
         if not ok:
             return False
 
-        for c in self.dbh.get_subject():
-            subject_list.append(c[1])
+        subject_list = [s[1] for s in self.dbh.get_subject()]
         subject, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['subject'], subject_list, 0, False)
         if not ok:
             return False
@@ -141,28 +134,22 @@ class BaseView(QMainWindow, CoreView):
         return True
 
     def window_report_student(self, lng):
-        schoolyear_list = []
-        schoolclass_list = []
-        subject_list = []
         student_list = []
         student_id_dict = {}
 
         report_dialog = QInputDialog(parent=self.tab_window)
 
-        for y in self.dbh.get_schoolyear():
-            schoolyear_list.append(y[1])
+        schoolyear_list = [y[1] for y in self.dbh.get_schoolyear()]
         schoolyear, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolyear'], schoolyear_list, 0, False)
         if not ok:
             return False
 
-        for c in self.dbh.get_schoolclassname(schoolyear=schoolyear):
-            schoolclass_list.append(c[1])
+        schoolclass_list = [c[1] for c in self.dbh.get_schoolclassname(schoolyear=schoolyear)]
         schoolclass, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolclass'], schoolclass_list, 0, False)
         if not ok:
             return False
 
-        for c in self.dbh.get_subject():
-            subject_list.append(c[1])
+        subject_list = [s[1] for s in self.dbh.get_subject()]
         subject, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['subject'], subject_list, 0, False)
         if not ok:
             return False

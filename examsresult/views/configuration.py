@@ -34,22 +34,13 @@ class ViewConfigure(CoreView):
         change_index = index
 
     def get_schoolclassnames(self):
-        ret = []
-        for i in self.dbh.get_schoolclassname():
-            ret.append(i[1])
-        return ret
+        return [x[1] for x in self.dbh.get_schoolclassname()]
 
     def get_schoolyears(self):
-        ret = []
-        for i in self.dbh.get_schoolyear():
-            ret.append(i[1])
-        return ret
+        return [x[1] for x in self.dbh.get_schoolyear()]
 
     def get_subjectnames(self):
-        ret = []
-        for i in self.dbh.get_subject():
-            ret.append(i[1])
-        return ret
+        return [x[1] for x in self.dbh.get_subject()]
 
 
 class ViewSchoolClassConfigure(ViewConfigure):

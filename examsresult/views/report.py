@@ -477,13 +477,8 @@ class ViewReportStudent(ViewReport):
     def simulate_student_result(self):
         simulation_data = []
 
-        timeperiod_list = []
-        for t in self.dbh.get_timeperiod():
-            timeperiod_list.append(t[1])
-
-        examtype_list = []
-        for x in self.dbh.get_examtype():
-            examtype_list.append(x[1])
+        timeperiod_list = [t[1] for t in self.dbh.get_timeperiod()]
+        examtype_list = [x[1] for x in self.dbh.get_examtype()]
 
         simulate_dialog = QInputDialog(parent=self.tab_window)
         add_results = True
