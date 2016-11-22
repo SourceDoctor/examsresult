@@ -85,6 +85,7 @@ msg_double_error=Schoolyear with this Name exists
 [window_about]
 title = About
 infotext=the Teacher Exams Management Database
+version=Version
 
 [window_settings]
 title = Settings

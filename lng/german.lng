@@ -85,6 +85,7 @@ msg_double_error=Schuljahr mit dieser Beschreibung existiert schon
 [window_about]
 title = Über
 infotext=Die Prüfungs und Schulnotenverwaltungsdatenbank für Lehrer
+version=Version
 
 [window_settings]
 title = Einstellungen
