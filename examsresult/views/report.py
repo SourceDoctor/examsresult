@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QTableWidget, QAbstractItemView, QMenu, QToolButton
+from PyQt5.QtWidgets import QWidget, QLabel, QTableWidget, QAbstractItemView, QMenu, \
+    QToolButton, QPushButton, QInputDialog, QMessageBox
 
 from examsresult import current_config
 from examsresult.tools import HIDE_ID_COLUMN
@@ -99,6 +100,18 @@ class ViewReport(CoreView):
         menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, data=self.show_results()))
         self.button_export.setMenu(menu)
 
+        if self.show_student:
+            self.button_simulate = QPushButton(self.lng['simulate'], mytab)
+            self.button_simulate.move(self.table_left + self.table_width + 10, self.table_top + self.button_export.height())
+            self.button_simulate.clicked.connect(self.simulate_action)
+            
+            self.button_simulation_clear = QPushButton(self.lng['simulation_clear'], mytab)
+            self.button_simulation_clear.move(self.table_left + self.table_width + 10,
+                                              self.table_top + self.button_export.height() + self.button_simulate.height()
+                                              )
+            self.button_simulation_clear.clicked.connect(self.simulate_clear)
+            self.button_simulation_clear.setEnabled(False)
+
         # hide Column 'id'
         self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
 
@@ -139,6 +152,15 @@ class ViewReport(CoreView):
     def pdf_foot_text(self):
         return "Foot"
 
+    def simulate_action(self):
+        pass
+
+    def simulate_clear(self):
+        pass
+
+    def reload_data(self):
+        self.clear_table()
+        self.load_data()
 
 class ViewReportSchoolclass(ViewReport):
 
@@ -279,6 +301,7 @@ class ViewReportSchoolclass(ViewReport):
 class ViewReportStudent(ViewReport):
 
     show_student = True
+    simulation_data = []
 
     def _define_column_title(self):
         return [{'name': self.lng['date'], 'type': 'string', 'unique': False},
@@ -290,13 +313,13 @@ class ViewReportStudent(ViewReport):
                 ]
 
     def _action_load_content(self):
-        return self.show_results()
+        return self.show_results(simulate_data=self.simulation_data)
 
     @property
     def export_file_title(self):
         return "%s_%s_%s" % (self.schoolclass, self.subject, self.student)
 
-    def show_results(self):
+    def show_results(self, simulate_data=[]):
 
         timeperiod_list = self.dbh.get_timeperiod()
         complete_t_p_result_sum = 0
@@ -321,6 +344,19 @@ class ViewReportStudent(ViewReport):
                 # print result
                 result_list.append((result_count, r.exam.date, period[1], x_t.name, r.result, "", r.comment))
                 result_count += 1
+
+            for s in simulate_data:
+                # (self.lng['simulate'], timeperiod_id, exam_id, result)
+                result = s[3]
+                if s[1] != period[0]:
+                    continue
+                # print simulation result
+                simulate_exam_type = self.dbh.get_examtype_by_id(s[2])
+                result_list.append((result_count, s[0], period[1], simulate_exam_type.name, result, "", s[0]))
+                result_count += 1
+                if result:
+                    t_p_result_sum += result * simulate_exam_type.weight
+                    t_p_result_count += simulate_exam_type.weight
 
             if t_p_result_count:
                 t_p_result_average = round(float(t_p_result_sum) / t_p_result_count, DIVISOR_PRECISION)
@@ -423,3 +459,52 @@ class ViewReportStudent(ViewReport):
     @property
     def pdf_foot_text(self):
         return ""
+
+    def simulate_clear(self):
+        self.simulation_data = []
+        self.button_simulation_clear.setEnabled(False)
+        self.reload_data()
+
+    def simulate_action(self):
+        self.simulation_data = self.simulate_student_result()
+        if self.simulation_data:
+            self.button_simulation_clear.setEnabled(True)
+        else:
+            self.button_simulation_clear.setEnabled(False)
+
+        self.load_data()
+
+    def simulate_student_result(self):
+        simulation_data = []
+
+        timeperiod_list = []
+        for t in self.dbh.get_timeperiod():
+            timeperiod_list.append(t[1])
+
+        examtype_list = []
+        for x in self.dbh.get_examtype():
+            examtype_list.append(x[1])
+
+        simulate_dialog = QInputDialog(parent=self.tab_window)
+        add_results = True
+        while add_results:
+            timeperiod, ok = simulate_dialog.getItem(self.tab_window, self.lng['simulate'], self.lng['timeperiod'], timeperiod_list, 0, False)
+            if not ok:
+                break
+            examtype, ok = simulate_dialog.getItem(self.tab_window, self.lng['simulate'], self.lng['examtype'], examtype_list, 0, False)
+            if not ok:
+                break
+            result, ok = simulate_dialog.getDouble(self.tab_window, self.lng['simulate'], self.lng['result'], value=0)
+            if not ok:
+                break
+
+            exam_id = self.dbh.get_examtype_id(examtype)
+            timeperiod_id = self.dbh.get_timeperiod_id(timeperiod)
+
+            simulation_data.append((self.lng['simulate'], timeperiod_id, exam_id, result))
+
+            answer = QMessageBox.question(self.tab_window, self.lng['simulate'], self.lng['msg_another_simulation_result'])
+            if answer == QMessageBox.No:
+                add_results = False
+
+        return simulation_data

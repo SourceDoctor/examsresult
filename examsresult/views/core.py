@@ -231,10 +231,13 @@ class CoreView(object):
         self.load_data()
         self.set_changed(False)
 
-    def load_data(self):
-        # clear table
+    def clear_table(self):
         while self.my_table.rowCount():
             self.my_table.removeRow(0)
+
+    def load_data(self):
+        # clear table
+        self.clear_table()
         # load data from Database
         data_list = self._action_load_content()
         for data in data_list:

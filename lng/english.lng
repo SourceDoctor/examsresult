@@ -199,3 +199,6 @@ comment = Comment
 result = Result
 periodresult = Periodresult
 results = Results
+simulate = Simulation
+simulation_clear= clear Simulation
+msg_another_simulation_result= Add another Simulation Result?

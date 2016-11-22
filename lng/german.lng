@@ -191,3 +191,6 @@ pdf_export = PDF Export
 comment = Kommentar
 periodresult = Zeitabschnitt Note
 results = Ergebnisse
+simulate = Simulation
+simulation_clear= bereinige Simulation
+msg_another_simulation_result= Eine weitere simulierte Note hinzufügen?

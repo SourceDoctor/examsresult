@@ -3,7 +3,7 @@
 This Application is a tool for Teacher to handle Exams and Test results 
 of students and complete School Classes with several Subjects
 
-Overview every time complete Result of Students or complete School Classes
+Have every time a complete overview to Results of Students and complete School Classes
 
 ## Features
 * set School Years
@@ -19,15 +19,13 @@ Overview every time complete Result of Students or complete School Classes
 
 * handle an Exam for complete School Class or a single student
 
-* CSV/PDF Export of School Class List
-* CSV/PDF Export of Exams List
-* CSV/PDF Export of Exams Results
+* CSV/PDF Export of School Class Student List
+* CSV/PDF Export of Exams List of School Class
+* CSV/PDF Export of Exam Results
 * CSV/PDF Export of Student Results (in Timeperiod and complete Schoolyear)
 * CSV/PDF Export of Schoolclass Results (in Timeperiod and complete Schoolyear)
 
-* calculates each Timeperiod seperate and show result, 
-* for schoolyear final result, system calculates timeperiod results with their weights together
+* calculates each Timeperiod seperate and show result
+* select method how schoolyear final result will be calculated
 
-## Todos
-
-* "what if Simulation" (what happens if Student has in next Test(s) this result(s)?)
+* "Simulation" (what happens if Student has in next Test(s) this result(s)?)
