@@ -86,7 +86,7 @@ class ViewSettings(CoreView):
 
         y += 20
         self.label_file_to_open = QLabel(config['open_file_on_startup'], self.window)
-        self.label_file_to_open.setGeometry(40, y, 300, self.label_file_to_open.height())
+        self.label_file_to_open.setGeometry(40, y, 500, self.label_file_to_open.height())
 
         y += 40
         button_cancel = QPushButton(local_lng['close'], self.window)
