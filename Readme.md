@@ -29,3 +29,7 @@ Have every time a complete overview to Results of Students and complete School C
 * select method how schoolyear final result will be calculated
 
 * "Simulation" (what happens if Student has in next Test(s) this result(s)?)
+
+## Known Issues
+* if no tab is open, first opened tab will show no buttons
+-> Workaround: open another tab, close the first opened tab and open it again
