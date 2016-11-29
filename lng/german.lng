@@ -1,6 +1,6 @@
 [filetypes]
 filetype_exf=Examsresult Dateien
-filetype_all=Allee Dateien
+filetype_all=Alle Dateien
 
 [calculation_method]
 title = Art zur Berechnung der Schuljahresnote
@@ -15,23 +15,23 @@ msg_close_unsaved=Wirklich schließen ohne zu speichern?
 msg_file_not_found=Datei nicht gefunden
 
 [menu]
-mainmenufile=File
+mainmenufile=Datei
 mainmenureport=Report
-mainmenuconfigure=Configuration
+mainmenuconfigure=Konfiguration
 mainmenudefinition=Definition
-mainmenuhelp=Help
+mainmenuhelp=Hilfe
 
-newfile=New
-openfile=Open
-settings=Settings
-quit=Exit
+newfile=Neu
+openfile=öffnen
+settings=Einstellungen
+quit=Beenden
 
-subject=Subject
-schoolclass=Schoolclass
-schoolyear=Schoolyear
-examstype=Examstype
-timeperiod=Timeperiod
-student=Student
+subject=Schulfach
+schoolclass=Schulklasse
+schoolyear=Schuljahr
+examstype=Prüfungsart
+timeperiod=Zeitperiode
+student=Schüler
 exam=Prüfung
 
 about=About
