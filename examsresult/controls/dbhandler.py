@@ -23,7 +23,7 @@ class DatabaseConnector(object):
             pass
 
         self.databasefile = databasefile
-        self.database = "%s%s"  % (db_type, databasefile)
+        self.database = "%s%s" % (db_type, databasefile)
         self.engine = self._create_db_engine()
         self._create_session()
 
@@ -96,13 +96,20 @@ class DBHandler(object):
         self.session.commit()
         return 0
 
-    def get_schoolclassname(self, schoolyear=None):
+    def get_schoolclass(self, schoolyear=None):
         data = []
         ret = self._list(SchoolClass)
         if schoolyear:
             ret = ret.filter(SchoolClass.schoolyear==schoolyear)
         for d in ret.all():
             data.append((d.id, d.schoolclass))
+        return data
+
+    def get_schoolclassname(self):
+        data = []
+        ret = self._list(SchoolClassName)
+        for d in ret.all():
+            data.append((d.id, d.name))
         return data
 
     def set_schoolclassname(self, data):
@@ -243,7 +250,7 @@ class DBHandler(object):
 
     def set_students(self, schoolyear, schoolclass, students=[]):
         s = self.session.query(SchoolClass).filter(SchoolClass.schoolyear==schoolyear)
-        s.filter(SchoolClass.schoolclass==schoolclass)
+        s = s.filter(SchoolClass.schoolclass==schoolclass)
         school_class = s.first()
 
         if not school_class:
@@ -255,7 +262,7 @@ class DBHandler(object):
             self.session.commit()
             # get the row back in secure way:
             s = self.session.query(SchoolClass).filter(SchoolClass.schoolyear == schoolyear)
-            s.filter(SchoolClass.schoolclass == schoolclass)
+            s = s.filter(SchoolClass.schoolclass == schoolclass)
             school_class = s.first()
 
         # collect all students found for class

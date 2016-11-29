@@ -114,7 +114,7 @@ class BaseView(QMainWindow, CoreView):
         if not ok:
             return False
 
-        schoolclass_list = [c[1] for c in self.dbh.get_schoolclassname(schoolyear=schoolyear)]
+        schoolclass_list = [c[1] for c in self.dbh.get_schoolclass(schoolyear=schoolyear)]
         schoolclass, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolclass'], schoolclass_list, 0, False)
         if not ok:
             return False
@@ -144,7 +144,7 @@ class BaseView(QMainWindow, CoreView):
         if not ok:
             return False
 
-        schoolclass_list = [c[1] for c in self.dbh.get_schoolclassname(schoolyear=schoolyear)]
+        schoolclass_list = [c[1] for c in self.dbh.get_schoolclass(schoolyear=schoolyear)]
         schoolclass, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolclass'], schoolclass_list, 0, False)
         if not ok:
             return False
