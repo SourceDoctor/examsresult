@@ -1,8 +1,8 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 
-from .configuration import init_config, current_config
-from .views import BaseView
+from examsresult.configuration import init_config, current_config
+from examsresult.views import BaseView
 
 
 def run():
