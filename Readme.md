@@ -33,10 +33,8 @@ Have every time a complete overview to Results of Students and complete School C
 ## Install Instructions for Windows
 1. Download an install at least Python 3.5 from https://www.python.org/downloads/
 2. Download an install pip-win https://sites.google.com/site/pydatalog/python/pip-for-windows
-3. open pip-win and paste in "command" this command and klick run everytime:
- - pip install sqlalchemy
- - pip install pyqt5
- - pip install reportlab
+3. open pip-win and paste in "command" this command and klick run:
+ - pip install sqlalchemy pyqt5 reportlab
 4. to open examsresult in Windows doubleclick "start.py" 
 
 
