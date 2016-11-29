@@ -1,5 +1,5 @@
-from examsresult.models import Version
-from examsresult.models import db_version as db_max_version
+from ..models import Version
+from ..models import db_version as db_max_version
 
 
 class DBUpdater(object):

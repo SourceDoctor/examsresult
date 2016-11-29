@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QTableWidget, QAbstractItemView, QMenu, \
     QToolButton, QPushButton, QInputDialog, QMessageBox
 
-from examsresult import current_config
-from examsresult.tools import HIDE_ID_COLUMN
-from examsresult.views import CoreView
+from ..configuration import current_config
+from ..tools import HIDE_ID_COLUMN
+from ..views import CoreView
 
 DIVISOR_PRECISION = 2
 
