@@ -3,7 +3,6 @@ from glob import glob
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import csv
-import sys
 
 language_extension = 'lng'
 language_path = '/lng'
@@ -12,23 +11,12 @@ app_icon = '.%s/1476313854_report_pencil.png' % language_path
 HIDE_ID_COLUMN = False
 
 
-@property
-def plattform():
-    if sys.platform == 'win32':
-        return 'windows'
-    else:
-        return 'linux'
-
-
 def lng_load(language='english', type='ini'):
     lng_cfg = {}
 
     if type == 'ini':
         cfg = RawConfigParser()
         configfile = '.%s/%s.%s' % (language_path, language, language_extension)
-
-        if plattform == 'windows':
-            configfile = configfile.replace('/', '\\')
 
         cfg.read(configfile)
         for section in cfg.sections():
@@ -53,10 +41,9 @@ def lng_list(type='ini'):
             cfg = RawConfigParser()
             cfg.read('%s' % lang_file)
             lang_name = cfg.get('main', 'language')
-            lang_file_name = lang_file.replace('.%s/' % language_path, '').replace('.%s' % language_extension, '')
-
-            if plattform == 'windows':
-                lang_file_name = lang_file_name.replace('/', '\\')
+            lang_file_name = lang_file.replace('.%s\\' % language_path, '')
+            lang_file_name = lang_file_name.replace('.%s/' % language_path, '')
+            lang_file_name = lang_file_name.replace('.%s' % language_extension, '')
 
             language_list.append((lang_name, lang_file_name))
         else:
