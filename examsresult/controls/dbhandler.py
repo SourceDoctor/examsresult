@@ -3,8 +3,8 @@ from os.path import isfile
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from ..controls.dbupdater import DBUpdater
-from ..models import Exam, ExamResult, SchoolClassName, Student, Schoolyear, \
+from examsresult.controls.dbupdater import DBUpdater
+from examsresult.models import Exam, ExamResult, SchoolClassName, Student, Schoolyear, \
     SchoolClass, ExamType, TimePeriod, Subject, Parameter, Base
 
 

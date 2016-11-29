@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QTableWidget, QWidget, QPushButton, QAbstractItemView
 
-from ..tools import HIDE_ID_COLUMN
-from .core import CoreView
+from examsresult.tools import HIDE_ID_COLUMN
+from . import CoreView
 
 
 class ViewDefine(CoreView):

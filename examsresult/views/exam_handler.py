@@ -2,9 +2,9 @@ from PyQt5.QtWidgets import QDialog, QPushButton, QLabel, QTableWidget, \
     QAbstractItemView, QTextEdit, QCalendarWidget, QInputDialog, QTableWidgetItem, \
     QMessageBox, QComboBox, QToolButton, QMenu
 
-from ..configuration import current_config
-from ..tools import lng_list, HIDE_ID_COLUMN
-from ..views.core import CoreView
+from examsresult.configuration import current_config
+from examsresult.tools import lng_list, HIDE_ID_COLUMN
+from examsresult.views.core import CoreView
 
 
 class Exam(CoreView):

@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton
-from ..tools import app_icon
+from examsresult.tools import app_icon
 
 
 class ViewAbout(object):

@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMessageBox, QInputDialog, QTableWidgetItem, QFileDialog
 
-from ..tools import export_csv, ExportPdf
+from examsresult.tools import export_csv, ExportPdf
 
 
 class CoreView(object):

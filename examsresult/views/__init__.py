@@ -1,13 +1,13 @@
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTabWidget, QInputDialog
-from ..controls.dbhandler import DBHandler
-from ..tools import lng_load, center_pos, app_icon
-from ..views.core import CoreView
-from ..views.report import ViewReportStudent, ViewReportSchoolclass
-from ..views.settings import ViewSettings
-from ..views.configuration import ViewSchoolClassConfigure, ViewExamConfigure
-from ..views.definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
-from ..views.about import ViewAbout
+from examsresult.controls.dbhandler import DBHandler
+from examsresult.tools import lng_load, center_pos, app_icon
+from examsresult.views.core import CoreView
+from examsresult.views.report import ViewReportStudent, ViewReportSchoolclass
+from examsresult.views.settings import ViewSettings
+from examsresult.views.configuration import ViewSchoolClassConfigure, ViewExamConfigure
+from examsresult.views.definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
+from examsresult.views.about import ViewAbout
 from os.path import isfile
 
 

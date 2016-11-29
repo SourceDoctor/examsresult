@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import QDialog, QPushButton, QCheckBox, QComboBox, QLabel, QFileDialog, QRadioButton
 
-from ..configuration import current_config, save_config
-from ..tools import lng_list
-from ..views.core import CoreView
+from examsresult.configuration import current_config, save_config
+from examsresult.tools import lng_list
+from examsresult.views.core import CoreView
 
 
 class ViewSettings(CoreView):

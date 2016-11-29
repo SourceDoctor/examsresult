@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
     QPushButton, QComboBox, QMessageBox, QToolButton, QMenu, QInputDialog
 
-from ..tools import HIDE_ID_COLUMN
-from ..views import CoreView
-from ..views.exam_handler import Exam
-from ..views.import_csv import CSVImport
+from examsresult.tools import HIDE_ID_COLUMN
+from examsresult.views import CoreView
+from examsresult.views.exam_handler import Exam
+from examsresult.views.import_csv import CSVImport
 
 
 class ViewConfigure(CoreView):

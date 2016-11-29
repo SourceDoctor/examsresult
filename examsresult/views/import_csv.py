@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QDialog, QPushButton, QLabel, QFileDialog, \
     QGroupBox, QRadioButton, QLineEdit, QMessageBox
 
-from ..views.core import CoreView
+from examsresult.views.core import CoreView
 import csv
 
 
