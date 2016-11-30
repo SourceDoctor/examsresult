@@ -116,6 +116,7 @@ msg_no_schoolclass=keine Schulklasse definiert
 msg_no_schoolyear=kein Schuljahr definiert
 msg_column_key_failure=Konnte Spalten Titel nicht finden
 msg_column_number_failure=Spalten Nummer nicht gefunden
+msg_missing_parameter=vermisse Parameter um Schulklasse zu spezifizieren
 csv_import_title=CSV Import
 csv_file=CSV Datei
 csv_with_header=CSV mit Spaltentitel
@@ -159,6 +160,7 @@ msg_close_unsaved=Wirklich schließen ohne zu speichern?
 msg_exam_not_unique=Diese Prüfung existiert schon, bitte prüfen Sie das nach
 msg_is_singletest=Ergebnis für einen oder mehrere einzelne Schüler?
 msg_remove_exam=Prüfung wirklich entfernen?
+msg_missing_parameter=vermisse Parameter um Schulklasse zu spezifizieren
 
 [window_report_schoolclass]
 title = Schulklasse Report

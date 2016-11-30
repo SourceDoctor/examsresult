@@ -151,6 +151,11 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.set_changed(False)
         self.button_add.setFocus()
 
+        if not self.listbox_schoolyear or not self.listbox_schoolclass:
+            QMessageBox.critical(self.tab_window, self.lng['title'], self.lng['msg_missing_parameter'])
+            self.button_add.setEnabled(False)
+            self.button_remove.setEnabled(False)
+
     @property
     def export_file_title(self):
         schoolyear = self.listbox_schoolyear.currentText()
@@ -397,6 +402,11 @@ class ViewExamConfigure(ViewConfigure):
 
         self.set_changed(False)
         self.button_add.setFocus()
+
+        if not self.listbox_schoolyear or not self.listbox_schoolclass or not self.listbox_subject:
+            QMessageBox.critical(self.tab_window, self.lng['title'], self.lng['msg_missing_parameter'])
+            self.button_add.setEnabled(False)
+            self.button_remove.setEnabled(False)
 
     @property
     def export_file_title(self):

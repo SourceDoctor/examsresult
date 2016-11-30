@@ -119,6 +119,7 @@ msg_no_schoolclass=No Schoolclass defined
 msg_no_schoolyear=No Schoolyear defined
 msg_column_key_failure=Column Key not found
 msg_column_number_failure=Column Number failure
+msg_missing_parameter=Missing Parameter to specify Schoolclass
 csv_import_title=CSV Import
 csv_file=CSV File
 csv_with_header=CSV with Column Title
@@ -164,6 +165,7 @@ msg_close_unsaved=Really close unsaved?
 msg_exam_not_unique=This Exams still exists, please recheck
 msg_is_singletest=Result for one or multiple single Students?
 msg_remove_exam=Really remove Exam?
+msg_missing_parameter=Missing Parameter to specify Schoolclass
 
 [window_report_schoolclass]
 title = Schoolclass Report
