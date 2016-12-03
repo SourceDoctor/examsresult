@@ -32,6 +32,10 @@ class ViewAbout(object):
         info_label.move(50, 50)
         info_label = QLabel("created by Thomas Berberich", window)
         info_label.move(50, 70)
+        supportmail = "program.examsresult@gmail.com"
+        info_label = QLabel("E-Mail: <a href=\"mailto:" + supportmail + "?Subject=Support\" target=\"_top\">" + supportmail + "</a>", window)
+        info_label.setOpenExternalLinks(True)
+        info_label.move(50, 90)
         button = QPushButton(self.lng['main']['ok'], window)
         button.move(300, 120)
         button.clicked.connect(window.close)
