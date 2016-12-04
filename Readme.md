@@ -35,9 +35,4 @@ Have every time a complete overview to Results of Students and complete School C
 2. Download an install pip-win https://sites.google.com/site/pydatalog/python/pip-for-windows
 3. open pip-win and paste in "command" this command and klick run:
  - pip install sqlalchemy pyqt5 reportlab
-4. to open examsresult in Windows doubleclick "start.py" 
-
-
-## Known Issues
-* if no tab is open, first opened tab will show no buttons
--> Workaround: open another tab, close the first opened tab and open it again
+4. to open examsresult in Windows doubleclick "start.py"

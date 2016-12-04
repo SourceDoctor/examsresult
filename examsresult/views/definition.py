@@ -5,8 +5,6 @@ from . import CoreView
 
 
 class ViewDefine(CoreView):
-    # Fixme: if tab added, and before Tabview was empty, first one has no buttons
-
     def __init__(self, dbhandler, root_tab, lng):
         self.dbh = dbhandler
         self.tab_window = root_tab

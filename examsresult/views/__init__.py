@@ -1,5 +1,5 @@
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTabWidget, QInputDialog
+from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTabWidget, QInputDialog, QWidget
 from examsresult.controls.dbhandler import DBHandler
 from examsresult.tools import lng_load, center_pos, app_icon
 from examsresult.views.core import CoreView
@@ -231,11 +231,22 @@ class BaseView(QMainWindow, CoreView):
         self.tab_window.removeTab(index)
 
     def add_tab_event(self, tab_window_to_open, lng):
+        # add dummy Tab (prevent incomplete view of first Tab)
+        if not self.tab_window.count():
+            self.tab_window.addTab(QWidget(), "")
+            dummy_tab_present = True
+        else:
+            dummy_tab_present = False
+
         # add Tab only if not still open
         if lng['title'] not in self.open_tabs:
             self.open_tabs.append(lng['title'])
             if not tab_window_to_open(lng):
                 self.open_tabs.remove(lng['title'])
+
+        # remove dummy Tab
+        if dummy_tab_present:
+            self.tab_window.removeTab(0)
 
         # set focus to requested Tab
         index = 0
