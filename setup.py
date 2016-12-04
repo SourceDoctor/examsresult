@@ -7,7 +7,7 @@ setup(
     packages=['examsresult', 'examsresult.models', 'examsresult.controls', 'examsresult.views'],
     package_data=package_templates,
     author='Thomas Berberich',
-    author_email='thomasberb@googlemail.com',
+    author_email='program.examsresult@gmail.com',
     description='Database for Schoolclasses and their Exams',
     entry_points={
         'gui_scripts': [
