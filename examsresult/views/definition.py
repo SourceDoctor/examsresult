@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QTableWidget, QWidget, QPushButton, QAbstractItemView
+from PyQt5.QtWidgets import QTableWidget, QWidget, QPushButton, QAbstractItemView, QLabel
 
 from examsresult.tools import HIDE_ID_COLUMN
 from . import CoreView
@@ -58,6 +58,25 @@ class ViewDefine(CoreView):
         self.button_save = QPushButton(lng['save'], mytab)
         self.button_save.move(self.table_left + self.table_width + 10, self.table_top + self.my_table.height())
         self.button_save.clicked.connect(lambda: self.action_save(self.tab_window))
+
+        # inject Newlines in Descriptiontext
+        max_length = 40
+        lbl_txt_list = []
+        tmp_txt = ""
+        for t in str(lng['description']).split(' '):
+            if not tmp_txt:
+                tmp_txt = t
+                continue
+            elif len(tmp_txt + ' ' + t) >= max_length:
+                lbl_txt_list.append(tmp_txt)
+                tmp_txt = t
+                continue
+            tmp_txt += ' ' + t
+        lbl_txt_list.append(tmp_txt)
+
+        lbl_description = QLabel('', mytab)
+        lbl_description.setText('\n'.join(lbl_txt_list))
+        lbl_description.setGeometry(450, self.table_top, 250, 100)
 
         # load Content from Database
         self.load_data()
