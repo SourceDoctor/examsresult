@@ -284,10 +284,26 @@ class DBHandler(object):
                 s.firstname = d[2]
                 s.comment = d[3]
             s.school_class = school_class
-            self.session.add(s),
+            self.session.add(s)
 
         self.session.commit()
+
+        # remove remaining students
+        self.remove_students(id_list)
         return 0
+
+    def remove_students(self, student_id_list=[]):
+        if not isinstance(student_id_list, (list, tuple)):
+            student_id_list = [student_id_list]
+
+        for student_id in student_id_list:
+            results = self.session.query(ExamResult).filter(ExamResult.student == student_id).all()
+            for r in results:
+                self.session.delete(r)
+
+            s = self.session.query(Student).filter(Student.id == int(student_id)).first()
+            self.session.delete(s)
+        return True
 
     def get_exams(self, schoolyear, schoolclassname, subject, timeperiod_id=None):
         exam_list = []
