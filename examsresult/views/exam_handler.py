@@ -277,15 +277,16 @@ class Exam(CoreView):
         if not self.exam_id and not self.exam_is_unique():
             return False
 
-        self.dbhandler.set_exam(id=self.exam_id,
-                                exam_date=self.exam_date.text(),
-                                schoolyear=self.schoolyear,
-                                schoolclassname=self.schoolclass,
-                                subject=self.subject,
-                                examtype=self.examtype,
-                                timeperiod=self.timeperiod,
-                                results=data,
-                                comment=self.text_exam_description.toPlainText())
+        self.exam_id = self.dbhandler.set_exam(id=self.exam_id,
+                            exam_date=self.exam_date.text(),
+                            schoolyear=self.schoolyear,
+                            schoolclassname=self.schoolclass,
+                            subject=self.subject,
+                            examtype=self.examtype,
+                            timeperiod=self.timeperiod,
+                            results=data,
+                            comment=self.text_exam_description.toPlainText())
+        self.type = 'edit'
         return True
 
     def closeEvent(self, event):

@@ -427,7 +427,7 @@ class DBHandler(object):
             student_comment = result[4]
             self.set_exam_result(exam_id=x.id, student_id=student_id, result=student_result, comment=student_comment)
 
-        return 0
+        return x.id
 
     def remove_exam(self, exam_id):
         results = self.session.query(ExamResult).filter(ExamResult.exam_id==exam_id).all()
