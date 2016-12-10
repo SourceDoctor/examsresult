@@ -97,7 +97,7 @@ class ViewReport(CoreView):
         self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
         menu = QMenu()
         menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
-        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, data=self.show_results()))
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title))
         self.button_export.setMenu(menu)
 
         if self.show_student:
@@ -129,7 +129,7 @@ class ViewReport(CoreView):
 
         # Fixme: on doubleclick-Edit Cell has blinking Cursor focus
 
-        self.load_data()
+        self.load_data(1, 0)
 
         self.my_table.resizeColumnsToContents()
         self.my_table.setSortingEnabled(self.sorting)
@@ -162,7 +162,10 @@ class ViewReport(CoreView):
         self.clear_table()
         self.load_data()
 
+
 class ViewReportSchoolclass(ViewReport):
+
+    sorting = True
 
     def _define_column_title(self):
         timeperiod_list = self.dbh.get_timeperiod()

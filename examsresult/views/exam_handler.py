@@ -123,7 +123,7 @@ class Exam(CoreView):
         self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
         menu = QMenu()
         menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
-        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, root=self.window, data=self._action_load_content()))
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, root=self.window))
         self.button_export.setMenu(menu)
 
         button_cancel = QPushButton(self.lng['close'], self.window)
@@ -159,7 +159,7 @@ class Exam(CoreView):
             # run over all students to fill in results
             self.insert_result(add_defaults=single_test)
         else:
-            self.load_data()
+            self.load_data(1, 0)
 
         self.examtype_change()
         self.timeperiod_change()
@@ -340,8 +340,8 @@ class Exam(CoreView):
         result_sum = 0
         result_average = 0
         for row in data:
-            if row[3]:
-                result_sum += row[3]
+            if float(row[3]):
+                result_sum += float(row[3])
                 result_count += 1
         if result_count:
             result_average = round(float(result_sum)/result_count, 2)

@@ -87,7 +87,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
         menu = QMenu()
         menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
-        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, data=self._action_load_content()))
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title))
         self.button_export.setMenu(menu)
 
         self.button_import = QToolButton(mytab)
@@ -145,7 +145,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
         label_schoolyear.move(self.table_left, self.table_top - label_students.height() - self.listbox_schoolyear.height() - self.listbox_schoolclass.height() + 5)
 
         # load Content from Database
-        self.load_data()
+        self.load_data(1, 0)
         self.my_table.resizeColumnsToContents()
 
         self.set_changed(False)
@@ -339,7 +339,7 @@ class ViewExamConfigure(ViewConfigure):
         self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
         menu = QMenu()
         menu.addAction(self.lng['csv_export'], lambda: self.do_csv_export())
-        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title, data=self._action_load_content()))
+        menu.addAction(self.lng['pdf_export'], lambda: self.do_pdf_export(self.export_file_title))
         self.button_export.setMenu(menu)
 
         # hide Column 'id'

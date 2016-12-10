@@ -150,6 +150,11 @@ class CoreView(object):
         return False
 
     def action_add(self, data_import=False, with_id=False, data=()):
+        # temporarly disable sorting
+        sort_state = self.sorting
+        self.sorting = False
+        self.my_table.setSortingEnabled(False)
+
         # fill Data into Cells
         if not data_import:
             data = self._action_add_content(self.my_table)
@@ -181,6 +186,10 @@ class CoreView(object):
             self.button_add.setFocus()
         except AttributeError:
             pass
+
+        # restore sorting state
+        self.sorting = sort_state
+        self.my_table.setSortingEnabled(sort_state)
 
     def action_edit(self, cell, limit_column=[]):
         row = cell.row()
@@ -228,14 +237,19 @@ class CoreView(object):
         if not self._action_save_content(data=data):
             return False
 
-        self.load_data()
+        self.load_data(1, 0)
         self.set_changed(False)
 
     def clear_table(self):
         while self.my_table.rowCount():
             self.my_table.removeRow(0)
 
-    def load_data(self):
+    def load_data(self, sort_column=None, sort_order=0):
+        # temporarly disable sorting
+        sort_state = self.sorting
+        self.sorting = False
+        self.my_table.setSortingEnabled(False)
+
         # clear table
         self.clear_table()
         # load data from Database
@@ -246,6 +260,14 @@ class CoreView(object):
             while column <= len(self.column_title) - 1:
                 self.my_table.setItem(self.my_table.rowCount() - 1, column, QTableWidgetItem(str(data[column])))
                 column += 1
+
+        # restore sorting state
+        self.sorting = sort_state
+        self.my_table.setSortingEnabled(sort_state)
+
+        # sort Table
+        if self.sorting and sort_column != None:
+            self.my_table.sortItems(sort_column, sort_order)
 
     def file_save(self, parent, caption, default_filename):
         file_handler = QFileDialog()
@@ -271,9 +293,23 @@ class CoreView(object):
             data.append(row)
         export_csv(target_file=csv_file, data=data)
 
-    def do_pdf_export(self, default_filename, root=None, data=[]):
+    def do_pdf_export(self, default_filename, root=None):
         if not root:
             root = self.tab_window
+
+        data = []
+        rows = self.my_table.rowCount()
+        columns = self.my_table.columnCount()
+        r = 0
+        while r <= rows - 1:
+            c = 0
+            row = ()
+            while c <= columns - 1:
+                row += (self.my_table.item(r, c).text(),)
+                c += 1
+            r += 1
+            data.append(row)
+
         filename = self.file_save(root, self.lng['title'], default_filename=default_filename)
         pdf = ExportPdf(target_file=filename, template=self.pdf_template, data=data, head_text=self.pdf_head_text, foot_text=self.pdf_foot_text)
         pdf.save()
