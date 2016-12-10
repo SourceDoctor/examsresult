@@ -277,20 +277,48 @@ class DBHandler(object):
             else:
                 s = None
             if not s:
-                s = Student(lastname=d[1], firstname=d[2], comment=d[3])
+                self.add_students(lastname=d[1], firstname=d[2], comment=d[3], school_class_id=school_class.id)
             else:
                 id_list.remove(str(d[0]))
                 s.lastname = d[1]
                 s.firstname = d[2]
                 s.comment = d[3]
-            s.school_class = school_class
-            self.session.add(s)
+                s.school_class = school_class
+                self.session.add(s)
 
         self.session.commit()
 
         # remove remaining students
         self.remove_students(id_list)
         return 0
+
+    def add_students(self, lastname, firstname, comment, school_class_id=None):
+
+        if school_class_id:
+            s = Student(lastname=lastname, firstname=firstname, comment=comment, school_class_id=school_class_id)
+        else:
+            s = Student(lastname=lastname, firstname=firstname, comment=comment)
+        self.session.add(s)
+        self.session.commit()
+
+        s = self.session.query(Student).filter(Student.lastname==lastname)
+        s = s.filter(Student.firstname==firstname)
+        s = s.filter(Student.comment==comment)
+        if school_class_id:
+            s = s.filter(Student.school_class_id==school_class_id)
+        s = s.first()
+
+        exam_list = self.session.query(Exam).filter(Exam.school_class_id==school_class_id).all()
+        for exam in exam_list:
+            result = 0
+            r = ExamResult(result=result,
+                           exam_id=exam.id,
+                           student=s.id,
+                           comment=comment)
+            self.session.add(r)
+        self.session.commit()
+
+        return True
 
     def remove_students(self, student_id_list=[]):
         if not isinstance(student_id_list, (list, tuple)):
@@ -303,6 +331,7 @@ class DBHandler(object):
 
             s = self.session.query(Student).filter(Student.id == int(student_id)).first()
             self.session.delete(s)
+        self.session.commit()
         return True
 
     def get_exams(self, schoolyear, schoolclassname, subject, timeperiod_id=None):
