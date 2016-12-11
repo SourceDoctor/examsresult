@@ -111,7 +111,7 @@ class BaseView(QMainWindow, CoreView):
         report_dialog = QInputDialog(parent=self.tab_window)
 
         schoolyear_list = [y[1] for y in self.dbh.get_schoolyear()]
-        schoolyear_list.sort()
+        schoolyear_list.sort(reverse=True)
         schoolyear, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolyear'], schoolyear_list, 0, False)
         if not ok:
             return False
@@ -144,7 +144,7 @@ class BaseView(QMainWindow, CoreView):
         report_dialog = QInputDialog(parent=self.tab_window)
 
         schoolyear_list = [y[1] for y in self.dbh.get_schoolyear()]
-        schoolyear_list.sort()
+        schoolyear_list.sort(reverse=True)
         schoolyear, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolyear'], schoolyear_list, 0, False)
         if not ok:
             return False

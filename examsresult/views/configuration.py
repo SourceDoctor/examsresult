@@ -142,7 +142,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
         self.listbox_schoolyear = QComboBox(mytab)
         list_schoolyear = self.get_schoolyears()
-        list_schoolyear.sort()
+        list_schoolyear.sort(reverse=True)
         for i in list_schoolyear:
             self.listbox_schoolyear.addItem(i)
         self.listbox_schoolyear.move(self.table_left + 100,
@@ -405,7 +405,7 @@ class ViewExamConfigure(ViewConfigure):
 
         self.listbox_schoolyear = QComboBox(mytab)
         list_schoolyear = self.get_schoolyears()
-        list_schoolyear.sort()
+        list_schoolyear.sort(reverse=True)
         for i in list_schoolyear:
             self.listbox_schoolyear.addItem(i)
         self.listbox_schoolyear.move(self.table_left + 100, 20)
