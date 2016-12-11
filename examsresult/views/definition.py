@@ -55,6 +55,10 @@ class ViewDefine(CoreView):
         self.button_add.move(self.table_left + self.table_width + 10, self.table_top)
         self.button_add.clicked.connect(self.action_add)
 
+        self.button_edit = QPushButton(lng['edit'], mytab)
+        self.button_edit.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
+        self.button_edit.clicked.connect(self.action_edit)
+
         self.button_save = QPushButton(lng['save'], mytab)
         self.button_save.move(self.table_left + self.table_width + 10, self.table_top + self.my_table.height())
         self.button_save.clicked.connect(lambda: self.action_save(self.tab_window))

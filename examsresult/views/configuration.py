@@ -76,9 +76,13 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_add = QPushButton(self.lng['add'], mytab)
         self.button_add.move(self.table_left + self.table_width + 10, self.table_top)
         self.button_add.clicked.connect(self.action_add)
-        
+
+        self.button_edit = QPushButton(lng['edit'], mytab)
+        self.button_edit.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
+        self.button_edit.clicked.connect(self.action_edit)
+
         self.button_remove = QPushButton(self.lng['remove'], mytab)
-        self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
+        self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_edit.height())
         self.button_remove.clicked.connect(self.student_remove)
 
         self.button_export = QToolButton(mytab)
@@ -329,12 +333,16 @@ class ViewExamConfigure(ViewConfigure):
         self.button_add.move(self.table_left + self.table_width + 10, self.table_top)
         self.button_add.clicked.connect(self.action_add)
 
+        self.button_edit = QPushButton(lng['edit'], mytab)
+        self.button_edit.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
+        self.button_edit.clicked.connect(self.change_result)
+
         self.button_remove = QPushButton(self.lng['remove'], mytab)
-        self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height())
+        self.button_remove.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_edit.height())
         self.button_remove.clicked.connect(self.action_remove)
 
         self.button_export = QToolButton(mytab)
-        self.button_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_remove.height())
+        self.button_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_edit.height() + self.button_remove.height())
         self.button_export.setText(self.lng['export'])
         self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
         menu = QMenu()
@@ -470,8 +478,14 @@ class ViewExamConfigure(ViewConfigure):
         self.dbh.remove_exam(exam_id=exam_id)
         self.load_data()
 
-    def change_result(self, cell):
-        row = cell.row()
+    def change_result(self, cell=None):
+        try:
+            row = cell.row()
+        except AttributeError:
+            try:
+                row = self.my_table.selectedIndexes()[0].row()
+            except IndexError:
+                row = 0
         column = 0
         exam_id = self.my_table.item(row, column).text()
 

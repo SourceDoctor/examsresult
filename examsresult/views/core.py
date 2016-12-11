@@ -191,8 +191,15 @@ class CoreView(object):
         self.sorting = sort_state
         self.my_table.setSortingEnabled(sort_state)
 
-    def action_edit(self, cell, limit_column=[]):
-        row = cell.row()
+    def action_edit(self, cell=None, limit_column=[]):
+        try:
+            row = cell.row()
+        except AttributeError:
+            try:
+                row = self.my_table.selectedIndexes()[0].row()
+            except IndexError:
+                row = 0
+
         content = ()
 
         # get Cell Content
