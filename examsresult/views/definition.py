@@ -83,7 +83,7 @@ class ViewDefine(CoreView):
         lbl_description.setGeometry(450, self.table_top, 250, 100)
 
         # load Content from Database
-        self.load_data()
+        self.load_data(1, 0)
 
         self.set_changed(False)
         self.button_add.setFocus()
