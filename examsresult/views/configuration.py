@@ -227,9 +227,11 @@ class ViewSchoolClassConfigure(ViewConfigure):
         for c in self.dbh.get_schoolclassname():
             schoolclass_list.append(c[1])
 
+        schoolyear_list.sort(reverse=True)
         if not schoolyear_list:
             QMessageBox.information(self.tab_window, self.lng['title'], self.lng['msg_no_schoolyear'])
             return
+        schoolclass_list.sort()
         if not schoolclass_list:
             QMessageBox.information(self.tab_window, self.lng['title'], self.lng['msg_no_schoolclass'])
             return
