@@ -58,7 +58,9 @@ class Exam(CoreView):
         label_examtype.setText(self.lng['exam_examtype'])
         label_examtype.move(self.table_left, 90)
         self.listbox_examtype = QComboBox(self.window)
-        for i in self.get_examtypenames():
+        list_examtype = self.get_examtypenames()
+        list_examtype.sort()
+        for i in list_examtype:
             self.listbox_examtype.addItem(i)
         self.listbox_examtype.move(self.table_left + 100, 87)
         self.listbox_examtype.currentIndexChanged.connect(self.examtype_change)
@@ -67,7 +69,9 @@ class Exam(CoreView):
         label_timeperiod.setText(self.lng['exam_timeperiod'])
         label_timeperiod.move(self.table_left, 120)
         self.listbox_timeperiod = QComboBox(self.window)
-        for i in self.get_timeperiodnames():
+        list_timeperiod = self.get_timeperiodnames()
+        list_timeperiod.sort()
+        for i in list_timeperiod:
             self.listbox_timeperiod.addItem(i)
         self.listbox_timeperiod.move(self.table_left + 100, 117)
         self.listbox_timeperiod.currentIndexChanged.connect(self.timeperiod_change)

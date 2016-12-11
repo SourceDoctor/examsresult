@@ -129,7 +129,9 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_save.clicked.connect(lambda: self.action_save(self.tab_window))
 
         self.listbox_schoolclass = QComboBox(mytab)
-        for i in self.get_schoolclassnames():
+        list_schoolclass = self.get_schoolclassnames()
+        list_schoolclass.sort()
+        for i in list_schoolclass:
             self.listbox_schoolclass.addItem(i)
         self.listbox_schoolclass.move(self.table_left + 100,
                                       self.table_top - label_students.height() - self.listbox_schoolclass.height())
@@ -139,7 +141,9 @@ class ViewSchoolClassConfigure(ViewConfigure):
         label_schoolclass.move(self.table_left, self.table_top - label_students.height() - self.listbox_schoolclass.height() + 5)
 
         self.listbox_schoolyear = QComboBox(mytab)
-        for i in self.get_schoolyears():
+        list_schoolyear = self.get_schoolyears()
+        list_schoolyear.sort()
+        for i in list_schoolyear:
             self.listbox_schoolyear.addItem(i)
         self.listbox_schoolyear.move(self.table_left + 100,
                              self.table_top - label_students.height() - self.listbox_schoolyear.height() - self.listbox_schoolclass.height())
@@ -378,7 +382,9 @@ class ViewExamConfigure(ViewConfigure):
         self.button_save.clicked.connect(lambda: self.action_save(self.tab_window))
 
         self.listbox_subject = QComboBox(mytab)
-        for i in self.get_subjectnames():
+        list_subject = self.get_subjectnames()
+        list_subject.sort()
+        for i in list_subject:
             self.listbox_subject.addItem(i)
         self.listbox_subject.move(self.table_left + 100, 80)
         self.listbox_subject.currentIndexChanged.connect(self.subject_change)
@@ -387,7 +393,9 @@ class ViewExamConfigure(ViewConfigure):
         label_subject.move(self.table_left, 80)
 
         self.listbox_schoolclass = QComboBox(mytab)
-        for i in self.get_schoolclassnames():
+        list_schoolclass = self.get_schoolclassnames()
+        list_schoolclass.sort()
+        for i in list_schoolclass:
             self.listbox_schoolclass.addItem(i)
         self.listbox_schoolclass.move(self.table_left + 100, 50)
         self.listbox_schoolclass.currentIndexChanged.connect(self.schoolclass_change)
@@ -396,7 +404,9 @@ class ViewExamConfigure(ViewConfigure):
         label_schoolclass.move(self.table_left, 50)
 
         self.listbox_schoolyear = QComboBox(mytab)
-        for i in self.get_schoolyears():
+        list_schoolyear = self.get_schoolyears()
+        list_schoolyear.sort()
+        for i in list_schoolyear:
             self.listbox_schoolyear.addItem(i)
         self.listbox_schoolyear.move(self.table_left + 100, 20)
         self.listbox_schoolyear.currentIndexChanged.connect(self.schoolyear_change)
