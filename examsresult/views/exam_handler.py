@@ -202,10 +202,8 @@ class Exam(CoreView):
             self.text_exam_description.setText(data.comment)
             self.examtype = examtype.name
             self.timeperiod = timeperiod.name
-            examtype_list = self.get_examtypenames()
-            self.listbox_examtype.setCurrentIndex(examtype_list.index(self.examtype))
-            timeperiod_list = self.get_timeperiodnames()
-            self.listbox_timeperiod.setCurrentIndex(timeperiod_list.index(self.timeperiod))
+            self.listbox_examtype.setCurrentText(self.examtype)
+            self.listbox_timeperiod.setCurrentText(self.timeperiod)
         else:
             school_class_id = self.dbhandler.get_schoolclass_id(self.schoolyear, self.schoolclass)
             data = self.dbhandler.get_exam(exam_date=self.exam_date.text(),
