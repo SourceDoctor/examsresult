@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMessageBox, QInputDialog, QTableWidgetItem, QFileDialog
 
-from examsresult.tools import export_csv, ExportPdf
+from examsresult.tools import export_csv, ExportPdf, cleanup_filename
 
 
 class CoreView(object):
@@ -276,14 +276,26 @@ class CoreView(object):
         if self.sorting and sort_column != None:
             self.my_table.sortItems(sort_column, sort_order)
 
-    def file_save(self, parent, caption, default_filename):
+    def file_save(self, parent, caption, default_filename, filetype=None):
+        if filetype == 'csv':
+            filetype = "CSV (*.csv)"
+        elif filetype == 'pdf':
+            filetype = "PDF (*.pdf)"
+        else:
+            filetype = ''
+
+        default_filename = "%s_%s" % (self.lng['export_title'], default_filename)
+        default_filename = cleanup_filename(default_filename)
+
         file_handler = QFileDialog()
-        # Todo: set Default Filename to Save Dialog
-        file_tuple = file_handler.getSaveFileName(parent=parent, caption=caption)
+        file_tuple = file_handler.getSaveFileName(parent, caption, default_filename, filetype)
+
+        if not file_tuple[1]:
+            return ''
         return file_tuple[0]
 
     def configure_export_csv(self, parent, default_filename):
-        csv_file = self.file_save(parent=parent, caption=self.lng['title'], default_filename=default_filename)
+        csv_file = self.file_save(parent=parent, caption=self.lng['title'], default_filename=default_filename, filetype='csv')
         if not csv_file:
             return
         data = []
@@ -317,7 +329,9 @@ class CoreView(object):
             r += 1
             data.append(row)
 
-        filename = self.file_save(root, self.lng['title'], default_filename=default_filename)
+        filename = self.file_save(root, self.lng['title'], default_filename=default_filename, filetype='pdf')
+        if not filename:
+            return
         pdf = ExportPdf(target_file=filename, template=self.pdf_template, data=data, head_text=self.pdf_head_text, foot_text=self.pdf_foot_text)
         pdf.save()
 

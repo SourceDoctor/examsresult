@@ -57,9 +57,9 @@ def cleanup_filename(filename):
     # remove's forbidden character from Filename
     forbidden_chars = '<>"|?*'
     if system() == 'Windows':
-        forbidden_chars += '/'
-    else:
         forbidden_chars += '\\:'
+    else:
+        forbidden_chars += '/'
 
     for char in forbidden_chars:
         if char in filename:
@@ -75,7 +75,6 @@ def center_pos(window_object, width, height):
 
 
 def export_csv(target_file, data, quotechar=" ", delimiter=";"):
-    target_file = cleanup_filename(target_file)
     if not target_file.endswith(".csv"):
         target_file += ".csv"
     with open(target_file, 'w') as csvfile:
@@ -104,7 +103,6 @@ class ExportPdf(object):
     foot_text = "Foot"
 
     def __init__(self, target_file, template, head_text="Head", foot_text="Foot", data=None):
-        target_file = cleanup_filename(target_file)
         if not target_file.endswith(".pdf"):
             target_file += ".pdf"
 

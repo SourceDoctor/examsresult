@@ -180,7 +180,7 @@ class ViewReportSchoolclass(ViewReport):
 
     @property
     def export_file_title(self):
-        return "%s_%s" % (self.schoolyear, self.schoolclass)
+        return "%s_%s_%s" % (self.schoolyear, self.schoolclass, self.subject)
 
     def _action_load_content(self):
         return self.show_results()
@@ -320,7 +320,7 @@ class ViewReportStudent(ViewReport):
 
     @property
     def export_file_title(self):
-        return "%s_%s_%s" % (self.schoolclass, self.subject, self.student)
+        return "%s_%s_%s_%s" % (self.schoolyear, self.schoolclass, self.subject, self.student)
 
     def show_results(self, simulate_data=[]):
 

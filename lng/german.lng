@@ -109,6 +109,7 @@ open_file_on_startup_select = auswählen
 
 [window_configure_schoolclass]
 title = Schulklassen Konfiguration
+export_title = Schulklasse
 schoolyear=Schuljahr
 schoolclass=Schulklasse
 students=Schüler
@@ -143,6 +144,7 @@ cancel=Abbrechen
 
 [window_configure_exam]
 title = Prüfung Konfiguration
+export_title = Prüfungsliste
 title_result = Prüfungsergebnis
 schoolyear=Schuljahr
 schoolclass=Schulklasse
@@ -181,6 +183,7 @@ msg_missing_parameter=vermisse Parameter um Schulklasse zu spezifizieren
 
 [window_report_schoolclass]
 title = Schulklasse Report
+export_title = Report Schulklasse
 date = Datum
 schoolyear=Schuljahr
 schoolclass=Schulklasse
@@ -198,6 +201,7 @@ results = Ergebnisse
 
 [window_report_student]
 title = Schüler Report
+export_title = Report Schüler
 date = Datum
 schoolyear=Schuljahr
 schoolclass=Schulklasse

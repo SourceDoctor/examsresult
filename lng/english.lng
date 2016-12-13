@@ -109,6 +109,7 @@ open_file_on_startup_select = Select
 
 [window_configure_schoolclass]
 title = Schoolclass Configuration
+export_title = Schoolclass
 schoolyear=Schoolyear
 schoolclass=Schoolclass
 students=Students
@@ -143,6 +144,7 @@ cancel=Cancel
 
 [window_configure_exam]
 title = Exam Configuration
+export_title = Exam List
 title_result = Exam Result
 schoolyear=Schoolyear
 schoolclass=Schoolclass
@@ -181,6 +183,7 @@ msg_missing_parameter=Missing Parameter to specify Schoolclass
 
 [window_report_schoolclass]
 title = Schoolclass Report
+export_title = Report Schoolclass
 date = Date
 schoolyear=Schoolyear
 schoolclass=Schoolclass
@@ -198,6 +201,7 @@ results = Results
 
 [window_report_student]
 title = Student Report
+export_title = Report Student
 date = Date
 schoolyear=Schoolyear
 schoolclass=Schoolclass

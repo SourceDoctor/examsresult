@@ -178,7 +178,7 @@ class Exam(CoreView):
 
     @property
     def export_file_title(self):
-        return "%s_%s_%s_%s" % (self.schoolyear, self.schoolclass, self.subject, self.exam_date)
+        return "%s_%s_%s_%s_%s" % (self.schoolyear, self.schoolclass, self.subject, self.examtype, self.exam_date.text())
 
     def _define_column_title(self):
         return [{'name': self.lng['lastname'], 'type': 'string', 'unique': False},
