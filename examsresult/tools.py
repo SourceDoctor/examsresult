@@ -1,4 +1,3 @@
-from platform import system
 from configparser import RawConfigParser
 from glob import glob
 from reportlab.lib.pagesizes import letter
@@ -55,11 +54,7 @@ def lng_list(type='ini'):
 
 def cleanup_filename(filename):
     # remove's forbidden character from Filename
-    forbidden_chars = '<>"|?*'
-    if system() == 'Windows':
-        forbidden_chars += '\\:'
-    else:
-        forbidden_chars += '/'
+    forbidden_chars = '<>"|?*\\:/'
 
     for char in forbidden_chars:
         if char in filename:
