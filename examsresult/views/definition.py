@@ -23,6 +23,7 @@ class ViewDefine(CoreView):
 
         self.my_table.verticalHeader().setVisible(self.header_vertical)
         self.my_table.horizontalHeader().setVisible(self.header_horizontal)
+        self.my_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         column_tuple = ()
         for col in self.column_title:
@@ -43,8 +44,6 @@ class ViewDefine(CoreView):
 
         if self.cell_editable:
             self.my_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-
-        # Fixme: on doubleclick-Edit Cell has blinking Cursor focus
 
         self.my_table.resizeColumnsToContents()
         self.my_table.setSortingEnabled(self.sorting)
