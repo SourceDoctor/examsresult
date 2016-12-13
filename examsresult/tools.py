@@ -150,7 +150,6 @@ class ExportPdf(object):
                                    self.min_y + self.line_distance_y,
                                    self.foot_text
                                    )
-        # Todo: align right instead of fixed Offset
         self.pdf_export.setFont(self.font_normal, self.font_size - 2)
         self.pdf_export.drawString(self.max_x - 8 * len(project_name),
                                    self.min_y + 10,
