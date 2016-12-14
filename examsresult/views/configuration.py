@@ -87,7 +87,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_remove.clicked.connect(self.student_remove)
 
         self.button_export = QToolButton(mytab)
-        self.button_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_remove.height())
+        self.button_export.move(self.table_left + self.table_width + 10, self.table_top + self.button_add.height() + self.button_edit.height() + self.button_remove.height())
         self.button_export.setText(self.lng['export'])
         self.button_export.setPopupMode(QToolButton.MenuButtonPopup)
         menu = QMenu()
