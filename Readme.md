@@ -5,6 +5,8 @@ of students and complete School Classes with several Subjects
 
 Have every time a complete overview to Results of Students and complete School Classes
 
+**For Screenshots take a look in directory screenshots**
+
 ## Features
 * set School Years
 * set School Class Names
