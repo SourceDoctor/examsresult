@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 # https://sqlalchemy-migrate.readthedocs.io/en/latest/
 
-db_version = 1
+db_version = 2
 
 
 class Base(object):
@@ -57,6 +57,10 @@ class SchoolClass(Base):
     __tablename__ = 'school_class'
     schoolyear = Column(Unicode(256), ForeignKey('school_year.name'))
     schoolclass = Column(Unicode(256), ForeignKey('school_class_name.name'))
+    # if school class is combined with students from several school classes
+    # for a subject in example, specific sports, or religious seperations
+    # then combined_schoolclass is set to True
+    combined_schoolclass = Column(Boolean, default=False)
     comment = Column(Unicode(1024), nullable=True)
 
     __table_args__ = (
@@ -96,6 +100,9 @@ class Student(Base):
 
     school_class_id = Column(Integer, ForeignKey('school_class.id'))
     school_class = relationship("SchoolClass", backref="students")
+    # real school_class_name per default equal with school_class (value = 0),
+    # if school class is mixed it shows the ID to school class, student is assigned to in school
+    real_school_class_name_id = Column(Integer, default=0)
 
     __table_args__ = (
         UniqueConstraint('firstname', 'lastname', 'school_class_id', name='student-unique-constraint'),

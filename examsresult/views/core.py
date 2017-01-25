@@ -95,27 +95,42 @@ class CoreView(object):
 
         for col in self.column_title:
             try:
+                default_value = col['default']
+            except KeyError:
+                default_value = None
+            try:
                 if col['editable'] == False:
                     continue
+            except KeyError:
+                pass
+
+            handle_column = True
+            try:
+                if col['handle'] == False:
+                    handle_column = False
             except KeyError:
                 pass
 
             try:
                 cell_content = content[content_index]
             except IndexError:
-                if col['type'] == 'int':
+                if default_value != None:
+                    cell_content = default_value
+                elif col['type'] == 'int':
                     cell_content = 0
                 elif col['type'] == 'float':
                     cell_content = 0
                 elif col['type'] == 'string':
                     cell_content = ""
                 elif col['type'] == 'list':
-                    cell_content = []
+                    cell_content = ""
                 else:
                     cell_content = None
 
             content_index += 1
             if len(limit_column) and content_index not in limit_column:
+                value = cell_content
+            elif not handle_column:
                 value = cell_content
             else:
                 if col['type'] == 'int':

@@ -32,6 +32,7 @@ class ViewReport(CoreView):
         self.column_title.append({'name': 'id', 'type': 'int', 'unique': True, 'editable': False})
         self.column_title.extend(self._define_column_title())
         self.config = current_config
+        self.data = data
 
         mytab = QWidget()
 
@@ -192,7 +193,18 @@ class ViewReportSchoolclass(ViewReport):
         timeperiod_list = self.dbh.get_timeperiod()
 
         for student in self.dbh.get_students(self.schoolyear, self.schoolclass):
-            name = "%s, %s" % (student[1], student[2])
+            student_id = student[0]
+            student_lastname = student[1]
+            student_firstname = student[2]
+            student_real_schoolclass = student[3]
+
+            try:
+                if self.data['combined_class'] and self.data['combined_class'] != student_real_schoolclass:
+                    continue
+            except KeyError:
+                pass
+
+            name = "%s, %s" % (student_lastname, student_firstname)
             data_list = (result_count, name)
             complete_t_p_result_sum = 0
             complete_t_p_result_count = 0
@@ -201,7 +213,7 @@ class ViewReportSchoolclass(ViewReport):
                 t_p_result_list = []
                 exams = self.dbh.get_exams(self.schoolyear, self.schoolclass, self.subject, period[0])
                 for x in exams:
-                    t_p_result_list.extend(self.dbh.get_exam_result(exam_id=x[0], student_id=student[0], subject=self.subject, timeperiod_id=period[0]))
+                    t_p_result_list.extend(self.dbh.get_exam_result(exam_id=x[0], student_id=student_id, subject=self.subject, timeperiod_id=period[0]))
                 t_p_result_sum = 0
                 t_p_result_count = 0
                 t_p_result_average = 0

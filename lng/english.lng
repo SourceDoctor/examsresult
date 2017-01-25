@@ -13,6 +13,7 @@ title=Examsresult
 ok=ok
 msg_close_unsaved=Really close unsaved?
 msg_file_not_found=File to open not found
+all=(all)
 
 [menu]
 mainmenufile=File
@@ -28,6 +29,7 @@ quit=Exit
 
 subject=Subject
 schoolclass=Schoolclass
+real_schoolclass=Student Schoolclass
 schoolyear=Schoolyear
 examstype=Examstype
 timeperiod=Timeperiod
@@ -42,7 +44,9 @@ title=New File
 [window_openfile]
 title=Open File
 msg_open_err=Failed to open File %s
+msg_db_has_to_be_updated=File has to be updated. Start now?
 msg_db_updated=File to new Version updated
+msg_db_update_failure=Something went run while updating File
 msg_db_to_new=Cannot open File, because it's Version is to new. Please update your Application
 
 [window_define_timeperiod]
@@ -111,6 +115,8 @@ open_file_on_startup_select = Select
 title = Schoolclass Configuration
 export_title = Schoolclass
 schoolyear=Schoolyear
+combined_schoolclass=combined Schoolclass
+real_schoolclass=Student Schoolclass
 schoolclass=Schoolclass
 students=Students
 save = Save Changes

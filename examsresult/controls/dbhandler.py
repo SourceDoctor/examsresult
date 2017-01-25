@@ -146,6 +146,28 @@ class DBHandler(object):
             return school_class_row.id
         return None
 
+    def get_schoolclass_combine(self, schoolyear, schoolclassname):
+        school_class_row = self.session.query(SchoolClass).filter(SchoolClass.schoolyear == schoolyear). \
+            filter(SchoolClass.schoolclass == schoolclassname).first()
+        if school_class_row:
+            return school_class_row.combined_schoolclass
+        return False
+
+    def set_schoolclass_combine(self, schoolyear, schoolclassname, combined_schoolclass):
+        school_class_row = self.session.query(SchoolClass).filter(SchoolClass.schoolyear == schoolyear). \
+            filter(SchoolClass.schoolclass == schoolclassname).first()
+        if school_class_row:
+            school_class_row.combined_schoolclass = combined_schoolclass
+            self.session.add(school_class_row)
+            self.session.commit()
+
+    def get_combined_classes(self, schoolyear, schoolclassname):
+        student_list = self.get_students(schoolyear=schoolyear, schoolclass=schoolclassname)
+        schoolclass_list = [x[3] for x in student_list]
+        schoolclass_list = list(set(schoolclass_list))
+        schoolclass_list.sort()
+        return schoolclass_list
+
     def get_schoolclass_data(self, id):
         school_class_row = self.session.query(SchoolClass).filter(SchoolClass.id==id).first()
         if school_class_row:
@@ -257,7 +279,13 @@ class DBHandler(object):
         data = []
         if school_class:
             for d in school_class.students:
-                data.append((d.id, d.lastname, d.firstname, d.comment))
+                # if school_class_name_id == 0 then it's not a mixed class,
+                # so real_school_class_name is set to school_class_name
+                if d.real_school_class_name_id:
+                    real_school_class_name = self.get_schoolclassname(id=d.real_school_class_name_id)
+                else:
+                    real_school_class_name = schoolclass
+                data.append((d.id, d.lastname, d.firstname, real_school_class_name, d.comment))
         return data
 
     def set_students(self, schoolyear, schoolclass, students=[]):
@@ -284,17 +312,28 @@ class DBHandler(object):
 
         # now refresh student assignment -------------------------
         for d in students:
+            real_school_class_name = self.get_schoolclassname_id(d[3])
+            if real_school_class_name:
+                real_school_class_name_id = real_school_class_name.id
+            else:
+                real_school_class_name_id = school_class.id
+
             if d[0] != '':
                 s = self.session.query(Student).filter(Student.id == int(d[0])).first()
             else:
                 s = None
+
             if not s:
-                self.add_students(lastname=d[1], firstname=d[2], comment=d[3], school_class_id=school_class.id)
+                self.add_students(lastname=d[1],
+                                  firstname=d[2],
+                                  real_school_class_name_id=real_school_class_name_id,
+                                  comment=d[4], school_class_id=school_class.id)
             else:
                 id_list.remove(str(d[0]))
                 s.lastname = d[1]
                 s.firstname = d[2]
-                s.comment = d[3]
+                s.real_school_class_name_id = real_school_class_name_id
+                s.comment = d[4]
                 s.school_class = school_class
                 self.session.add(s)
 
@@ -304,12 +343,20 @@ class DBHandler(object):
         self.remove_students(id_list)
         return 0
 
-    def add_students(self, lastname, firstname, comment, school_class_id=None):
+    def add_students(self, lastname, firstname, comment, real_school_class_name_id=0, school_class_id=None):
 
         if school_class_id:
-            s = Student(lastname=lastname, firstname=firstname, comment=comment, school_class_id=school_class_id)
+            s = Student(lastname=lastname,
+                        firstname=firstname,
+                        real_school_class_name_id=real_school_class_name_id,
+                        comment=comment,
+                        school_class_id=school_class_id
+                        )
         else:
-            s = Student(lastname=lastname, firstname=firstname, comment=comment)
+            s = Student(lastname=lastname,
+                        firstname=firstname,
+                        real_school_class_name_id=real_school_class_name_id,
+                        comment=comment)
         self.session.add(s)
         self.session.commit()
 

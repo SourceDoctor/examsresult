@@ -13,6 +13,7 @@ title=Examsresult
 ok=ok
 msg_close_unsaved=Wirklich schließen ohne zu speichern?
 msg_file_not_found=Datei nicht gefunden
+all=(alle)
 
 [menu]
 mainmenufile=Datei
@@ -28,6 +29,7 @@ quit=Beenden
 
 subject=Schulfach
 schoolclass=Schulklasse
+real_schoolclass=Schülers Schulklasse
 schoolyear=Schuljahr
 examstype=Prüfungsart
 timeperiod=Zeitperiode
@@ -42,7 +44,9 @@ title=Neue Datei
 [window_openfile]
 title=Datei öffnen
 msg_open_err=Konnte diese Datei nicht öffnen %s
+msg_db_has_to_be_updated=Datei muss upgedated werden. Beginnen?
 msg_db_updated=Datei wurde auf neue Version aktualisiert
+msg_db_update_failure=Fehler beim Datei updaten
 msg_db_to_new=Konnte Datei nicht öffnen, da ihre Version zu neu ist. Bitte updaten Sie das Programm
 
 [window_define_timeperiod]
@@ -112,6 +116,8 @@ title = Schulklassen Konfiguration
 export_title = Schulklasse
 schoolyear=Schuljahr
 schoolclass=Schulklasse
+real_schoolclass=Schülers Schulklasse
+combined_schoolclass=zusammengestellte Schulklasse
 students=Schüler
 save = Speichern
 add=Hinzufügen

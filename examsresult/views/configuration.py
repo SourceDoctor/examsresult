@@ -1,10 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
-    QPushButton, QComboBox, QMessageBox, QToolButton, QMenu, QInputDialog
+    QPushButton, QComboBox, QMessageBox, QToolButton, QMenu, QInputDialog, QCheckBox
 
 from examsresult.tools import HIDE_ID_COLUMN
 from examsresult.views import CoreView
 from examsresult.views.exam_handler import Exam
 from examsresult.views.import_csv import CSVImport
+
+schoolclass_column_number = 2
 
 
 class ViewConfigure(CoreView):
@@ -45,13 +47,17 @@ class ViewConfigure(CoreView):
 
 class ViewSchoolClassConfigure(ViewConfigure):
 
+    # TODO: remove double Ask, for "really switch unsaved"
+
+    schoolclass_combined = False
+    schoolclass_name = ""
+
     def __init__(self, dbhandler, root_tab, lng):
         self.dbh = dbhandler
         self.tab_window = root_tab
         self.lng = lng
-        self.column_title = []
-        self.column_title.append({'name': 'id', 'type': 'int', 'unique': True, 'editable': False})
-        self.column_title.extend(self._define_column_title())
+
+        self.define_column_title()
 
         mytab = QWidget()
 
@@ -127,29 +133,34 @@ class ViewSchoolClassConfigure(ViewConfigure):
         self.button_save.move(self.table_left + self.table_width + 10, self.table_top + self.my_table.height())
         self.button_save.clicked.connect(lambda: self.action_save(self.tab_window))
 
+        self.combined_schoolclass = QCheckBox(self.lng['combined_schoolclass'], mytab)
+        top_pos = self.table_top - label_students.height() - self.combined_schoolclass.height() + 5
+        self.combined_schoolclass.move(self.table_left, top_pos + 5)
+        self.combined_schoolclass.clicked.connect(self.schoolclass_combined_change)
+
         self.listbox_schoolclass = QComboBox(mytab)
         list_schoolclass = self.get_schoolclassnames()
         list_schoolclass.sort()
         for i in list_schoolclass:
             self.listbox_schoolclass.addItem(i)
-        self.listbox_schoolclass.move(self.table_left + 100,
-                                      self.table_top - label_students.height() - self.listbox_schoolclass.height())
+        top_pos -= self.listbox_schoolclass.height()
+        self.listbox_schoolclass.move(self.table_left + 100, top_pos)
         self.listbox_schoolclass.currentIndexChanged.connect(self.schoolclass_change)
 
         label_schoolclass = QLabel(self.lng['schoolclass'], mytab)
-        label_schoolclass.move(self.table_left, self.table_top - label_students.height() - self.listbox_schoolclass.height() + 5)
+        label_schoolclass.move(self.table_left, top_pos + 5)
 
         self.listbox_schoolyear = QComboBox(mytab)
         list_schoolyear = self.get_schoolyears()
         list_schoolyear.sort(reverse=True)
         for i in list_schoolyear:
             self.listbox_schoolyear.addItem(i)
-        self.listbox_schoolyear.move(self.table_left + 100,
-                             self.table_top - label_students.height() - self.listbox_schoolyear.height() - self.listbox_schoolclass.height())
+        top_pos -= self.listbox_schoolyear.height()
+        self.listbox_schoolyear.move(self.table_left + 100, top_pos)
         self.listbox_schoolyear.currentIndexChanged.connect(self.schoolyear_change)
 
         label_schoolyear = QLabel(self.lng['schoolyear'], mytab)
-        label_schoolyear.move(self.table_left, self.table_top - label_students.height() - self.listbox_schoolyear.height() - self.listbox_schoolclass.height() + 5)
+        label_schoolyear.move(self.table_left, top_pos + 5)
 
         # load Content from Database
         self.load_data(1, 0)
@@ -163,6 +174,11 @@ class ViewSchoolClassConfigure(ViewConfigure):
             self.button_add.setEnabled(False)
             self.button_remove.setEnabled(False)
 
+    def define_column_title(self):
+        self.column_title = []
+        self.column_title.append({'name': 'id', 'type': 'int', 'unique': True, 'editable': False})
+        self.column_title.extend(self._define_column_title())
+
     @property
     def export_file_title(self):
         schoolyear = self.listbox_schoolyear.currentText()
@@ -172,21 +188,47 @@ class ViewSchoolClassConfigure(ViewConfigure):
     def _define_column_title(self):
         return [{'name': self.lng['lastname'], 'type': 'string', 'unique': False},
                 {'name': self.lng['firstname'], 'type': 'string', 'unique': False},
+                {'name': self.lng['real_schoolclass'],
+                 'type': 'list',
+                 'unique': False,
+                 'list': self.get_schoolclassnames(),
+                 'handle': self.schoolclass_combined,
+                 'default': self.schoolclass_name},
                 {'name': self.lng['comment'], 'type': 'string', 'unique': False}
                 ]
 
+    def schoolclass_combined_change(self):
+        school_class_combined_column_nr = 3
+        self.schoolclass_combined = self.combined_schoolclass.isChecked()
+        self.my_table.setColumnHidden(school_class_combined_column_nr, not self.schoolclass_combined)
+        self.set_changed(True)
+        self.define_column_title()
+
     def schoolclass_change(self, index):
+        self.schoolclass_name = self.listbox_schoolclass.currentText()
         self._change(self.schoolclass_change_enabled, self.listbox_schoolclass, self.schoolclass_listindex, index)
+        self.define_column_title()
 
     def schoolyear_change(self, index):
         self._change(self.schoolyear_change_enabled, self.listbox_schoolyear, self.schoolyear_listindex, index)
 
     def _action_load_content(self):
+        is_combined_school_class = self.dbh.get_schoolclass_combine(schoolyear=self.listbox_schoolyear.currentText(),
+                                                         schoolclassname=self.listbox_schoolclass.currentText()
+                                                         )
+        self.combined_schoolclass.setChecked(is_combined_school_class)
+        self.schoolclass_combined_change()
+        self.set_changed(False)
+
         return self.dbh.get_students(schoolyear=self.listbox_schoolyear.currentText(),
                                      schoolclass=self.listbox_schoolclass.currentText()
                                      )
 
     def _action_save_content(self, data):
+        self.dbh.set_schoolclass_combine(schoolyear=self.listbox_schoolyear.currentText(),
+                                        schoolclassname=self.listbox_schoolclass.currentText(),
+                                        combined_schoolclass=self.combined_schoolclass.isChecked()
+                                        )
         self.dbh.set_students(schoolyear=self.listbox_schoolyear.currentText(),
                               schoolclass=self.listbox_schoolclass.currentText(),
                               students=data)
@@ -215,6 +257,14 @@ class ViewSchoolClassConfigure(ViewConfigure):
     def student_import_csv(self):
         data = CSVImport(self.tab_window, lng=self.lng)
         for student in data.students:
+            # incoming Tuple
+            # Lastname, Firstname, Comment
+            student = list(student[1:len(student)])
+            student.append(student[len(student) - 1])
+            student[schoolclass_column_number] = self.listbox_schoolclass.currentText()
+            # modified to
+            # Lastname, Firstname, Schoolclass, Comment
+            student = tuple(student)
             self.action_add(data_import=True, data=student)
 
     def student_import_other_class(self):
@@ -246,7 +296,9 @@ class ViewSchoolClassConfigure(ViewConfigure):
         student_list = self.dbh.get_students(schoolyear=schoolyear, schoolclass=schoolclass)
         for student in student_list:
             # remove first element of tuple (id Field)
-            student = student[1:len(student)]
+            student = list(student[1:len(student)])
+            student[schoolclass_column_number] = self.listbox_schoolclass.currentText()
+            student = tuple(student)
             self.action_add(data_import=True, data=student)
 
     def do_csv_export(self):
@@ -386,33 +438,36 @@ class ViewExamConfigure(ViewConfigure):
         list_subject.sort()
         for i in list_subject:
             self.listbox_subject.addItem(i)
-        self.listbox_subject.move(self.table_left + 100, 80)
+        top_pos = self.table_top - label_students.height() - self.listbox_subject.height() + 5
+        self.listbox_subject.move(self.table_left + 100, top_pos)
         self.listbox_subject.currentIndexChanged.connect(self.subject_change)
         
         label_subject = QLabel(self.lng['subject'], mytab)
-        label_subject.move(self.table_left, 80)
+        label_subject.move(self.table_left, top_pos + 5)
 
         self.listbox_schoolclass = QComboBox(mytab)
         list_schoolclass = self.get_schoolclassnames()
         list_schoolclass.sort()
         for i in list_schoolclass:
             self.listbox_schoolclass.addItem(i)
-        self.listbox_schoolclass.move(self.table_left + 100, 50)
+        top_pos -= self.listbox_schoolclass.height()
+        self.listbox_schoolclass.move(self.table_left + 100, top_pos)
         self.listbox_schoolclass.currentIndexChanged.connect(self.schoolclass_change)
 
         label_schoolclass = QLabel(self.lng['schoolclass'], mytab)
-        label_schoolclass.move(self.table_left, 50)
+        label_schoolclass.move(self.table_left, top_pos + 5)
 
         self.listbox_schoolyear = QComboBox(mytab)
         list_schoolyear = self.get_schoolyears()
         list_schoolyear.sort(reverse=True)
         for i in list_schoolyear:
             self.listbox_schoolyear.addItem(i)
-        self.listbox_schoolyear.move(self.table_left + 100, 20)
+        top_pos -= self.listbox_schoolyear.height()
+        self.listbox_schoolyear.move(self.table_left + 100, top_pos)
         self.listbox_schoolyear.currentIndexChanged.connect(self.schoolyear_change)
 
         label_schoolyear = QLabel(self.lng['schoolyear'], mytab)
-        label_schoolyear.move(self.table_left, 20)
+        label_schoolyear.move(self.table_left, top_pos + 5)
 
         # load Content from Database
         self.load_data()

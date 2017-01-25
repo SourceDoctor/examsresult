@@ -34,12 +34,26 @@ class BaseView(QMainWindow, CoreView):
             QMessageBox.warning(self, "", self.lng['window_openfile']['msg_open_err'] % self.database_file)
         else:
             self.db_loaded = True
-            old_db_version, db_version = self.dbh.dbc.db_updater()
-            if old_db_version and old_db_version < db_version:
-                QMessageBox.information(self, "", self.lng['window_openfile']['msg_db_updated'])
-            elif old_db_version > db_version:
+            db_versions_difference = self.dbh.dbc.db_version_difference
+
+            if db_versions_difference > 0:
+                answer = QMessageBox.question(self, "", self.lng['window_openfile']['msg_db_has_to_be_updated'])
+                if answer == QMessageBox.Yes:
+                    if self.dbh.dbc.db_updater():
+                        QMessageBox.information(self, "", self.lng['window_openfile']['msg_db_updated'])
+                    else:
+                        QMessageBox.warning(self, "", self.lng['window_openfile']['msg_db_update_failure'])
+                        self.db_loaded = False
+                else:
+                    self.db_loaded = False
+
+            elif db_versions_difference < 0:
                 self.db_loaded = False
                 QMessageBox.warning(self, "", self.lng['window_openfile']['msg_db_to_new'])
+
+            else:
+                # Version is on newest state
+                pass
 
         if self.db_loaded:
             self.setWindowTitle("%s - %s" % (self.lng['main']['title'], self.database_file))
@@ -128,9 +142,24 @@ class BaseView(QMainWindow, CoreView):
         if not ok:
             return False
 
+        is_combined = self.dbh.get_schoolclass_combine(schoolyear=schoolyear, schoolclassname=schoolclass)
+        if is_combined:
+            _combined_class_list = self.dbh.get_combined_classes(schoolyear=schoolyear, schoolclassname=schoolclass)
+            _combined_class_list.sort()
+            combined_class_list = [self.lng['main']['all']]
+            combined_class_list.extend(_combined_class_list)
+            combined_class, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['real_schoolclass'], combined_class_list, 0, False)
+            if not ok:
+                return False
+            if combined_class == self.lng['main']['all']:
+                combined_class = None
+        else:
+            combined_class = None
+
         data = {
             'schoolyear': schoolyear,
             'schoolclass': schoolclass,
+            'combined_class': combined_class,
             'subject': subject,
         }
 
