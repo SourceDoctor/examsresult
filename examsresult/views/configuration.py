@@ -17,23 +17,23 @@ class ViewConfigure(CoreView):
     table_width = 500
 
     schoolyear_listindex = 0
-    schoolyear_change_enabled = True
     schoolclass_listindex = 0
-    schoolclass_change_enabled = True
 
-    def _change(self, change_enabled, change_listbox, change_index, index):
-        if not change_enabled:
-            change_enabled = True
-            return
+    change_enabled = True
+
+    def _change(self, change_listbox, change_index, index):
+        if not self.change_enabled:
+            self.change_enabled = True
+            return change_index
         if self.is_changed:
             answer = QMessageBox.question(self.tab_window, self.lng['title'], self.lng['msg_switch_unsaved'])
             if answer == QMessageBox.No:
-                change_enabled = False
+                self.change_enabled = False
                 change_listbox.setCurrentIndex(change_index)
-                return
+                return change_index
             self.set_changed(False)
         self.load_data()
-        change_index = index
+        return index
 
     def get_schoolclassnames(self):
         return [x[1] for x in self.dbh.get_schoolclassname()]
@@ -46,8 +46,6 @@ class ViewConfigure(CoreView):
 
 
 class ViewSchoolClassConfigure(ViewConfigure):
-
-    # TODO: remove double Ask, for "really switch unsaved"
 
     schoolclass_combined = False
     schoolclass_name = ""
@@ -206,11 +204,11 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
     def schoolclass_change(self, index):
         self.schoolclass_name = self.listbox_schoolclass.currentText()
-        self._change(self.schoolclass_change_enabled, self.listbox_schoolclass, self.schoolclass_listindex, index)
+        self.schoolclass_listindex = self._change(self.listbox_schoolclass, self.schoolclass_listindex, index)
         self.define_column_title()
 
     def schoolyear_change(self, index):
-        self._change(self.schoolyear_change_enabled, self.listbox_schoolyear, self.schoolyear_listindex, index)
+        self.schoolyear_listindex = self._change(self.listbox_schoolyear, self.schoolyear_listindex, index)
 
     def _action_load_content(self):
         is_combined_school_class = self.dbh.get_schoolclass_combine(schoolyear=self.listbox_schoolyear.currentText(),
@@ -356,7 +354,6 @@ class ViewSchoolClassConfigure(ViewConfigure):
 class ViewExamConfigure(ViewConfigure):
 
     subject_listindex = 0
-    subject_change_enabled = True
 
     def __init__(self, dbhandler, root_tab, lng):
         self.dbh = dbhandler
@@ -498,13 +495,13 @@ class ViewExamConfigure(ViewConfigure):
                 ]
 
     def schoolclass_change(self, index):
-        self._change(self.schoolclass_change_enabled, self.listbox_schoolclass, self.schoolclass_listindex, index)
+        self.schoolclass_listindex = self._change(self.listbox_schoolclass, self.schoolclass_listindex, index)
     
     def schoolyear_change(self, index):
-        self._change(self.schoolyear_change_enabled, self.listbox_schoolyear, self.schoolyear_listindex, index)
+        self.schoolyear_listindex = self._change(self.listbox_schoolyear, self.schoolyear_listindex, index)
 
     def subject_change(self, index):
-        self._change(self.subject_change_enabled, self.listbox_subject, self.subject_listindex, index)
+        self.subject_listindex = self._change(self.listbox_subject, self.subject_listindex, index)
 
     def action_add(self, data_import=False, data=()):
         answer = QMessageBox.question(self.tab_window, self.lng['title'], self.lng['msg_is_singletest'])
