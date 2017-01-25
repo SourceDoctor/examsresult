@@ -126,7 +126,13 @@ class CoreView(object):
                 elif col['type'] == 'string':
                     value, ok = add_dialog.getText(root_window, self.lng['title'], col['name'], text=cell_content)
                 elif col['type'] == 'list':
-                    value, ok = add_dialog.getItem(root_window, self.lng['title'], col['name'], cell_content, 0, False)
+                    column_list = col['list']
+                    column_list.sort()
+                    if cell_content in column_list:
+                        list_index = column_list.index(cell_content)
+                    else:
+                        list_index = 0
+                    value, ok = add_dialog.getItem(root_window, self.lng['title'], col['name'], col['list'], list_index, False)
                 else:
                     print("unknown Type: %s" % col[1])
                     return ()
@@ -294,10 +300,7 @@ class CoreView(object):
             return ''
         return file_tuple[0]
 
-    def configure_export_csv(self, parent, default_filename):
-        csv_file = self.file_save(parent=parent, caption=self.lng['title'], default_filename=default_filename, filetype='csv')
-        if not csv_file:
-            return
+    def _collect_export_data(self):
         data = []
         rows = self.my_table.rowCount()
         columns = self.my_table.columnCount()
@@ -310,28 +313,24 @@ class CoreView(object):
                 c += 1
             r += 1
             data.append(row)
-        export_csv(target_file=csv_file, data=data)
+        return data
+
+    def configure_export_csv(self, parent, default_filename):
+        filename = self.file_save(parent=parent, caption=self.lng['title'], default_filename=default_filename, filetype='csv')
+        if not filename:
+            return
+
+        data = self._collect_export_data()
+        export_csv(target_file=filename, data=data)
 
     def do_pdf_export(self, default_filename, root=None):
         if not root:
             root = self.tab_window
-
-        data = []
-        rows = self.my_table.rowCount()
-        columns = self.my_table.columnCount()
-        r = 0
-        while r <= rows - 1:
-            c = 0
-            row = ()
-            while c <= columns - 1:
-                row += (self.my_table.item(r, c).text(),)
-                c += 1
-            r += 1
-            data.append(row)
-
         filename = self.file_save(root, self.lng['title'], default_filename=default_filename, filetype='pdf')
         if not filename:
             return
+
+        data = self._collect_export_data()
         pdf = ExportPdf(target_file=filename, template=self.pdf_template, data=data, head_text=self.pdf_head_text, foot_text=self.pdf_foot_text)
         pdf.save()
 
