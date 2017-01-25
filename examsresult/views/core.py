@@ -300,13 +300,13 @@ class CoreView(object):
             return ''
         return file_tuple[0]
 
-    def _collect_export_data(self):
+    def _collect_export_data(self, start_column=0):
         data = []
         rows = self.my_table.rowCount()
         columns = self.my_table.columnCount()
         r = 0
         while r <= rows - 1:
-            c = 1
+            c = start_column
             row = ()
             while c <= columns - 1:
                 row += (self.my_table.item(r, c).text(),)
@@ -320,7 +320,7 @@ class CoreView(object):
         if not filename:
             return
 
-        data = self._collect_export_data()
+        data = self._collect_export_data(start_column=1)
         export_csv(target_file=filename, data=data)
 
     def do_pdf_export(self, default_filename, root=None):
@@ -330,7 +330,7 @@ class CoreView(object):
         if not filename:
             return
 
-        data = self._collect_export_data()
+        data = self._collect_export_data(start_column=0)
         pdf = ExportPdf(target_file=filename, template=self.pdf_template, data=data, head_text=self.pdf_head_text, foot_text=self.pdf_foot_text)
         pdf.save()
 
