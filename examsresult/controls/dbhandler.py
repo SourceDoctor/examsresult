@@ -26,6 +26,7 @@ class DatabaseConnector(object):
         self.database = "%s%s" % (db_type, databasefile)
         self.engine = self._create_db_engine()
         self._create_session()
+        self.dbu = DBUpdater(self.session)
 
     def _create_db_engine(self):
         if not isfile(self.databasefile):
@@ -42,9 +43,12 @@ class DatabaseConnector(object):
         Base.metadata.bind = self.database
         Base.metadata.create_all(self.engine)
 
+    @property
+    def db_version_difference(self):
+        return self.dbu.version_difference
+
     def db_updater(self):
-        dbu = DBUpdater(self.session)
-        return dbu.dbupdater()
+        return self.dbu.dbupdater()
 
 
 class DBHandler(object):
@@ -105,12 +109,20 @@ class DBHandler(object):
             data.append((d.id, d.schoolclass))
         return data
 
-    def get_schoolclassname(self):
+    def get_schoolclassname(self, id=None):
         data = []
         ret = self._list(SchoolClassName)
         for d in ret.all():
+            if id and id == d.id:
+                return d.name
             data.append((d.id, d.name))
         return data
+
+    def get_schoolclassname_id(self, name=None):
+        ret = self.session.query(SchoolClassName).filter(SchoolClassName.name==name).first()
+        if ret:
+            return ret
+        return None
 
     def set_schoolclassname(self, data):
         for d in data:
