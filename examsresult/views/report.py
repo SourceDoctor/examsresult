@@ -2,10 +2,9 @@ from PyQt5.QtWidgets import QWidget, QLabel, QTableWidget, QAbstractItemView, QM
     QToolButton, QPushButton, QInputDialog, QMessageBox
 
 from examsresult import current_config
+from examsresult.controls.calculation import Calculation
 from examsresult.tools import HIDE_ID_COLUMN
 from examsresult.views import CoreView
-
-DIVISOR_PRECISION = 2
 
 
 class ViewReport(CoreView):
@@ -33,6 +32,7 @@ class ViewReport(CoreView):
         self.column_title.extend(self._define_column_title())
         self.config = current_config
         self.data = data
+        self.calculation = Calculation(dbh=self.dbh, config=self.config, lng=self.lng, data=self.data)
 
         mytab = QWidget()
 
@@ -186,69 +186,9 @@ class ViewReportSchoolclass(ViewReport):
         return self.show_results()
 
     def show_results(self):
-
-        result_list = []
-        result_count = 1
-
-        timeperiod_list = self.dbh.get_timeperiod()
-
-        for student in self.dbh.get_students(self.schoolyear, self.schoolclass):
-            student_id = student[0]
-            student_lastname = student[1]
-            student_firstname = student[2]
-            student_real_schoolclass = student[3]
-
-            try:
-                if self.data['combined_class'] and self.data['combined_class'] != student_real_schoolclass:
-                    continue
-            except KeyError:
-                pass
-
-            name = "%s, %s" % (student_lastname, student_firstname)
-            data_list = (result_count, name)
-            complete_t_p_result_sum = 0
-            complete_t_p_result_count = 0
-            complete_t_p_result_average = 0
-
-            for period in timeperiod_list:
-                t_p_result_sum = 0
-                t_p_result_count = 0
-                t_p_result_average = 0
-
-                results = []
-                exams = self.dbh.get_exams(self.schoolyear, self.schoolclass, self.subject, period[0])
-                for x in exams:
-                    results.extend(self.dbh.get_exam_result(exam_id=x[0], student_id=student_id, subject=self.subject, timeperiod_id=period[0]))
-
-                for r in results:
-                    x_t = self.dbh.get_examtype_by_id(r.exam.exam_type)
-                    if r.result:
-                        t_p_result_sum += r.result * x_t.weight
-                        t_p_result_count += x_t.weight
-
-                if t_p_result_count:
-                    t_p_result_average = round(float(t_p_result_sum)/t_p_result_count, DIVISOR_PRECISION)
-
-                if t_p_result_sum:
-                    if self.config['schoolyear_result_calculation_method'] == 'complete':
-                        complete_t_p_result_sum += t_p_result_sum * period[2]
-                        complete_t_p_result_count += t_p_result_count * period[2]
-                    elif self.config['schoolyear_result_calculation_method'] == 'timeperiod':
-                        complete_t_p_result_sum += t_p_result_average * period[2]
-                        complete_t_p_result_count += period[2]
-                    else:
-                        print("unknown calculation method")
-                data_list += (t_p_result_average,)
-
-            if complete_t_p_result_count:
-                complete_t_p_result_average = round(float(complete_t_p_result_sum)/complete_t_p_result_count, DIVISOR_PRECISION)
-            data_list += (complete_t_p_result_average,)
-
-            # print student result
-            result_list.append(data_list)
-            result_count += 1
-
-        return result_list
+        return self.calculation.show_results_schoolclass(schoolyear=self.schoolyear,
+                                                         schoolclass=self.schoolclass,
+                                                         subject=self.subject)
 
     def pdf_template(self, obj, data):
         y = obj.body_max_y
@@ -336,68 +276,9 @@ class ViewReportStudent(ViewReport):
         return "%s_%s_%s_%s" % (self.schoolyear, self.schoolclass, self.subject, self.student)
 
     def show_results(self, simulate_data=[]):
-
-        timeperiod_list = self.dbh.get_timeperiod()
-        complete_t_p_result_sum = 0
-        complete_t_p_result_count = 0
-        complete_t_p_result_average = 0
-
-        result_list = []
-        result_count = 1
-
-        for period in timeperiod_list:
-            t_p_result_sum = 0
-            t_p_result_count = 0
-            t_p_result_average = 0
-
-            results = self.dbh.get_exam_result(student_id=self.student_id, subject=self.subject,
-                                               timeperiod_id=period[0])
-            for r in results:
-                x_t = self.dbh.get_examtype_by_id(r.exam.exam_type)
-                if r.result:
-                    t_p_result_sum += r.result * x_t.weight
-                    t_p_result_count += x_t.weight
-                # print result
-                result_list.append((result_count, r.exam.date, period[1], x_t.name, r.result, "", r.comment))
-                result_count += 1
-
-            for s in simulate_data:
-                # (self.lng['simulate'], timeperiod_id, exam_id, result)
-                result = s[3]
-                if s[1] != period[0]:
-                    continue
-                # print simulation result
-                simulate_exam_type = self.dbh.get_examtype_by_id(s[2])
-                result_list.append((result_count, s[0], period[1], simulate_exam_type.name, result, "", s[0]))
-                result_count += 1
-                if result:
-                    t_p_result_sum += result * simulate_exam_type.weight
-                    t_p_result_count += simulate_exam_type.weight
-
-            if t_p_result_count:
-                t_p_result_average = round(float(t_p_result_sum) / t_p_result_count, DIVISOR_PRECISION)
-
-            if t_p_result_sum:
-                if self.config['schoolyear_result_calculation_method'] == 'complete':
-                    complete_t_p_result_sum += t_p_result_sum * period[2]
-                    complete_t_p_result_count += t_p_result_count * period[2]
-                elif self.config['schoolyear_result_calculation_method'] == 'timeperiod':
-                    complete_t_p_result_sum += t_p_result_average * period[2]
-                    complete_t_p_result_count += period[2]
-                else:
-                    print("unknown calculation method")
-            # print Average
-            result_list.append((result_count, "", period[1], "", "", t_p_result_average, ""))
-            result_count += 1
-
-        if complete_t_p_result_count:
-            complete_t_p_result_average = round(float(complete_t_p_result_sum)/complete_t_p_result_count, DIVISOR_PRECISION)
-
-        # print schoolyear
-        result_list.append((result_count, "", self.lng['schoolyear'], "", "", complete_t_p_result_average, ""))
-        result_count += 1
-
-        return result_list
+        return self.calculation.show_results_student(student_id=self.student_id,
+                                                     subject=self.subject,
+                                                     simulate_data=simulate_data)
 
     def pdf_template(self, obj, data):
         y = obj.body_max_y
