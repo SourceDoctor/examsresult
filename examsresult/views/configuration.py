@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
     QPushButton, QComboBox, QMessageBox, QToolButton, QMenu, QInputDialog, QCheckBox
 
-from examsresult.tools import HIDE_ID_COLUMN
+from examsresult.tools import HIDE_ID_COLUMN, sort
 from examsresult.views import CoreView
 from examsresult.views.exam_handler import Exam
 from examsresult.views.import_csv import CSVImport
@@ -138,7 +138,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
         self.listbox_schoolclass = QComboBox(mytab)
         list_schoolclass = self.get_schoolclassnames()
-        list_schoolclass.sort()
+        list_schoolclass = sort(list_schoolclass)
         for i in list_schoolclass:
             self.listbox_schoolclass.addItem(i)
         top_pos -= self.listbox_schoolclass.height()
@@ -150,7 +150,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
         self.listbox_schoolyear = QComboBox(mytab)
         list_schoolyear = self.get_schoolyears()
-        list_schoolyear.sort(reverse=True)
+        list_schoolyear = sort(list_schoolyear, reverse=True)
         for i in list_schoolyear:
             self.listbox_schoolyear.addItem(i)
         top_pos -= self.listbox_schoolyear.height()
@@ -274,11 +274,11 @@ class ViewSchoolClassConfigure(ViewConfigure):
         for c in self.dbh.get_schoolclassname():
             schoolclass_list.append(c[1])
 
-        schoolyear_list.sort(reverse=True)
+        schoolyear_list = sort(schoolyear_list, reverse=True)
         if not schoolyear_list:
             QMessageBox.information(self.tab_window, self.lng['title'], self.lng['msg_no_schoolyear'])
             return
-        schoolclass_list.sort()
+        schoolclass_list = sort(schoolclass_list)
         if not schoolclass_list:
             QMessageBox.information(self.tab_window, self.lng['title'], self.lng['msg_no_schoolclass'])
             return
@@ -432,7 +432,7 @@ class ViewExamConfigure(ViewConfigure):
 
         self.listbox_subject = QComboBox(mytab)
         list_subject = self.get_subjectnames()
-        list_subject.sort()
+        list_subject = sort(list_subject)
         for i in list_subject:
             self.listbox_subject.addItem(i)
         top_pos = self.table_top - label_students.height() - self.listbox_subject.height() + 5
@@ -444,7 +444,7 @@ class ViewExamConfigure(ViewConfigure):
 
         self.listbox_schoolclass = QComboBox(mytab)
         list_schoolclass = self.get_schoolclassnames()
-        list_schoolclass.sort()
+        list_schoolclass = sort(list_schoolclass)
         for i in list_schoolclass:
             self.listbox_schoolclass.addItem(i)
         top_pos -= self.listbox_schoolclass.height()
@@ -456,7 +456,7 @@ class ViewExamConfigure(ViewConfigure):
 
         self.listbox_schoolyear = QComboBox(mytab)
         list_schoolyear = self.get_schoolyears()
-        list_schoolyear.sort(reverse=True)
+        list_schoolyear = sort(list_schoolyear, reverse=True)
         for i in list_schoolyear:
             self.listbox_schoolyear.addItem(i)
         top_pos -= self.listbox_schoolyear.height()

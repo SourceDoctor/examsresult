@@ -78,6 +78,10 @@ def export_csv(target_file, data, quotechar=" ", delimiter=";"):
             writer.writerow(line)
 
 
+def sort(unsorted_list, reverse=False):
+    return sorted(unsorted_list, key=str.lower, reverse=reverse)
+
+
 class ExportPdf(object):
 
     min_x = 2

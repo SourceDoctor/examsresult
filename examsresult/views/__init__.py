@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTabWidget, QInputDialog, QWidget
 from examsresult.controls.dbhandler import DBHandler
-from examsresult.tools import lng_load, center_pos, app_icon
+from examsresult.tools import lng_load, center_pos, app_icon, sort
 from examsresult.views.core import CoreView
 from examsresult.views.report import ViewReportStudent, ViewReportSchoolclass
 from examsresult.views.settings import ViewSettings
@@ -125,19 +125,19 @@ class BaseView(QMainWindow, CoreView):
         report_dialog = QInputDialog(parent=self.tab_window)
 
         schoolyear_list = [y[1] for y in self.dbh.get_schoolyear()]
-        schoolyear_list.sort(reverse=True)
+        schoolyear_list = sort(schoolyear_list, reverse=True)
         schoolyear, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolyear'], schoolyear_list, 0, False)
         if not ok:
             return False
 
         schoolclass_list = [c[1] for c in self.dbh.get_schoolclass(schoolyear=schoolyear)]
-        schoolclass_list.sort()
+        schoolclass_list = sort(schoolclass_list)
         schoolclass, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolclass'], schoolclass_list, 0, False)
         if not ok:
             return False
 
         subject_list = [s[1] for s in self.dbh.get_subject()]
-        subject_list.sort()
+        subject_list = sort(subject_list)
         subject, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['subject'], subject_list, 0, False)
         if not ok:
             return False
@@ -173,19 +173,19 @@ class BaseView(QMainWindow, CoreView):
         report_dialog = QInputDialog(parent=self.tab_window)
 
         schoolyear_list = [y[1] for y in self.dbh.get_schoolyear()]
-        schoolyear_list.sort(reverse=True)
+        schoolyear_list = sort(schoolyear_list, reverse=True)
         schoolyear, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolyear'], schoolyear_list, 0, False)
         if not ok:
             return False
 
         schoolclass_list = [c[1] for c in self.dbh.get_schoolclass(schoolyear=schoolyear)]
-        schoolclass_list.sort()
+        schoolclass_list = sort(schoolclass_list)
         schoolclass, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['schoolclass'], schoolclass_list, 0, False)
         if not ok:
             return False
 
         subject_list = [s[1] for s in self.dbh.get_subject()]
-        subject_list.sort()
+        subject_list = sort(subject_list)
         subject, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['subject'], subject_list, 0, False)
         if not ok:
             return False
@@ -194,7 +194,7 @@ class BaseView(QMainWindow, CoreView):
             name = "%s, %s" % (c[1], c[2])
             student_list.append(name)
             student_id_dict[name] = c[0]
-        student_list.sort()
+        student_list = sort(student_list)
         student, ok = report_dialog.getItem(self.tab_window, self.lng['menu']['mainmenureport'], self.lng['menu']['student'], student_list, 0, False)
         if not ok:
             return False
