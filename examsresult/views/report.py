@@ -209,20 +209,22 @@ class ViewReportSchoolclass(ViewReport):
             complete_t_p_result_sum = 0
             complete_t_p_result_count = 0
             complete_t_p_result_average = 0
+
             for period in timeperiod_list:
-                t_p_result_list = []
-                exams = self.dbh.get_exams(self.schoolyear, self.schoolclass, self.subject, period[0])
-                for x in exams:
-                    t_p_result_list.extend(self.dbh.get_exam_result(exam_id=x[0], student_id=student_id, subject=self.subject, timeperiod_id=period[0]))
                 t_p_result_sum = 0
                 t_p_result_count = 0
                 t_p_result_average = 0
-                for tp in t_p_result_list:
-                    if tp.result:
-                        exam_type = self.dbh.get_examtype_by_id(tp.exam.exam_type)
-                        if tp.result:
-                            t_p_result_sum += tp.result * exam_type.weight
-                            t_p_result_count += exam_type.weight
+
+                results = []
+                exams = self.dbh.get_exams(self.schoolyear, self.schoolclass, self.subject, period[0])
+                for x in exams:
+                    results.extend(self.dbh.get_exam_result(exam_id=x[0], student_id=student_id, subject=self.subject, timeperiod_id=period[0]))
+
+                for r in results:
+                    x_t = self.dbh.get_examtype_by_id(r.exam.exam_type)
+                    if r.result:
+                        t_p_result_sum += r.result * x_t.weight
+                        t_p_result_count += x_t.weight
 
                 if t_p_result_count:
                     t_p_result_average = round(float(t_p_result_sum)/t_p_result_count, DIVISOR_PRECISION)
