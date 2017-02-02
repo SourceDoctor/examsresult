@@ -13,7 +13,11 @@ class DBUpdater(object):
         try:
             db_version = int(_version.value)
         except AttributeError:
-            db_version = 0
+            # no db_version given -> new Database, so it's db_max_version
+            p = Version(key='db_version', value=db_max_version)
+            db_version = db_max_version
+            self.session.add(p)
+            self.session.commit()
 
         if db_version < db_max_version:
             return 1
