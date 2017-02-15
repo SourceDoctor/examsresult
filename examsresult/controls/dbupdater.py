@@ -19,12 +19,7 @@ class DBUpdater(object):
             self.session.add(p)
             self.session.commit()
 
-        if db_version < db_max_version:
-            return 1
-        elif db_version > db_max_version:
-            return -1
-        else:
-            return 0
+        return db_max_version - db_version
 
     # def _update_v2_to_v3(self):
     #     # update DB Model to v3
@@ -41,8 +36,9 @@ class DBUpdater(object):
 
     def dbupdater(self):
         # DB Version to high for this System?
-        if self.version_difference < 0:
-            return -1
+        version_difference = self.version_difference
+        if version_difference < 0:
+            return version_difference
 
         _version = self.session.query(Version).filter(Version.key == 'db_version').first()
         try:
