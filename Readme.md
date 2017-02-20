@@ -33,14 +33,17 @@ Have every time a complete overview to Results of Students and complete School C
 
 
 **Configuration of a Schoolclass**
+
 ![Schoolclass Screenshot](screenshots/schoolclass.jpg)
 
 
 **List of Exams for a Subject in a Schoolclass**
+
 ![Schoolclass Screenshot](screenshots/exam%20list.jpg)
 
 
 **Results of an Exam**
+
 ![Schoolclass Screenshot](screenshots/exam%20Details.jpg)
 
 ## Install Instructions for Windows
