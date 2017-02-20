@@ -14,21 +14,16 @@ Have every time a complete overview to Results of Students and complete School C
 * define Time Periods and weight them
 * define School Class for School Year and assign Students
 * handle several Subjects in every School Class
-
 * import Students from CSV
 * import Students from a Class of a School Year before
-
 * handle an Exam for complete School Class or a single student
-
 * CSV/PDF Export of School Class Student List
 * CSV/PDF Export of Exams List of School Class
 * CSV/PDF Export of Exam Results
 * CSV/PDF Export of Student Results (in Timeperiod and complete Schoolyear)
 * CSV/PDF Export of Schoolclass Results (in Timeperiod and complete Schoolyear)
-
 * calculates each Timeperiod seperate and show result
 * select method how schoolyear final result will be calculated
-
 * "Simulation" (what happens if Student has in next Test(s) this result(s)?)
 
 
