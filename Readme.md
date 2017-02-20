@@ -5,7 +5,6 @@ of students and complete School Classes with several Subjects
 
 Have every time a complete overview to Results of Students and complete School Classes
 
-**For Screenshots take a look in directory screenshots**
 
 ## Features
 * set School Years
@@ -31,6 +30,18 @@ Have every time a complete overview to Results of Students and complete School C
 * select method how schoolyear final result will be calculated
 
 * "Simulation" (what happens if Student has in next Test(s) this result(s)?)
+
+
+**Configuration of a Schoolclass**
+![Schoolclass Screenshot](screenshots/schoolclass.jpg)
+
+
+**List of Exams for a Subject in a Schoolclass**
+![Schoolclass Screenshot](screenshots/exam%20list.jpg)
+
+
+**Results of an Exam**
+![Schoolclass Screenshot](screenshots/exam%20Details.jpg)
 
 ## Install Instructions for Windows
 1. Download an install at least Python 3.5 from https://www.python.org/downloads/
