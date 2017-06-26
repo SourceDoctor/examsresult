@@ -22,6 +22,7 @@ Have every time a complete overview to Results of Students and complete School C
 * CSV/PDF Export of Exam Results
 * CSV/PDF Export of Student Results (in Timeperiod and complete Schoolyear)
 * CSV/PDF Export of Schoolclass Results (in Timeperiod and complete Schoolyear)
+* optional PDF Password Encryption
 * calculates each Timeperiod seperate and show result
 * select method how schoolyear final result will be calculated
 * "Simulation" (what happens if Student has in next Test(s) this result(s)?)

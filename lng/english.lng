@@ -15,6 +15,24 @@ msg_close_unsaved=Really close unsaved?
 msg_file_not_found=File to open not found
 all=(all)
 
+[pdfexport]
+title=PDF Settings
+no_encryption= no Encryption
+encryption=Encryption
+password=Password
+password_retype=Retype Password
+userpassword=Userpassword
+ownerpassword=Ownerpassword
+cancopy=allow copying
+canmodify=allow modifying
+canprint=allow printing
+cananotate=allow anotation
+export=Export
+msg_empty_password=no empty passwords allowed
+msg_unequal_user_password=User Password has to be equal
+msg_unequal_owner_password=Owner Password has to be equal
+msg_user_owner_password_equal=User Password and Owner Password have to be different
+
 [menu]
 mainmenufile=File
 mainmenureport=Report

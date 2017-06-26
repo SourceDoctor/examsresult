@@ -15,6 +15,24 @@ msg_close_unsaved=Wirklich schließen ohne zu speichern?
 msg_file_not_found=Datei nicht gefunden
 all=(alle)
 
+[pdfexport]
+title=PDF Einstellungen
+no_encryption= kein Verschlüsselung
+encryption=Verschlüsselung
+password=Passwort
+password_retype=wiederhole Passwort
+userpassword=Benuzerpasswort
+ownerpassword=Besitzerpasswort
+cancopy=erlaube Kopien
+canmodify=erlaube Veränderung
+canprint=erlaube Drucken
+cananotate=erlaube Markierungen
+export=Export
+msg_empty_password=keine leeren Passwörter zugelassen
+msg_unequal_user_password=Benutzerpasswort stimmt nicht überein
+msg_unequal_owner_password=Besitzerpassword stimmt nicht überein
+msg_user_owner_password_equal=Benutzerpasswort und Besitzerpassword müssern verschieden sein
+
 [menu]
 mainmenufile=Datei
 mainmenureport=Report

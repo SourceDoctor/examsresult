@@ -20,7 +20,7 @@ class ViewAbout(object):
         app_icon_label.setPixmap(pixmap)
         app_icon_label.move(7, 7)
 
-        version = "%s %s" % (local_lng['version'], "1.0.3.0")
+        version = "%s %s" % (local_lng['version'], "1.0.4.0")
 
         title_label = QLabel(self.lng['main']['title'], window)
         title_label.move(80, 10)

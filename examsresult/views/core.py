@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QMessageBox, QInputDialog, QTableWidgetItem, QFileDialog
 
 from examsresult.tools import export_csv, ExportPdf, cleanup_filename
+from examsresult.views.export_pdf import PDFExportSettings
 
 
 class CoreView(object):
@@ -341,12 +342,20 @@ class CoreView(object):
     def do_pdf_export(self, default_filename, root=None):
         if not root:
             root = self.tab_window
+
+        pdf_settings = PDFExportSettings(parent=root)
+        security = pdf_settings.settings
+        if security['failure']:
+            return
+
         filename = self.file_save(root, self.lng['title'], default_filename=default_filename, filetype='pdf')
         if not filename:
             return
 
         data = self._collect_export_data(start_column=0)
-        pdf = ExportPdf(target_file=filename, template=self.pdf_template, data=data, head_text=self.pdf_head_text, foot_text=self.pdf_foot_text)
+        pdf = ExportPdf(target_file=filename, template=self.pdf_template,
+                        data=data, security=security,
+                        head_text=self.pdf_head_text, foot_text=self.pdf_foot_text)
         pdf.save()
 
     def pdf_template(self, obj, data):

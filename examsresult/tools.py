@@ -2,6 +2,7 @@ from configparser import RawConfigParser
 from glob import glob
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from reportlab.lib import pdfencrypt
 import csv
 
 language_extension = 'lng'
@@ -101,11 +102,43 @@ class ExportPdf(object):
     head_text = "Head"
     foot_text = "Foot"
 
-    def __init__(self, target_file, template, head_text="Head", foot_text="Foot", data=None):
+    def __init__(self, target_file, template, head_text="Head", foot_text="Foot", data=None, security={}):
         if not target_file.endswith(".pdf"):
             target_file += ".pdf"
+        try:
+            userpassword = security['userpassword']
+        except KeyError:
+            userpassword = None
+        try:
+            ownerpassword = security['ownerpassword']
+        except KeyError:
+            ownerpassword = None
+        try:
+            cancopy = security['cancopy']
+        except KeyError:
+            cancopy = True
+        try:
+            canmodify = security['canmodify']
+        except KeyError:
+            canmodify = True
+        try:
+            canprint = security['canprint']
+        except KeyError:
+            canprint = True
+        try:
+            canannotate = security['canannotate']
+        except KeyError:
+            canannotate = True
+
+        encryption = self.encryption(userpassword=userpassword,
+                                     ownerpassword=ownerpassword,
+                                     cancopy=cancopy,
+                                     canmodify=canmodify,
+                                     canprint=canprint,
+                                     canannotate=canannotate)
 
         self.pdf_export = canvas.Canvas(target_file, pagesize=letter)
+        self.pdf_export.setEncrypt(encrypt=encryption)
         self.pdf_export.setLineWidth(.3)
         self.pdf_export.setFont(self.font_normal, self.font_size)
         self.pdf_export.font_size = self.font_size
@@ -117,6 +150,31 @@ class ExportPdf(object):
         self.head_text = head_text
         self.foot_text = foot_text
         self.data = data
+
+    def encryption(self, userpassword=None, ownerpassword=None, strength=128,
+                   cancopy=True, canmodify=True, canprint=True, canannotate=True):
+        #
+        # https://www.reportlab.com/docs/reportlab-userguide.pdf
+        # from reportlab.pdfgen import canvas
+        # from reportlab.lib import pdfencrypt
+        # enc=pdfencrypt.StandardEncryption("rptlab",canPrint=0)
+        # def hello(c):
+        #     c.drawString(100,100,"Hello World")
+        # c = canvas.Canvas("hello.pdf",encrypt=enc)
+        # hello(c)
+        # c.showPage()
+        # c.save()
+        #
+
+        if not userpassword and not ownerpassword:
+            return None
+        return pdfencrypt.StandardEncryption(userPassword=userpassword,
+                                           ownerPassword=ownerpassword,
+                                           canCopy=cancopy,
+                                           canModify=canmodify,
+                                           canPrint=canprint,
+                                           canAnnotate=canannotate,
+                                           strength=strength)
 
     def template(self, data):
         self.pdf_export.drawString(100, 750, "no content")
