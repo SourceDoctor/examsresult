@@ -47,9 +47,9 @@ class PDFExportSettings(object):
         self.canprint = QCheckBox(self.security_settings)
         self.canprint.setText(self.lng['canprint'])
         self.canprint.move(option_x, 64)
-        self.cananotate = QCheckBox(self.security_settings)
-        self.cananotate.setText(self.lng['cananotate'])
-        self.cananotate.move(option_x, 84)
+        self.canannotate = QCheckBox(self.security_settings)
+        self.canannotate.setText(self.lng['canannotate'])
+        self.canannotate.move(option_x, 84)
 
         self.chk_userpassword_title = QCheckBox(self.lng['userpassword'], self.security_settings)
         self.chk_userpassword_title.clicked.connect(self.set_user_password_ability)
@@ -82,7 +82,7 @@ class PDFExportSettings(object):
         self.radio_no_encryption.setChecked(True)
         self.chk_userpassword_title.setChecked(True)
         
-        self.cananotate.setChecked(True)
+        self.canannotate.setChecked(True)
         self.cancopy.setChecked(True)
         self.canmodify.setChecked(True)
         self.canprint.setChecked(True)
@@ -100,7 +100,7 @@ class PDFExportSettings(object):
         self.label_userpassword_retype.setEnabled(enabled)
         self.text_userpassword_retype.setEnabled(enabled)
 
-        self.cananotate.setEnabled(enabled)
+        self.canannotate.setEnabled(enabled)
         self.cancopy.setEnabled(enabled)
         self.canmodify.setEnabled(enabled)
         self.canprint.setEnabled(enabled)
@@ -131,7 +131,7 @@ class PDFExportSettings(object):
             settings['cancopy'] = self.cancopy.isChecked()
             settings['canmodify'] = self.canmodify.isChecked()
             settings['canprint'] = self.canprint.isChecked()
-            settings['cananotate'] = self.cananotate.isChecked()
+            settings['canannotate'] = self.canannotate.isChecked()
 
             if self.chk_ownerpassword_title.isChecked():
                 settings['ownerpassword'] = self.text_ownerpassword.text()
