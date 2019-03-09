@@ -164,12 +164,10 @@ class CoreView(object):
         return self._action_add_content(root_window, content, limit_column)
 
     def _action_load_content(self):
-        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to load!")
-        return []
+        raise NotImplemented()
 
     def _action_save_content(self, data):
-        QMessageBox.information(self.tab_window, self.lng['title'], "Tell me how to save!")
-        return False
+        raise NotImplemented()
 
     def action_add(self, data_import=False, with_id=False, data=()):
         # temporarly disable sorting

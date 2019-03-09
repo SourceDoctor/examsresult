@@ -5,12 +5,21 @@ from . import CoreView
 
 
 class ViewDefine(CoreView):
+
+    table_left = 100
+    table_top = 30
+    table_height = 350
+    table_width = 200
+
     def __init__(self, dbhandler, root_tab, lng):
         self.dbh = dbhandler
         self.tab_window = root_tab
         self.lng = lng
         self.column_title = []
-        self.column_title.append({'name':'id', 'type':'int', 'unique':True, 'editable':False})
+        self.column_title.append({'name': 'id',
+                                  'type': 'int',
+                                  'unique': True,
+                                  'editable': False})
         self.column_title.extend(self._define_column_title())
 
         mytab = QWidget()
@@ -90,11 +99,6 @@ class ViewDefine(CoreView):
 
 class ViewSchoolYear(ViewDefine):
 
-    table_left = 100
-    table_top = 30
-    table_height = 350
-    table_width = 200
-
     def _define_column_title(self):
         return [{'name': self.lng['name'], 'type': 'string', 'unique': True}]
 
@@ -107,11 +111,6 @@ class ViewSchoolYear(ViewDefine):
 
 
 class ViewSchoolClass(ViewDefine):
-
-    table_left = 100
-    table_top = 30
-    table_height = 350
-    table_width = 200
 
     def _define_column_title(self):
         return [{'name': self.lng['name'], 'type': 'string', 'unique': True}]
@@ -126,11 +125,6 @@ class ViewSchoolClass(ViewDefine):
 
 class ViewSubject(ViewDefine):
 
-    table_left = 100
-    table_top = 30
-    table_height = 350
-    table_width = 200
-
     def _define_column_title(self):
         return [{'name': self.lng['name'], 'type': 'string', 'unique': True}]
 
@@ -143,11 +137,6 @@ class ViewSubject(ViewDefine):
 
 
 class ViewExamsType(ViewDefine):
-
-    table_left = 100
-    table_top = 30
-    table_height = 350
-    table_width = 200
 
     def _define_column_title(self):
         return [{'name': self.lng['name'], 'type': 'string', 'unique': True},
@@ -163,11 +152,6 @@ class ViewExamsType(ViewDefine):
 
 
 class ViewTimeperiod(ViewDefine):
-
-    table_left = 100
-    table_top = 30
-    table_height = 350
-    table_width = 200
 
     def _define_column_title(self):
         return [{'name': self.lng['name'], 'type': 'string', 'unique': True},
