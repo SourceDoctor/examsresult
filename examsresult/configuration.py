@@ -12,6 +12,7 @@ def default_config():
         'openbox_on_startup': False,
         'open_file_on_startup': '',
         'schoolyear_result_calculation_method': 'complete',
+        'title_view': 'filename'
         }
     return default_dict
 

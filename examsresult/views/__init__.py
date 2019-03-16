@@ -8,7 +8,7 @@ from examsresult.views.settings import ViewSettings
 from examsresult.views.configuration import ViewSchoolClassConfigure, ViewExamConfigure
 from examsresult.views.definition import ViewTimeperiod, ViewExamsType, ViewSchoolClass, ViewSchoolYear, ViewSubject
 from examsresult.views.about import ViewAbout
-from os.path import isfile
+from os.path import isfile, basename
 
 
 class BaseView(QMainWindow, CoreView):
@@ -56,7 +56,13 @@ class BaseView(QMainWindow, CoreView):
                 pass
 
         if self.db_loaded:
-            self.setWindowTitle("%s - %s" % (self.lng['main']['title'], self.database_file))
+            if self.config['title_view'] == 'fullpath':
+                self.setWindowTitle("%s - %s" % (self.lng['main']['title'], self.database_file))
+            elif self.config['title_view'] == 'filename':
+                self.setWindowTitle("%s - %s" % (self.lng['main']['title'], basename(self.database_file)))
+            else:
+                print("critical unknown Key '%s' in settings" % self.config['title_view'])
+                self.setWindowTitle("%s - %s" % (self.lng['main']['title'], basename(self.database_file)))
         else:
             self.setWindowTitle(self.lng['main']['title'])
             self.database_file = None
