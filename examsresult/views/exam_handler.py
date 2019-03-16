@@ -139,7 +139,8 @@ class Exam(CoreView):
 
         self.cal = QCalendarWidget(self.window)
         self.cal.setGridVisible(True)
-        self.cal.move(self.table_left + 100, 20)
+#        self.cal.move(self.table_left + 100, 20)
+        self.cal.move(self.table_left, 30)
         self.cal.clicked.connect(self.set_date)
         self.cal.setVisible(False)
 
