@@ -169,12 +169,12 @@ class ExportPdf(object):
         if not userpassword and not ownerpassword:
             return None
         return pdfencrypt.StandardEncryption(userPassword=userpassword,
-                                           ownerPassword=ownerpassword,
-                                           canCopy=cancopy,
-                                           canModify=canmodify,
-                                           canPrint=canprint,
-                                           canAnnotate=canannotate,
-                                           strength=strength)
+                                             ownerPassword=ownerpassword,
+                                             canCopy=cancopy,
+                                             canModify=canmodify,
+                                             canPrint=canprint,
+                                             canAnnotate=canannotate,
+                                             strength=strength)
 
     def template(self, data):
         self.pdf_export.drawString(100, 750, "no content")
