@@ -1,9 +1,16 @@
 import json
-from os.path import isfile
+from os import makedirs
+from os.path import isfile, splitext
 
 configfile = "examsresult.conf"
 
 current_config = {}
+
+
+def image_directory(absolute_filename):
+    directory = splitext(absolute_filename)[0]
+    makedirs(directory, exist_ok=True)
+    return directory
 
 
 def default_config():
