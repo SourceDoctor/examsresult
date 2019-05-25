@@ -285,7 +285,7 @@ class DBHandler(object):
                     real_school_class_name = self.get_schoolclassname(id=d.real_school_class_name_id)
                 else:
                     real_school_class_name = schoolclass
-                data.append((d.id, d.lastname, d.firstname, real_school_class_name, d.comment))
+                data.append((d.id, d.lastname, d.firstname, real_school_class_name, d.comment, d.image))
         return data
 
     def set_students(self, schoolyear, schoolclass, students=[]):
@@ -328,6 +328,7 @@ class DBHandler(object):
                                   firstname=d[2],
                                   real_school_class_name_id=real_school_class_name_id,
                                   comment=d[4],
+                                  image=d[5],
                                   school_class_id=school_class.id)
             else:
                 id_list.remove(str(d[0]))
@@ -335,6 +336,7 @@ class DBHandler(object):
                 s.firstname = d[2]
                 s.real_school_class_name_id = real_school_class_name_id
                 s.comment = d[4]
+                s.image = d[5]
                 s.school_class = school_class
                 self.session.add(s)
 
@@ -344,20 +346,23 @@ class DBHandler(object):
         self.remove_students(id_list)
         return 0
 
-    def add_students(self, lastname, firstname, comment, real_school_class_name_id=0, school_class_id=None):
+    def add_students(self, lastname, firstname, comment, real_school_class_name_id=0, school_class_id=None, image=None):
 
         if school_class_id:
             s = Student(lastname=lastname,
                         firstname=firstname,
                         real_school_class_name_id=real_school_class_name_id,
                         comment=comment,
+                        image=image,
                         school_class_id=school_class_id
                         )
         else:
             s = Student(lastname=lastname,
                         firstname=firstname,
                         real_school_class_name_id=real_school_class_name_id,
-                        comment=comment)
+                        comment=comment,
+                        image=image
+                        )
         self.session.add(s)
         self.session.commit()
 

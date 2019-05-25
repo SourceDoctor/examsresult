@@ -36,7 +36,8 @@ class ExtendedQInputDialog(QInputDialog):
             filetypes = ';;'.join([self.filetype_all, self.filetype_image])
 
             file_handler = QFileDialog()
-            file_tuple = file_handler.getOpenFileName(parent=dialog_window, filter=filetypes)
+            file_tuple = file_handler.getOpenFileName(parent=dialog_window,
+                                                      filter=filetypes)
             filename = file_tuple[0]
 
             if not filename:
@@ -114,6 +115,9 @@ class ExtendedQInputDialog(QInputDialog):
         button_ok.move(button_left_coord, button_top_coord)
         button_left_coord -= button_cancel.width() - button_offset
         button_cancel.move(button_left_coord, button_top_coord)
+
+        if image_data:
+            load_image()
 
         dialog_window.exec()
 

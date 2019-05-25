@@ -1,8 +1,14 @@
+from os.path import isfile
+
+from PyQt5 import QtCore
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget, QLabel, QTableWidget, QAbstractItemView, QMenu, \
-    QToolButton, QPushButton, QInputDialog, QMessageBox
+    QToolButton, QPushButton, QMessageBox, QFrame
 
 from examsresult import current_config
 from examsresult.controls.calculation import Calculation
+from examsresult.extendedqinputdialog import ExtendedQInputDialog
+from examsresult.models import DB_ID_INDEX
 from examsresult.tools import HIDE_ID_COLUMN
 from examsresult.views import CoreView
 
@@ -39,6 +45,17 @@ class ViewReport(CoreView):
         self.my_table = QTableWidget(mytab)
         self.tab_window.addTab(mytab, self.lng['title'])
 
+        self.image_window = QLabel(mytab)
+        self.image_window.setFrameShape(QFrame.Panel)
+        self.image_window.setFrameShadow(QFrame.Sunken)
+        self.image_window.setLineWidth(3)
+        image_window_top = self.table_top - 10 - self.student_image_height
+        image_window_left = self.table_left + self.table_width + 10
+        self.image_window.setGeometry(image_window_left,
+                                      image_window_top,
+                                      self.student_image_width,
+                                      self.student_image_height)
+
         if self.show_schoolyear:
             self.schoolyear = data['schoolyear']
             label_schoolyear_description = QLabel(self.lng['schoolyear'], mytab)
@@ -67,6 +84,7 @@ class ViewReport(CoreView):
             self.student_id = data['student_id']
             s = self.dbh.get_student_data(self.student_id)
             self.student = "%s, %s" % (s.lastname, s.firstname)
+            self.student_image = s.image
 
             label_student_description = QLabel(self.lng['student'], mytab)
             label_student_description.move(10, self.y_pos)
@@ -91,6 +109,8 @@ class ViewReport(CoreView):
         column_tuple = ()
         for col in self.column_title:
             column_tuple += (col['name'],)
+            if 'hide' in col.keys():
+                self.my_table.setColumnHidden(self.column_title.index(col), col['hide'])
         self.my_table.setHorizontalHeaderLabels(column_tuple)
 
         self.button_export = QToolButton(mytab)
@@ -115,7 +135,7 @@ class ViewReport(CoreView):
             self.button_simulation_clear.setEnabled(False)
 
         # hide Column 'id'
-        self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
+        self.my_table.setColumnHidden(DB_ID_INDEX, HIDE_ID_COLUMN)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)
@@ -133,6 +153,15 @@ class ViewReport(CoreView):
 
         self.my_table.resizeColumnsToContents()
         self.my_table.setSortingEnabled(self.sorting)
+
+    def load_image(self, filename):
+        # TODO: does not work if placed in parent class
+        pixmap = QPixmap(filename)
+        if filename and isfile(filename):
+            pixmap = pixmap.scaled(self.student_image_height,
+                                   self.student_image_width,
+                                   QtCore.Qt.KeepAspectRatio)
+        self.image_window.setPixmap(pixmap)
 
     def show_results(self):
         return []
@@ -167,6 +196,10 @@ class ViewReportSchoolclass(ViewReport):
 
     sorting = True
 
+    def __init__(self, dbhandler, root_tab, lng, data):
+        super().__init__(dbhandler, root_tab, lng, data)
+        self.my_table.clicked.connect(self.action_select)
+
     def _define_column_title(self):
         timeperiod_list = self.dbh.get_timeperiod()
         column_title = []
@@ -175,8 +208,16 @@ class ViewReportSchoolclass(ViewReport):
         for period in timeperiod_list:
             column_title.append({'name': period[1], 'type': 'string', 'unique': False})
         column_title.append({'name': self.lng['schoolyear'], 'type': 'string', 'unique': False})
+        column_title.append({'name': 'image_filename', 'type': 'image', 'unique': False, 'hide': True})
 
         return column_title
+
+    def action_select(self, cell=None, limit_column=[]):
+        student_image_column = len(self.column_title)
+        if student_image_column:
+            student_image_column -= 1
+        image_data_temp = self.my_table.item(cell.row(), student_image_column).text()
+        self.load_image(image_data_temp)
 
     @property
     def export_file_title(self):
@@ -258,6 +299,12 @@ class ViewReportStudent(ViewReport):
 
     show_student = True
     simulation_data = []
+
+    student_image = None
+
+    def __init__(self, dbhandler, root_tab, lng, data):
+        super().__init__(dbhandler, root_tab, lng, data)
+        self.load_image(self.student_image)
 
     def _define_column_title(self):
         return [{'name': self.lng['date'], 'type': 'string', 'unique': False},
@@ -377,7 +424,7 @@ class ViewReportStudent(ViewReport):
         timeperiod_list = [t[1] for t in self.dbh.get_timeperiod()]
         examtype_list = [x[1] for x in self.dbh.get_examtype()]
 
-        simulate_dialog = QInputDialog(parent=self.tab_window)
+        simulate_dialog = ExtendedQInputDialog(parent=self.tab_window)
         add_results = True
         while add_results:
             timeperiod, ok = simulate_dialog.getItem(self.tab_window, self.lng['simulate'], self.lng['timeperiod'], timeperiod_list, 0, False)

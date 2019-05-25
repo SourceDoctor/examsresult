@@ -62,10 +62,10 @@ title=New File
 [window_openfile]
 title=Open File
 msg_open_err=Failed to open File %s
-msg_db_has_to_be_updated=File has to be updated. Start now?
-msg_db_updated=File to new Version updated
-msg_db_update_failure=Something went run while updating File
-msg_db_to_new=Cannot open File, because it's Version is to new. Please update your Application
+msg_db_has_to_be_updated=%s has to be updated. Start now?
+msg_db_updated=%s to new Version updated
+msg_db_update_failure=Something went run while updating %s
+msg_db_to_new=Cannot open %s, because it's Version is to new. Please update your Application
 
 [window_define_timeperiod]
 title = Timeperiod

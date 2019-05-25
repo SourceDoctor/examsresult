@@ -21,9 +21,9 @@ class DBUpdater(object):
 
         return db_max_version - db_version
 
-    # def _update_v2_to_v3(self):
-    #     # update DB Model to v3
-    #     pass
+    def _update_v2_to_v3(self):
+        # update DB Model to v3
+        self.session.execute("alter table student add column image VARCHAR(64)")
 
     def _update_v1_to_v2(self):
         # update DB Model to v2

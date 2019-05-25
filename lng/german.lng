@@ -62,10 +62,10 @@ title=Neue Datei
 [window_openfile]
 title=Datei öffnen
 msg_open_err=Konnte diese Datei nicht öffnen %s
-msg_db_has_to_be_updated=Datei muss upgedated werden. Beginnen?
-msg_db_updated=Datei wurde auf neue Version aktualisiert
-msg_db_update_failure=Fehler beim Datei updaten
-msg_db_to_new=Konnte Datei nicht öffnen, da ihre Version zu neu ist. Bitte updaten Sie das Programm
+msg_db_has_to_be_updated=%s muss upgedated werden. Beginnen?
+msg_db_updated=%s wurde auf neue Version aktualisiert
+msg_db_update_failure=Fehler beim updaten von %s
+msg_db_to_new=Konnte %s nicht öffnen, da ihre Version zu neu ist. Bitte updaten Sie das Programm
 
 [window_define_timeperiod]
 title = Zeitperiode

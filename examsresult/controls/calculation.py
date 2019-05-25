@@ -111,6 +111,7 @@ class Calculation(object):
             student_lastname = student[1]
             student_firstname = student[2]
             student_real_schoolclass = student[3]
+            student_image = student[5]
 
             try:
                 if self.data['combined_class'] and self.data['combined_class'] != student_real_schoolclass:
@@ -150,7 +151,7 @@ class Calculation(object):
             if complete_t_p_result_count:
                 complete_t_p_result_average = round(float(complete_t_p_result_sum) / complete_t_p_result_count,
                                                     DIVISOR_PRECISION)
-            data_list += (complete_t_p_result_average,)
+            data_list += (complete_t_p_result_average, student_image)
 
             # print student result
             self.result_output_list.append(data_list)

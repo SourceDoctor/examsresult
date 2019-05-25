@@ -1,6 +1,7 @@
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTabWidget, QInputDialog, QWidget
+from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox, QTabWidget, QWidget
 from examsresult.controls.dbhandler import DBHandler
+from examsresult.extendedqinputdialog import ExtendedQInputDialog
 from examsresult.tools import lng_load, center_pos, app_icon, sort
 from examsresult.views.core import CoreView
 from examsresult.views.report import ViewReportStudent, ViewReportSchoolclass
@@ -37,19 +38,19 @@ class BaseView(QMainWindow, CoreView):
             db_versions_difference = self.dbh.dbc.db_version_difference
 
             if db_versions_difference > 0:
-                answer = QMessageBox.question(self, "", self.lng['window_openfile']['msg_db_has_to_be_updated'])
+                answer = QMessageBox.question(self, "", self.lng['window_openfile']['msg_db_has_to_be_updated'] % self.database_file)
                 if answer == QMessageBox.Yes:
                     if self.dbh.dbc.db_updater():
-                        QMessageBox.information(self, "", self.lng['window_openfile']['msg_db_updated'])
+                        QMessageBox.information(self, "", self.lng['window_openfile']['msg_db_updated'] % self.database_file)
                     else:
-                        QMessageBox.warning(self, "", self.lng['window_openfile']['msg_db_update_failure'])
+                        QMessageBox.warning(self, "", self.lng['window_openfile']['msg_db_update_failure'] % self.database_file)
                         self.db_loaded = False
                 else:
                     self.db_loaded = False
 
             elif db_versions_difference < 0:
                 self.db_loaded = False
-                QMessageBox.warning(self, "", self.lng['window_openfile']['msg_db_to_new'])
+                QMessageBox.warning(self, "", self.lng['window_openfile']['msg_db_to_new'] % self.database_file)
 
             else:
                 # Version is on newest state
@@ -128,7 +129,7 @@ class BaseView(QMainWindow, CoreView):
         ViewSettings(parent=parent, lng=self.lng)
 
     def window_report_schoolclass(self, lng):
-        report_dialog = QInputDialog(parent=self.tab_window)
+        report_dialog = ExtendedQInputDialog(parent=self.tab_window)
 
         schoolyear_list = [y[1] for y in self.dbh.get_schoolyear()]
         schoolyear_list = sort(schoolyear_list, reverse=True)
@@ -176,7 +177,7 @@ class BaseView(QMainWindow, CoreView):
         student_list = []
         student_id_dict = {}
 
-        report_dialog = QInputDialog(parent=self.tab_window)
+        report_dialog = ExtendedQInputDialog(parent=self.tab_window)
 
         schoolyear_list = [y[1] for y in self.dbh.get_schoolyear()]
         schoolyear_list = sort(schoolyear_list, reverse=True)

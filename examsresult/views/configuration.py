@@ -1,12 +1,15 @@
-from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
-    QPushButton, QComboBox, QMessageBox, QToolButton, QMenu, QInputDialog, QCheckBox
+from os.path import isfile
 
+from PyQt5 import QtCore
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QLabel, \
+    QPushButton, QComboBox, QMessageBox, QToolButton, QMenu, QCheckBox, QFrame
+from examsresult.extendedqinputdialog import ExtendedQInputDialog
+from examsresult.models import DB_ID_INDEX, DB_SCHOOLCLASS_SCHOOLCLASS_INDEX
 from examsresult.tools import HIDE_ID_COLUMN, sort
 from examsresult.views import CoreView
 from examsresult.views.exam_handler import Exam
 from examsresult.views.import_csv import CSVImport
-
-schoolclass_column_number = 2
 
 
 class ViewConfigure(CoreView):
@@ -76,6 +79,8 @@ class ViewSchoolClassConfigure(ViewConfigure):
         column_tuple = ()
         for col in self.column_title:
             column_tuple += (col['name'],)
+            if 'hide' in col.keys():
+                self.my_table.setColumnHidden(self.column_title.index(col), col['hide'])
         self.my_table.setHorizontalHeaderLabels(column_tuple)
 
         self.button_add = QPushButton(self.lng['add'], mytab)
@@ -108,8 +113,19 @@ class ViewSchoolClassConfigure(ViewConfigure):
         menu.addAction(self.lng['import_other_schoolclass'], self.student_import_other_class)
         self.button_import.setMenu(menu)
 
+        self.image_window = QLabel(mytab)
+        self.image_window.setFrameShape(QFrame.Panel)
+        self.image_window.setFrameShadow(QFrame.Sunken)
+        self.image_window.setLineWidth(3)
+        image_window_top = self.table_top - 10 - self.student_image_height
+        image_window_left = self.table_left + self.table_width + 10
+        self.image_window.setGeometry(image_window_left,
+                                      image_window_top,
+                                      self.student_image_width,
+                                      self.student_image_height)
+
         # hide Column 'id'
-        self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
+        self.my_table.setColumnHidden(DB_ID_INDEX, HIDE_ID_COLUMN)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)
@@ -125,6 +141,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
         self.my_table.setSortingEnabled(self.sorting)
 
+        self.my_table.clicked.connect(self.action_select)
         self.my_table.doubleClicked.connect(self.action_edit)
 
         self.button_save = QPushButton(lng['save'], mytab)
@@ -172,6 +189,20 @@ class ViewSchoolClassConfigure(ViewConfigure):
             self.button_add.setEnabled(False)
             self.button_remove.setEnabled(False)
 
+    def load_image(self, filename):
+        # TODO: does not work if placed in parent class
+        pixmap = QPixmap(filename)
+        if filename and isfile(filename):
+            pixmap = pixmap.scaled(self.student_image_height,
+                                   self.student_image_width,
+                                   QtCore.Qt.KeepAspectRatio)
+        self.image_window.setPixmap(pixmap)
+
+    def action_select(self, cell=None, limit_column=[]):
+        student_image_column = 5
+        image_data_temp = self.my_table.item(cell.row(), student_image_column).text()
+        self.load_image(image_data_temp)
+
     def define_column_title(self):
         self.column_title = []
         self.column_title.append({'name': 'id', 'type': 'int', 'unique': True, 'editable': False})
@@ -192,7 +223,8 @@ class ViewSchoolClassConfigure(ViewConfigure):
                  'list': self.get_schoolclassnames(),
                  'handle': self.schoolclass_combined,
                  'default': self.schoolclass_name},
-                {'name': self.lng['comment'], 'type': 'string', 'unique': False}
+                {'name': self.lng['comment'], 'type': 'string', 'unique': False},
+                {'name': 'image_filename', 'type': 'image', 'unique': False, 'hide': True}
                 ]
 
     def schoolclass_combined_change(self):
@@ -212,8 +244,8 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
     def _action_load_content(self):
         is_combined_school_class = self.dbh.get_schoolclass_combine(schoolyear=self.listbox_schoolyear.currentText(),
-                                                         schoolclassname=self.listbox_schoolclass.currentText()
-                                                         )
+                                                                    schoolclassname=self.listbox_schoolclass.currentText()
+                                                                    )
         self.combined_schoolclass.setChecked(is_combined_school_class)
         self.schoolclass_combined_change()
         self.set_changed(False)
@@ -224,12 +256,13 @@ class ViewSchoolClassConfigure(ViewConfigure):
 
     def _action_save_content(self, data):
         self.dbh.set_schoolclass_combine(schoolyear=self.listbox_schoolyear.currentText(),
-                                        schoolclassname=self.listbox_schoolclass.currentText(),
-                                        combined_schoolclass=self.combined_schoolclass.isChecked()
-                                        )
+                                         schoolclassname=self.listbox_schoolclass.currentText(),
+                                         combined_schoolclass=self.combined_schoolclass.isChecked()
+                                         )
         self.dbh.set_students(schoolyear=self.listbox_schoolyear.currentText(),
                               schoolclass=self.listbox_schoolclass.currentText(),
-                              students=data)
+                              students=data
+                              )
         self.set_changed(False)
         return True
 
@@ -259,7 +292,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
             # Lastname, Firstname, Comment
             student = list(student[1:len(student)])
             student.append(student[len(student) - 1])
-            student[schoolclass_column_number] = self.listbox_schoolclass.currentText()
+            student[DB_SCHOOLCLASS_SCHOOLCLASS_INDEX] = self.listbox_schoolclass.currentText()
             # modified to
             # Lastname, Firstname, Schoolclass, Comment
             student = tuple(student)
@@ -283,7 +316,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
             QMessageBox.information(self.tab_window, self.lng['title'], self.lng['msg_no_schoolclass'])
             return
 
-        import_dialog = QInputDialog(parent=self.tab_window)
+        import_dialog = ExtendedQInputDialog(parent=self.tab_window)
         schoolyear, ok = import_dialog.getItem(self.tab_window, self.lng['title'], self.lng['schoolyear'], schoolyear_list, 0, False)
         if not ok:
             return
@@ -295,7 +328,7 @@ class ViewSchoolClassConfigure(ViewConfigure):
         for student in student_list:
             # remove first element of tuple (id Field)
             student = list(student[1:len(student)])
-            student[schoolclass_column_number] = self.listbox_schoolclass.currentText()
+            student[DB_SCHOOLCLASS_SCHOOLCLASS_INDEX] = self.listbox_schoolclass.currentText()
             student = tuple(student)
             self.action_add(data_import=True, data=student)
 
@@ -406,7 +439,7 @@ class ViewExamConfigure(ViewConfigure):
         self.button_export.setMenu(menu)
 
         # hide Column 'id'
-        self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
+        self.my_table.setColumnHidden(DB_ID_INDEX, HIDE_ID_COLUMN)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)

@@ -1,8 +1,10 @@
 from PyQt5.QtWidgets import QDialog, QPushButton, QLabel, QTableWidget, \
-    QAbstractItemView, QTextEdit, QCalendarWidget, QInputDialog, QTableWidgetItem, \
+    QAbstractItemView, QTextEdit, QCalendarWidget, QTableWidgetItem, \
     QMessageBox, QComboBox, QToolButton, QMenu
 
 from examsresult.configuration import current_config
+from examsresult.extendedqinputdialog import ExtendedQInputDialog
+from examsresult.models import DB_ID_INDEX
 from examsresult.tools import lng_list, HIDE_ID_COLUMN
 from examsresult.views.core import CoreView
 
@@ -89,6 +91,8 @@ class Exam(CoreView):
         column_tuple = ()
         for col in self.column_title:
             column_tuple += (col['name'],)
+            if 'hide' in col.keys():
+                self.my_table.setColumnHidden(self.column_title.index(col), col['hide'])
         self.my_table.setHorizontalHeaderLabels(column_tuple)
 
         self.my_table.verticalHeader().setVisible(self.header_vertical)
@@ -96,7 +100,7 @@ class Exam(CoreView):
         self.my_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         # hide Column 'id'
-        self.my_table.setColumnHidden(0, HIDE_ID_COLUMN)
+        self.my_table.setColumnHidden(DB_ID_INDEX, HIDE_ID_COLUMN)
 
         if self.row_title:
             self.my_table.setVerticalHeaderLabels(self.row_title)
@@ -258,7 +262,7 @@ class Exam(CoreView):
         lastname_column = 1
         firstname_column = 2
         result_column = 3
-        dialog = QInputDialog(self.my_table)
+        dialog = ExtendedQInputDialog(self.my_table)
         row = 0
         while row <= self.my_table.rowCount() - 1:
             lastname = self.my_table.item(row, lastname_column).text()
@@ -284,14 +288,14 @@ class Exam(CoreView):
             return False
 
         self.exam_id = self.dbhandler.set_exam(id=self.exam_id,
-                            exam_date=self.exam_date.text(),
-                            schoolyear=self.schoolyear,
-                            schoolclassname=self.schoolclass,
-                            subject=self.subject,
-                            examtype=self.examtype,
-                            timeperiod=self.timeperiod,
-                            results=data,
-                            comment=self.text_exam_description.toPlainText())
+                                               exam_date=self.exam_date.text(),
+                                               schoolyear=self.schoolyear,
+                                               schoolclassname=self.schoolclass,
+                                               subject=self.subject,
+                                               examtype=self.examtype,
+                                               timeperiod=self.timeperiod,
+                                               results=data,
+                                               comment=self.text_exam_description.toPlainText())
         self.type = 'edit'
         return True
 

@@ -1,5 +1,10 @@
-from PyQt5.QtWidgets import QMessageBox, QInputDialog, QTableWidgetItem, QFileDialog
+from PyQt5 import QtCore
+from PyQt5.QtGui import QPixmap
+from os.path import isfile
+from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem, QFileDialog
+from PyQt5.uic.properties import QtCore
 
+from examsresult.extendedqinputdialog import ExtendedQInputDialog
 from examsresult.tools import export_csv, ExportPdf, cleanup_filename
 from examsresult.views.export_pdf import PDFExportSettings
 
@@ -28,6 +33,18 @@ class CoreView(object):
     header_horizontal = True
     header_vertical = False
     float_precision = 2
+
+    student_image_height = 100
+    student_image_width = 100
+
+    def load_image(self, filename):
+        # TODO: does not work if placed in parent class
+        pixmap = QPixmap(filename)
+        if filename and isfile(filename):
+            pixmap = pixmap.scaled(self.student_image_height,
+                                   self.student_image_width,
+                                   QtCore.Qt.KeepAspectRatio)
+        self.image_window.setPixmap(pixmap)
 
     def set_filetypes(self, lng):
         filetype = []
@@ -91,7 +108,7 @@ class CoreView(object):
     def _action_add_content(self, root_window, content=(), limit_column=[]):
         data = ()
 
-        add_dialog = QInputDialog(parent=root_window)
+        add_dialog = ExtendedQInputDialog(parent=root_window)
         content_index = 0
 
         for col in self.column_title:
@@ -125,6 +142,8 @@ class CoreView(object):
                     cell_content = ""
                 elif col['type'] == 'list':
                     cell_content = ""
+                elif col['type'] == 'image':
+                    cell_content = ""
                 else:
                     cell_content = None
 
@@ -149,6 +168,9 @@ class CoreView(object):
                     else:
                         list_index = 0
                     value, ok = add_dialog.getItem(root_window, self.lng['title'], col['name'], col['list'], list_index, False)
+                elif col['type'] == 'image':
+                    filename, ok = add_dialog.getImage(root_window, self.lng['title'], col['name'], image_data=cell_content)
+                    value = filename
                 else:
                     print("unknown Type: %s" % col[1])
                     return ()
