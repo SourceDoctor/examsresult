@@ -54,7 +54,7 @@ if receiving the following error **ModuleNotFoundError: No module named 'PyQt5.s
 
 ensure Package 'python3-pyqt5' is installed
 
-and use this script for running examsresult in future:
+### and use this script for running examsresult in future:
 
 ```
 #!/bin/sh
