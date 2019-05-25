@@ -48,3 +48,19 @@ Have every time a complete overview to Results of Students and complete School C
 3. open pip-win and paste in "command" this command and klick run:
  - pip install sqlalchemy pyqt5 reportlab
 4. to open examsresult in Windows doubleclick "start.py"
+
+## Problem on some Debian based Systems (Debian, Ubuntu, ...)
+if receiving the following error **ModuleNotFoundError: No module named 'PyQt5.sip'**
+
+ensure Package 'python3-pyqt5' is installed
+
+and use this script for running examsresult in future:
+
+```
+#!/bin/sh
+export PYTHONPATH=/usr/lib/python3/dist-packages
+examsresult
+```
+
+maybe export path differs
+
