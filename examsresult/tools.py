@@ -4,12 +4,17 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib import pdfencrypt
 import csv
+import random
 
 language_extension = 'lng'
 language_path = '/lng'
 app_icon = '.%s/1476313854_report_pencil.png' % language_path
 
 HIDE_ID_COLUMN = True
+
+
+def random_string(length=16, alphabet='abcdefghijklmnopqrstuvwxyz'):
+    return ''.join((random.choice(alphabet) for i in range(length)))
 
 
 def lng_load(language='english', type='ini'):
