@@ -327,7 +327,8 @@ class DBHandler(object):
                 self.add_students(lastname=d[1],
                                   firstname=d[2],
                                   real_school_class_name_id=real_school_class_name_id,
-                                  comment=d[4], school_class_id=school_class.id)
+                                  comment=d[4],
+                                  school_class_id=school_class.id)
             else:
                 id_list.remove(str(d[0]))
                 s.lastname = d[1]
