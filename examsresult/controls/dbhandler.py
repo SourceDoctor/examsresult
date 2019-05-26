@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 from examsresult.controls.dbupdater import DBUpdater
 from examsresult.models import Exam, ExamResult, SchoolClassName, Student, Schoolyear, \
-    SchoolClass, ExamType, TimePeriod, Subject, Parameter, Base
+    SchoolClass, ExamType, TimePeriod, Subject, Parameter, Base, Version, SYSTEM_VERSION_KEY
 
 
 class DatabaseConnector(object):
@@ -561,5 +561,25 @@ class DBHandler(object):
             p.value = value
 
         self.session.add(p)
+        self.session.commit()
+        return 0
+
+    @property
+    def system_version(self):
+        return self.get_version(SYSTEM_VERSION_KEY)
+
+    def get_version(self, key):
+        ret = self.session.query(Version).filter(Version.key==key).first()
+        return ret.value
+
+    def set_version(self, key, value):
+        v = self.get_version(key=key)
+        if not v:
+            v = Version(key=key,
+                        value=value)
+        else:
+            v.value = value
+
+        self.session.add(v)
         self.session.commit()
         return 0

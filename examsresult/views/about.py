@@ -5,7 +5,9 @@ from examsresult.tools import app_icon
 
 class ViewAbout(object):
 
-    def __init__(self, parent, lng, width=400, height=150):
+    def __init__(self, dbhandler, parent, lng, width=400, height=150):
+        self.dbh = dbhandler
+
         self.lng = lng
         local_lng = lng['window_about']
 
@@ -20,7 +22,7 @@ class ViewAbout(object):
         app_icon_label.setPixmap(pixmap)
         app_icon_label.move(7, 7)
 
-        version = "%s %s" % (local_lng['version'], "1.0.5.0")
+        version = "%s %s" % (local_lng['version'], self.dbh.system_version)
 
         title_label = QLabel(self.lng['main']['title'], window)
         title_label.move(80, 10)

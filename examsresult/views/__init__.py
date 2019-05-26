@@ -246,7 +246,7 @@ class BaseView(QMainWindow, CoreView):
         return True
 
     def window_about(self, parent):
-        ViewAbout(parent=parent, lng=self.lng)
+        ViewAbout(dbhandler=self.dbh, parent=parent, lng=self.lng)
         return True
 
     def closeEvent(self, event):

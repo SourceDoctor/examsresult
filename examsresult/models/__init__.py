@@ -9,6 +9,9 @@ DB_ID_INDEX = 0
 # table schoolclass - column schoolclass
 DB_SCHOOLCLASS_SCHOOLCLASS_INDEX = 2
 
+SYSTEM_VERSION_KEY = 'system_version'
+DB_VERSION_KEY = 'db_version'
+
 
 class Base(object):
     id = Column(Integer, primary_key=True, autoincrement=True)
