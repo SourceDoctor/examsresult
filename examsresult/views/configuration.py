@@ -237,10 +237,12 @@ class ViewSchoolClassConfigure(ViewConfigure):
     def schoolclass_change(self, index):
         self.schoolclass_name = self.listbox_schoolclass.currentText()
         self.schoolclass_listindex = self._change(self.listbox_schoolclass, self.schoolclass_listindex, index)
+        self.load_image(None)
         self.define_column_title()
 
     def schoolyear_change(self, index):
         self.schoolyear_listindex = self._change(self.listbox_schoolyear, self.schoolyear_listindex, index)
+        self.load_image(None)
 
     def _action_load_content(self):
         is_combined_school_class = self.dbh.get_schoolclass_combine(schoolyear=self.listbox_schoolyear.currentText(),
