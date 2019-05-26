@@ -118,6 +118,11 @@ description=Name of Schoolyears
 title = About
 infotext=the Teacher Exams Management Database
 version=Version
+remote_check_failed = Update check failed
+system_update_available = System update available
+system_uptodate = you are running the newest Version
+system_newer_than_repository = local Version newer than repository version
+unknown_version_check_error = Unknown error
 
 [window_settings]
 title = Settings

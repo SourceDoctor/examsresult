@@ -118,6 +118,11 @@ description=Benennung der Schuljahre
 title = Über
 infotext=Die Prüfungs und Schulnotenverwaltungsdatenbank für Lehrer
 version=Version
+remote_check_failed = Prüfung auf Updates fehlgeschlagen
+system_update_available = System Update verfügbar
+system_uptodate = Sie haben die neueste Version installiert
+system_newer_than_repository = lokale Version ist neuer als die Repository Version
+unknown_version_check_error = unbekannter Fehler
 
 [window_settings]
 title = Einstellungen

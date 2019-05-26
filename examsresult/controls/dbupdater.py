@@ -21,21 +21,28 @@ class DBUpdater(object):
 
         return db_max_version - db_version
 
+    def _update_v3_to_v4(self):
+        # update system to v4
+        p = self.session.query(Version).filter(Version.key == SYSTEM_VERSION_KEY).first()
+        p.value = 'v1.0.5.1'
+        self.session.add(p)
+        self.session.commit()
+
     def _update_v2_to_v3(self):
-        # update DB Model to v3
+        # update system to v3
         self.session.execute("alter table student add column image VARCHAR(64)")
         system_version = Version(key=SYSTEM_VERSION_KEY,
-                                 value='1.0.5.0')
+                                 value='v1.0.5.0')
         self.session.add(system_version)
         self.session.commit()
 
     def _update_v1_to_v2(self):
-        # update DB Model to v2
+        # update system to v2
         self.session.execute("alter table student add column real_school_class_name_id INTEGER default 0")
         self.session.execute("alter table school_class add column combined_schoolclass BOOLEAN default 0")
 
     def _update_v0_to_v1(self):
-        # update DB Model to v1
+        # update system to v1
         pass
 
     def dbupdater(self):

@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton
-from examsresult.tools import app_icon
+from examsresult.tools import app_icon, repository_version
 
 
 class ViewAbout(object):
@@ -22,7 +22,8 @@ class ViewAbout(object):
         app_icon_label.setPixmap(pixmap)
         app_icon_label.move(7, 7)
 
-        version = "%s %s" % (local_lng['version'], self.dbh.system_version)
+        system_version = self.dbh.system_version
+        version = "%s %s" % (local_lng['version'], system_version.replace('v', ''))
 
         title_label = QLabel(self.lng['main']['title'], window)
         title_label.move(80, 10)
@@ -36,8 +37,30 @@ class ViewAbout(object):
         info_label = QLabel("E-Mail: <a href=\"mailto:" + supportmail + "?Subject=Support\" target=\"_top\">" + supportmail + "</a>", window)
         info_label.setOpenExternalLinks(True)
         info_label.move(80, 90)
+        version_information_label = QLabel(self.version_information, window)
+        version_information_label.move(10, 120)
         button = QPushButton(self.lng['main']['ok'], window)
         button.move(300, 120)
         button.clicked.connect(window.close)
 
         window.exec_()
+
+    @property
+    def version_information(self):
+        local_lng = self.lng['window_about']
+
+        running_version = self.dbh.system_version
+        repo_version = repository_version()
+
+        if not repo_version:
+            ret = local_lng['remote_check_failed']
+        elif running_version < repo_version:
+            ret = local_lng['system_update_available']
+        elif running_version == repo_version:
+            ret = local_lng['system_uptodate']
+        elif running_version > repo_version:
+            ret = local_lng['system_newer_than_repository']
+        else:
+            ret = local_lng['unknown_version_check_error']
+
+        return ret

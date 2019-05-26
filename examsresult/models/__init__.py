@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, Float, ForeignKey, Unicode, Boolean, Uni
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-db_version = 3
+db_version = 4
 
 # all table column id
 DB_ID_INDEX = 0

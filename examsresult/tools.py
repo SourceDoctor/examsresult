@@ -5,6 +5,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib import pdfencrypt
 import csv
 import random
+import requests
 
 language_extension = 'lng'
 language_path = '/lng'
@@ -15,6 +16,21 @@ HIDE_ID_COLUMN = True
 
 def random_string(length=16, alphabet='abcdefghijklmnopqrstuvwxyz'):
     return ''.join((random.choice(alphabet) for i in range(length)))
+
+
+def repository_version():
+    url = 'https://api.github.com/repos/SourceDoctor/examsresult/tags'
+    timeout = 1
+    r = requests.get(url=url, timeout=timeout)
+    if not r:
+        return None
+
+    try:
+        data = r.json()
+        newest_version = data[0]
+        return newest_version['name']
+    except:
+        return None
 
 
 def lng_load(language='english', type='ini'):

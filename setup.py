@@ -14,6 +14,6 @@ setup(
             "examsresult = examsresult:run",
         ]
     },
-    install_requires=['sqlalchemy', 'PyQt5', 'reportlab'],
+    install_requires=['sqlalchemy', 'PyQt5', 'reportlab', 'requests'],
     version='1.0',
 )
