@@ -14,8 +14,10 @@ Have every time a complete overview to Results of Students and complete School C
 * define Time Periods and weight them
 * define School Class for School Year and assign Students
 * handle several Subjects in every School Class
+* handle mixed Classes with students of several School Classes
 * import Students from CSV
 * import Students from a Class of a School Year before
+* assign a photo to a student
 * handle an Exam for complete School Class or a single student
 * CSV/PDF Export of School Class Student List
 * CSV/PDF Export of Exams List of School Class
@@ -46,7 +48,7 @@ Have every time a complete overview to Results of Students and complete School C
 1. Download an install at least Python 3.5 from https://www.python.org/downloads/
 2. Download an install pip-win https://sites.google.com/site/pydatalog/python/pip-for-windows
 3. open pip-win and paste in "command" this command and klick run:
- - pip install sqlalchemy pyqt5 reportlab
+ - pip install sqlalchemy pyqt5 reportlab requests
 4. to open examsresult in Windows doubleclick "start.py"
 
 ## Problem on some Debian based Systems (Debian, Ubuntu, ...)
