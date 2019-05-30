@@ -121,7 +121,7 @@ class Exam(CoreView):
 
         self.button_edit = QPushButton(lng['edit'], self.window)
         self.button_edit.move(self.table_left + self.table_width - self.button_edit.width(), self.table_top + self.table_height)
-        self.button_edit.clicked.connect(self.action_edit)
+        self.button_edit.clicked.connect(self.result_edit)
 
         # set button_save object, so set_change - Handler doesn't crash
         self.button_save = QPushButton(self.lng['save'], self.window)
