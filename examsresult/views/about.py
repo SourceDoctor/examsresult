@@ -33,7 +33,7 @@ class ViewAbout(object):
         info_label.move(80, 50)
         info_label = QLabel("created by Thomas Berberich", window)
         info_label.move(80, 70)
-        supportmail = "program.examsresult@gmail.com"
+        supportmail = "sourcehhdoctor@gmail.com"
         info_label = QLabel("E-Mail: <a href=\"mailto:" + supportmail + "?Subject=Support\" target=\"_top\">" + supportmail + "</a>", window)
         info_label.setOpenExternalLinks(True)
         info_label.move(80, 90)
